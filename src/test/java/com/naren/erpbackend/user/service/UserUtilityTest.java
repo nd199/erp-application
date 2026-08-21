@@ -18,21 +18,29 @@ class UserUtilityTest {
 
     @Test
     void trimsUsername() {
-        assertThat(TestableUtility.normalize("  johndoe  ")).isEqualTo("johndoe");
+        assertThat(TestableUtility
+                .normalize("  johndoe  ")
+        ).isEqualTo("johndoe");
     }
 
     @Test
     void preservesUsernameCase() {
-        assertThat(TestableUtility.normalize("John.Doe")).isEqualTo("John.Doe");
+        assertThat(TestableUtility
+                .normalize("John.Doe")
+        ).isEqualTo("John.Doe");
     }
 
     @Test
     void trimsAndLowercasesEmail() {
-        assertThat(TestableUtility.normalizeMail("  JOHN@Example.COM  ")).isEqualTo("john@example.com");
+        assertThat(TestableUtility
+                .normalizeMail("  JOHN@Example.COM  ")
+        ).isEqualTo("john@example.com");
     }
 
     @Test
     void lowercasesEmailUsingRootLocale() {
-        assertThat(TestableUtility.normalizeMail("JOHN@EXAMPLE.COM")).isEqualTo("john@example.com");
+        assertThat(TestableUtility
+                .normalizeMail("JOHN@EXAMPLE.COM")
+        ).isEqualTo("john@example.com");
     }
 }

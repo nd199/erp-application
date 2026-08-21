@@ -31,6 +31,8 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
     public RegResponse registerUser(RegRequest regRequest) {
         String username = normalizeUsername(regRequest.username());
         String email = normalizeEmail(regRequest.email());
+        String phone = normalizePhone(regRequest.phone());
+        String address = normalizeAddress(regRequest.address());
 
         if (isUserPresent(username, email)) {
             log.warn("Registration rejected, identity already in use: " +
@@ -42,6 +44,8 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
                 .builder()
                 .username(username)
                 .email(email)
+                .phone(phone)
+                .address(address)
                 .password(
                         passwordEncoder
                                 .encode(

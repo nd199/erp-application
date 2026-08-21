@@ -13,6 +13,8 @@ public class RegResponseMapper implements Function<UserProfile, RegResponse> {
         return new RegResponse(
                 userProfile.getUsername(),
                 userProfile.getEmail(),
+                userProfile.getPhone(),
+                userProfile.getAddress(),
                 userProfile.getCreatedAt(),
                 userProfile.getLastUpdated()
         );

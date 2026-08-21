@@ -1,6 +1,6 @@
 package com.naren.erpbackend.user.service;
 
-import com.naren.erpbackend.common.exception.UserNotFoundException;
+import com.naren.erpbackend.common.exception.ResourceNotFoundException;
 import com.naren.erpbackend.user.dto.UserResponse;
 import com.naren.erpbackend.user.dto.UserResponseMapper;
 import com.naren.erpbackend.user.entity.UserProfile;
@@ -8,6 +8,8 @@ import com.naren.erpbackend.user.repository.UserProfileRepository;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -24,7 +26,7 @@ public class UserQServiceImpl implements UserQService {
 
 
         UserProfile user = repository.findById(id).orElseThrow(
-                () -> new UserNotFoundException("User Not found with id: " + id)
+                () -> new ResourceNotFoundException("User Not found with id: " + id)
         );
 
         return userResponseMapper.apply(user);
@@ -38,7 +40,7 @@ public class UserQServiceImpl implements UserQService {
         }
 
         UserProfile user = repository.findByUsername(username).orElseThrow(
-                () -> new UserNotFoundException("User Not found with username: " + username)
+                () -> new ResourceNotFoundException("User Not found with username: " + username)
         );
 
         return userResponseMapper.apply(user);
@@ -52,9 +54,37 @@ public class UserQServiceImpl implements UserQService {
         }
 
         UserProfile user = repository.findByEmail(email).orElseThrow(
-                () -> new UserNotFoundException("User Not found with email: " + email)
+                () -> new ResourceNotFoundException("User Not found with email: " + email)
         );
 
         return userResponseMapper.apply(user);
     }
+
+    @Override
+    public Page<UserResponse> findAllUsers(Pageable pageable) {
+        Page<UserProfile> users = repository.findAllUsers(pageable);
+
+        if (users.isEmpty()) {
+            throw new ResourceNotFoundException("No users found");
+        }
+
+        return users.map(userResponseMapper);
+    }
+
+    @Override
+    public Page<UserResponse> searchUsers(String keyword, Pageable pageable) {
+
+        if (keyword == null || keyword.isBlank()) {
+            throw new ValidationException("search keyword is required");
+        }
+
+        Page<UserProfile> users = repository.searchUsers(keyword.trim(), pageable);
+
+        if (users.isEmpty()) {
+            throw new ResourceNotFoundException("No users found for keyword: " + keyword);
+        }
+
+        return users.map(userResponseMapper);
+    }
+
 }

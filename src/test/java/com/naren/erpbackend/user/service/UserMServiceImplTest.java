@@ -45,7 +45,7 @@ class UserMServiceImplTest {
     @Test
     void registersUserWithTrimmedLowercasedAndEncodedValues() {
         RegRequest request = new RegRequest("  John.Doe  ",
-                "  JOHN@Example.COM ", "RawPass123");
+                "  JOHN@Example.COM ", "1234567890", "123 Main St", "RawPass123");
 
         when(userProfileRepository.existsByUsername("John.Doe")).thenReturn(false);
         when(userProfileRepository.existsByEmail("john@example.com")).thenReturn(false);
@@ -62,6 +62,8 @@ class UserMServiceImplTest {
 
         assertThat(response.username()).isEqualTo("John.Doe");
         assertThat(response.email()).isEqualTo("john@example.com");
+        assertThat(response.phone()).isEqualTo("1234567890");
+        assertThat(response.address()).isEqualTo("123 Main St");
         assertThat(response.created_at()).isNotNull();
 
         verify(passwordEncoder).encode("RawPass123");
@@ -70,7 +72,7 @@ class UserMServiceImplTest {
 
     @Test
     void persistsBcryptHashInsteadOfRawPassword() {
-        RegRequest request = new RegRequest("johndoe", "john@example.com", "RawPass123");
+        RegRequest request = new RegRequest("johndoe", "john@example.com", "1234567890", "456 Oak Ave", "RawPass123");
 
         when(userProfileRepository.existsByUsername("johndoe")).thenReturn(false);
         when(userProfileRepository.existsByEmail("john@example.com")).thenReturn(false);
@@ -88,7 +90,7 @@ class UserMServiceImplTest {
 
     @Test
     void rejectsDuplicateUsername() {
-        RegRequest request = new RegRequest("johndoe", "john@example.com", "RawPass123");
+        RegRequest request = new RegRequest("johndoe", "john@example.com", "1234567890", "789 Pine Rd", "RawPass123");
 
         when(userProfileRepository.existsByUsername("johndoe")).thenReturn(true);
 
@@ -101,7 +103,7 @@ class UserMServiceImplTest {
 
     @Test
     void rejectsDuplicateEmail() {
-        RegRequest request = new RegRequest("johndoe", "john@example.com", "RawPass123");
+        RegRequest request = new RegRequest("johndoe", "john@example.com", "1234567890", "789 Pine Rd", "RawPass123");
 
         when(userProfileRepository.existsByUsername("johndoe")).thenReturn(false);
         when(userProfileRepository.existsByEmail("john@example.com")).thenReturn(true);
@@ -115,7 +117,7 @@ class UserMServiceImplTest {
 
     @Test
     void translatesConcurrentUniqueConstraintViolation() {
-        RegRequest request = new RegRequest("johndoe", "john@example.com", "RawPass123");
+        RegRequest request = new RegRequest("johndoe", "john@example.com", "1234567890", "789 Pine Rd", "RawPass123");
 
         when(userProfileRepository.existsByUsername("johndoe")).thenReturn(false);
         when(userProfileRepository.existsByEmail("john@example.com")).thenReturn(false);

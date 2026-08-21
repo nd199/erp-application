@@ -11,4 +11,12 @@ public abstract class UserUtility {
     protected static String normalizeEmail(String email) {
         return email.trim().toLowerCase(Locale.ROOT);
     }
+
+    protected static String normalizePhone(String phone) {
+        return phone.trim();
+    }
+
+    protected static String normalizeAddress(String address) {
+        return address.trim();
+    }
 }

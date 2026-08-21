@@ -5,13 +5,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ResponseStatus(NOT_FOUND)
-public class UserNotFoundException extends RuntimeException {
+public class ResourceNotFoundException extends RuntimeException {
 
-    public UserNotFoundException(String message) {
+    public ResourceNotFoundException(String message) {
         super(message);
     }
 
-    public UserNotFoundException(String message, Throwable cause) {
+    public ResourceNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
 }

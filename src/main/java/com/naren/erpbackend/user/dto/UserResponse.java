@@ -10,6 +10,10 @@ public record UserResponse(
 
         String email,
 
+        String phone,
+
+        String address,
+
         Instant created_at,
 
         Instant last_updated

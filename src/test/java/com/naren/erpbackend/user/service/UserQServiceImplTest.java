@@ -1,6 +1,6 @@
 package com.naren.erpbackend.user.service;
 
-import com.naren.erpbackend.common.exception.UserNotFoundException;
+import com.naren.erpbackend.common.exception.ResourceNotFoundException;
 import com.naren.erpbackend.user.dto.UserResponse;
 import com.naren.erpbackend.user.dto.UserResponseMapper;
 import com.naren.erpbackend.user.entity.UserProfile;
@@ -54,6 +54,8 @@ class UserQServiceImplTest {
                 "testuser",
                 "test@example.com",
                 null,
+                null,
+                null,
                 null
         );
 
@@ -83,7 +85,7 @@ class UserQServiceImplTest {
 
         //Act + Assert
         assertThatThrownBy(() -> userQService.fetchUserById(id))
-                .isInstanceOf(UserNotFoundException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("User Not found with id: " + id);
 
         verify(userProfileRepository).findById(id);
@@ -103,6 +105,8 @@ class UserQServiceImplTest {
                 1L,
                 username,
                 "test@example.com",
+                null,
+                null,
                 null,
                 null
         );
@@ -134,7 +138,7 @@ class UserQServiceImplTest {
         // Act + Assert
         assertThatThrownBy(() ->
                 userQService.fetchUserByUsername(username))
-                .isInstanceOf(UserNotFoundException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("User Not found with username: " + username);
 
         // Verify
@@ -155,6 +159,8 @@ class UserQServiceImplTest {
                 1L,
                 "testuser",
                 email,
+                null,
+                null,
                 null,
                 null
         );
@@ -187,7 +193,7 @@ class UserQServiceImplTest {
         // Act + Assert
         assertThatThrownBy(() ->
                 userQService.fetchUserByEmail(email))
-                .isInstanceOf(UserNotFoundException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("User Not found with email: " + email);
 
         // Verify
