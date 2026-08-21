@@ -2,7 +2,9 @@ package com.naren.erpbackend.user.dto;
 
 import java.time.Instant;
 
-public record RegResponse(
+public record UserResponse(
+
+        Long id,
 
         String username,
 

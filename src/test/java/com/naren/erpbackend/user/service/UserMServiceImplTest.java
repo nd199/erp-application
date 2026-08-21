@@ -21,12 +21,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceImplTest {
+class UserMServiceImplTest {
 
     @Mock
     private UserProfileRepository userProfileRepository;
@@ -34,16 +32,20 @@ class UserServiceImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
-    private UserServiceImpl userService;
+    private UserMServiceImpl userService;
 
     @BeforeEach
     void setUp() {
-        userService = new UserServiceImpl(userProfileRepository, passwordEncoder, new RegResponseMapper());
+        userService = new UserMServiceImpl(
+                userProfileRepository, passwordEncoder,
+                new RegResponseMapper()
+        );
     }
 
     @Test
     void registersUserWithTrimmedLowercasedAndEncodedValues() {
-        RegRequest request = new RegRequest("  John.Doe  ", "  JOHN@Example.COM ", "RawPass123");
+        RegRequest request = new RegRequest("  John.Doe  ",
+                "  JOHN@Example.COM ", "RawPass123");
 
         when(userProfileRepository.existsByUsername("John.Doe")).thenReturn(false);
         when(userProfileRepository.existsByEmail("john@example.com")).thenReturn(false);
@@ -60,7 +62,7 @@ class UserServiceImplTest {
 
         assertThat(response.username()).isEqualTo("John.Doe");
         assertThat(response.email()).isEqualTo("john@example.com");
-        assertThat(response.createdAt()).isNotNull();
+        assertThat(response.created_at()).isNotNull();
 
         verify(passwordEncoder).encode("RawPass123");
         verify(userProfileRepository).save(any(UserProfile.class));

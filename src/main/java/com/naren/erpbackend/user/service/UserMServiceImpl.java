@@ -14,13 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.Locale;
-
 @Slf4j
 @Service
 @Validated
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserMServiceImpl extends UserUtility implements UserMService {
 
     private final UserProfileRepository userProfileRepository;
 
@@ -35,7 +33,8 @@ public class UserServiceImpl implements UserService {
         String email = normalizeEmail(regRequest.email());
 
         if (isUserPresent(username, email)) {
-            log.warn("Registration rejected, identity already in use: username={}, email={}", username, email);
+            log.warn("Registration rejected, identity already in use: " +
+                    "username={}, email={}", username, email);
             throw new UserExistsException("Username or email already exists");
         }
 
@@ -57,7 +56,6 @@ public class UserServiceImpl implements UserService {
             log.info("User registered successfully: id={}, username={}", savedUserProfile.getId(), username);
             return mapper.apply(savedUserProfile);
         } catch (DataIntegrityViolationException e) {
-            // A concurrent request slipped past the pre-check and hit a unique constraint.
             log.warn("Registration rejected by unique constraint: username={}, email={}", username, email);
             throw new UserExistsException("Username or email already exists", e);
         }
@@ -66,13 +64,5 @@ public class UserServiceImpl implements UserService {
     private boolean isUserPresent(String username, String email) {
         return userProfileRepository.existsByUsername(username)
                 || userProfileRepository.existsByEmail(email);
-    }
-
-    private String normalizeUsername(String username) {
-        return username.trim();
-    }
-
-    private String normalizeEmail(String email) {
-        return email.trim().toLowerCase(Locale.ROOT);
     }
 }

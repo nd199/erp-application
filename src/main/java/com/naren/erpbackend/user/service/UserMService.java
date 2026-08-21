@@ -4,7 +4,7 @@ import com.naren.erpbackend.user.dto.RegRequest;
 import com.naren.erpbackend.user.dto.RegResponse;
 import jakarta.validation.Valid;
 
-public interface UserService {
+public interface UserMService {
 
     RegResponse registerUser(@Valid RegRequest regRequest);
 }
