@@ -4,6 +4,7 @@ import com.naren.erpbackend.common.exception.ResourceNotFoundException;
 import com.naren.erpbackend.user.dto.UserResponse;
 import com.naren.erpbackend.user.dto.UserResponseMapper;
 import com.naren.erpbackend.user.entity.UserProfile;
+import com.naren.erpbackend.user.entity.UserStatus;
 import com.naren.erpbackend.user.repository.UserProfileRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,6 +56,7 @@ class UserQServiceImplTest {
                 "test@example.com",
                 null,
                 null,
+                UserStatus.ACTIVE,
                 null,
                 null
         );
@@ -107,6 +109,7 @@ class UserQServiceImplTest {
                 "test@example.com",
                 null,
                 null,
+                UserStatus.ACTIVE,
                 null,
                 null
         );
@@ -161,6 +164,7 @@ class UserQServiceImplTest {
                 email,
                 null,
                 null,
+                UserStatus.ACTIVE,
                 null,
                 null
         );
