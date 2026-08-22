@@ -26,6 +26,12 @@ public class GlobalExceptionHandler {
         return problem(HttpStatus.CONFLICT, ex.getMessage(), "user_exists");
     }
 
+    @ExceptionHandler(InvalidUserStateException.class)
+    public ProblemDetail handleInvalidUserState(InvalidUserStateException ex) {
+        log.warn("Invalid user state transition: {}", ex.getMessage());
+        return problem(HttpStatus.CONFLICT, ex.getMessage(), "invalid_user_state");
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         log.error("Data integrity violation", ex);
