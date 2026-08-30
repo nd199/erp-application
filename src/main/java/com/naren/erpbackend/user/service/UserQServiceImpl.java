@@ -1,6 +1,7 @@
 package com.naren.erpbackend.user.service;
 
 import com.naren.erpbackend.common.exception.ResourceNotFoundException;
+import com.naren.erpbackend.user.dto.RoleResponse;
 import com.naren.erpbackend.user.dto.UserResponse;
 import com.naren.erpbackend.user.dto.UserResponseMapper;
 import com.naren.erpbackend.user.entity.UserProfile;
@@ -11,6 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -85,6 +90,23 @@ public class UserQServiceImpl implements UserQService {
         }
 
         return users.map(userResponseMapper);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Set<RoleResponse> findRolesByUser(Long userId) {
+
+        UserProfile userProfile = repository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User Not found with id: " + userId)
+        );
+        return userProfile.getRoles()
+                .stream().map(role ->
+                        new RoleResponse(
+                                role.getId(),
+                                role.getName(),
+                                role.getDescription()
+                        )
+                ).collect(Collectors.toSet());
     }
 
 }

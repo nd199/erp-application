@@ -1,8 +1,11 @@
 package com.naren.erpbackend.user.service;
 
+import com.naren.erpbackend.user.dto.RoleResponse;
 import com.naren.erpbackend.user.dto.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Set;
 
 
 public interface UserQService {
@@ -16,4 +19,7 @@ public interface UserQService {
     Page<UserResponse> findAllUsers(Pageable pageable);
 
     Page<UserResponse> searchUsers(String keyword, Pageable pageable);
+
+    Set<RoleResponse> findRolesByUser(Long userId);
+
 }
