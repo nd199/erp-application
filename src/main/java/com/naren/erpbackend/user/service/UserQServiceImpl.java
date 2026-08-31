@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserQServiceImpl implements UserQService {
 
     private final UserProfileRepository repository;
@@ -28,18 +29,18 @@ public class UserQServiceImpl implements UserQService {
 
     @Override
     public UserResponse fetchUserById(Long id) {
-
-
+        log.info("Entering fetchUserById with id: {}", id);
         UserProfile user = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("User Not found with id: " + id)
         );
-
-        return userResponseMapper.apply(user);
+        UserResponse response = userResponseMapper.apply(user);
+        log.info("Exiting fetchUserById");
+        return response;
     }
 
     @Override
     public UserResponse fetchUserByUsername(String username) {
-
+        log.info("Entering fetchUserByUsername with username: {}", username);
         if (username == null) {
             throw new ValidationException("username is required");
         }
@@ -47,13 +48,14 @@ public class UserQServiceImpl implements UserQService {
         UserProfile user = repository.findByUsername(username).orElseThrow(
                 () -> new ResourceNotFoundException("User Not found with username: " + username)
         );
-
-        return userResponseMapper.apply(user);
+        UserResponse response = userResponseMapper.apply(user);
+        log.info("Exiting fetchUserByUsername");
+        return response;
     }
 
     @Override
     public UserResponse fetchUserByEmail(String email) {
-
+        log.info("Entering fetchUserByEmail with email: {}", email);
         if (email == null) {
             throw new ValidationException("email is required");
         }
@@ -61,24 +63,28 @@ public class UserQServiceImpl implements UserQService {
         UserProfile user = repository.findByEmail(email).orElseThrow(
                 () -> new ResourceNotFoundException("User Not found with email: " + email)
         );
-
-        return userResponseMapper.apply(user);
+        UserResponse response = userResponseMapper.apply(user);
+        log.info("Exiting fetchUserByEmail");
+        return response;
     }
 
     @Override
     public Page<UserResponse> findAllUsers(Pageable pageable) {
+        log.info("Entering findAllUsers with pageable: {}", pageable);
         Page<UserProfile> users = repository.findAllUsers(pageable);
 
         if (users.isEmpty()) {
             throw new ResourceNotFoundException("No users found");
         }
 
-        return users.map(userResponseMapper);
+        Page<UserResponse> responses = users.map(userResponseMapper);
+        log.info("Exiting findAllUsers");
+        return responses;
     }
 
     @Override
     public Page<UserResponse> searchUsers(String keyword, Pageable pageable) {
-
+        log.info("Entering searchUsers with keyword: {} and pageable: {}", keyword, pageable);
         if (keyword == null || keyword.isBlank()) {
             throw new ValidationException("search keyword is required");
         }
@@ -89,17 +95,19 @@ public class UserQServiceImpl implements UserQService {
             throw new ResourceNotFoundException("No users found for keyword: " + keyword);
         }
 
-        return users.map(userResponseMapper);
+        Page<UserResponse> responses = users.map(userResponseMapper);
+        log.info("Exiting searchUsers");
+        return responses;
     }
 
     @Transactional(readOnly = true)
     @Override
     public Set<RoleResponse> findRolesByUser(Long userId) {
-
+        log.info("Entering findRolesByUser with userId: {}", userId);
         UserProfile userProfile = repository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User Not found with id: " + userId)
         );
-        return userProfile.getRoles()
+        Set<RoleResponse> responses = userProfile.getRoles()
                 .stream().map(role ->
                         new RoleResponse(
                                 role.getId(),
@@ -107,6 +115,8 @@ public class UserQServiceImpl implements UserQService {
                                 role.getDescription()
                         )
                 ).collect(Collectors.toSet());
+        log.info("Exiting findRolesByUser");
+        return responses;
     }
 
 }

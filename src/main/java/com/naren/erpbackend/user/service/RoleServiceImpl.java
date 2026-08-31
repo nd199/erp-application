@@ -35,7 +35,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleResponse createRole(String name, String description) {
-        log.info("createRole: name={}, description={}", name, description);
+        log.info("Entering createRole with name: {} and description: {}", name, description);
 
         if (roleRepository.existsByName(name)) {
             throw new ResourceExistsException(
@@ -49,26 +49,28 @@ public class RoleServiceImpl implements RoleService {
                 .build();
 
         Role savedRole = roleRepository.save(role);
-
+        log.info("Exiting createRole");
         return roleResponseMapper.apply(savedRole);
     }
 
     @Override
     public RoleResponse findByName(String name) {
-        log.info("findByName: name={}", name);
+        log.info("Entering findByName with name: {}", name);
 
-        return roleResponseMapper.apply(roleRepository.findByName(name)
+        RoleResponse response = roleResponseMapper.apply(roleRepository.findByName(name)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Role not found: " + name
                         )
                 ));
+        log.info("Exiting findByName");
+        return response;
     }
 
     @Override
     @Transactional
     public void addPermission(Long roleId, Long permissionId) {
-        log.info("addPermission: roleId={}, permissionId={}", roleId, permissionId);
+        log.info("Entering addPermission with roleId: {} and permissionId: {}", roleId, permissionId);
 
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() ->
@@ -86,12 +88,13 @@ public class RoleServiceImpl implements RoleService {
         role.getPermissions().add(permission);
 
         roleRepository.save(role);
+        log.info("Exiting addPermission");
     }
 
     @Transactional
     @Override
     public void removePermission(Long roleId, Long permissionId) {
-        log.info("removePermission: roleId={}, permissionId={}", roleId, permissionId);
+        log.info("Entering removePermission with roleId: {} and permissionId: {}", roleId, permissionId);
 
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() ->
@@ -114,12 +117,13 @@ public class RoleServiceImpl implements RoleService {
         }
 
         roleRepository.save(role);
+        log.info("Exiting removePermission");
     }
 
     @Transactional
     @Override
     public void assignRoleToUser(Long userId, Long roleId) {
-        log.info("assignRoleToUser: userId={}, roleId={}", userId, roleId);
+        log.info("Entering assignRoleToUser with userId: {} and roleId: {}", userId, roleId);
 
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() ->
@@ -136,12 +140,13 @@ public class RoleServiceImpl implements RoleService {
         userProfile.getRoles().add(role);
 
         userProfileRepository.save(userProfile);
+        log.info("Exiting assignRoleToUser");
     }
 
     @Transactional
     @Override
     public void removeRoleFromUser(Long userId, Long roleId) {
-        log.info("removeRoleFromUser: userId={}, roleId={}", userId, roleId);
+        log.info("Entering removeRoleFromUser with userId: {} and roleId: {}", userId, roleId);
 
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() ->
@@ -164,13 +169,14 @@ public class RoleServiceImpl implements RoleService {
         }
 
         userProfileRepository.save(userProfile);
+        log.info("Exiting removeRoleFromUser");
     }
 
 
     @Transactional
     @Override
     public Set<PermissionResponse> findPermissionsByRole(Long roleId) {
-        log.info("findPermissionsByRole: roleId={}", roleId);
+        log.info("Entering findPermissionsByRole with roleId: {}", roleId);
 
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(
@@ -180,7 +186,7 @@ public class RoleServiceImpl implements RoleService {
                 );
 
 
-        return role.getPermissions().stream()
+        Set<PermissionResponse> responses = role.getPermissions().stream()
                 .map(
                         permission -> new PermissionResponse(
                                 permission.getId(),
@@ -188,12 +194,14 @@ public class RoleServiceImpl implements RoleService {
                                 permission.getDescription()
                         )
                 ).collect(Collectors.toSet());
+        log.info("Exiting findPermissionsByRole");
+        return responses;
     }
 
     @Transactional
     @Override
     public boolean hasPermission(Long roleId, Long permissionId) {
-        log.info("hasPermission: roleId={}, permissionId={}", roleId, permissionId);
+        log.info("Entering hasPermission with roleId: {} and permissionId: {}", roleId, permissionId);
 
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(
@@ -202,11 +210,13 @@ public class RoleServiceImpl implements RoleService {
                         )
                 );
 
-        return role.getPermissions()
+        boolean hasPermission = role.getPermissions()
                 .stream()
                 .anyMatch(permission ->
                         Objects.equals(permission.getId(), permissionId)
                 );
+        log.info("Exiting hasPermission");
+        return hasPermission;
     }
 
 }

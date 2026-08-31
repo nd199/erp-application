@@ -11,7 +11,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @Builder
-@Table(name = "Permissions", uniqueConstraints = {
+@Table(name = "Permission", uniqueConstraints = {
         @UniqueConstraint(name = "uk_name_permission", columnNames = "name")
 })
 public class Permission {

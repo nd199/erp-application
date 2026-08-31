@@ -33,6 +33,7 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
     @Override
     @Transactional
     public RegResponse registerUser(RegRequest regRequest) {
+        log.info("Entering registerUser with username: {} and email: {}", regRequest.username(), regRequest.email());
         String username = normalizeUsername(regRequest.username());
         String email = normalizeEmail(regRequest.email());
         String phone = normalizePhone(regRequest.phone());
@@ -63,7 +64,9 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
             UserProfile savedUserProfile = userProfileRepository.save(userProfile);
             log.info("User registered successfully: id={}, username={}",
                     savedUserProfile.getId(), username);
-            return mapper.apply(savedUserProfile);
+            RegResponse response = mapper.apply(savedUserProfile);
+            log.info("Exiting registerUser");
+            return response;
         } catch (DataIntegrityViolationException e) {
             log.warn("Registration rejected by unique constraint: username={}, " +
                     "email={}", username, email);
@@ -79,6 +82,7 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
     @Transactional
     @Override
     public UserResponse updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
+        log.info("Entering updateUser with userId: {}", userId);
 
         UserProfile user = userProfileRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User not found")
@@ -124,13 +128,14 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
                 throw new UserExistsException("Username or email already exists", e);
             }
         }
-
+        log.info("Exiting updateUser");
         return userResponseMapper.apply(user);
     }
 
     @Transactional
     @Override
     public void changePassword(Long userId, ChangePasswordRequest request) {
+        log.info("Entering changePassword with userId: {}", userId);
 
         UserProfile userProfile = userProfileRepository
                 .findById(userId)
@@ -160,6 +165,7 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
         );
 
         userProfileRepository.save(userProfile);
+        log.info("Exiting changePassword");
     }
 
 

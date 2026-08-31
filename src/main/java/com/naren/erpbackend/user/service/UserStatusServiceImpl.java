@@ -26,7 +26,7 @@ public class UserStatusServiceImpl implements UserStatusService {
     @Override
     @Transactional
     public UserResponse activateUser(Long userId) {
-
+        log.info("Entering activateUser with userId: {}", userId);
         UserProfile user = findUserById(userId);
 
         validateTransition(user.getStatus(), UserStatus.ACTIVE);
@@ -34,13 +34,15 @@ public class UserStatusServiceImpl implements UserStatusService {
         user.setStatus(UserStatus.ACTIVE);
         UserProfile savedUser = userProfileRepository.save(user);
         log.info("User activated: id={}, username={}", userId, savedUser.getUsername());
-        return userResponseMapper.apply(savedUser);
+        UserResponse response = userResponseMapper.apply(savedUser);
+        log.info("Exiting activateUser");
+        return response;
     }
 
     @Override
     @Transactional
     public UserResponse deactivateUser(Long userId) {
-
+        log.info("Entering deactivateUser with userId: {}", userId);
         UserProfile user = findUserById(userId);
 
         validateTransition(user.getStatus(), UserStatus.INACTIVE);
@@ -48,25 +50,30 @@ public class UserStatusServiceImpl implements UserStatusService {
         user.setStatus(UserStatus.INACTIVE);
         UserProfile savedUser = userProfileRepository.save(user);
         log.info("User deactivated: id={}, username={}", userId, savedUser.getUsername());
-        return userResponseMapper.apply(savedUser);
+        UserResponse response = userResponseMapper.apply(savedUser);
+        log.info("Exiting deactivateUser");
+        return response;
     }
 
     @Override
     @Transactional
     public UserResponse lockUser(Long userId) {
+        log.info("Entering lockUser with userId: {}", userId);
         UserProfile user = findUserById(userId);
         validateTransition(user.getStatus(), UserStatus.LOCKED);
 
         user.setStatus(UserStatus.LOCKED);
         UserProfile savedUser = userProfileRepository.save(user);
         log.info("User locked: id={}, username={}", userId, savedUser.getUsername());
-        return userResponseMapper.apply(savedUser);
+        UserResponse response = userResponseMapper.apply(savedUser);
+        log.info("Exiting lockUser");
+        return response;
     }
 
     @Override
     @Transactional
     public UserResponse unlockUser(Long userId) {
-
+        log.info("Entering unlockUser with userId: {}", userId);
         UserProfile user = findUserById(userId);
         validateTransition(user.getStatus(), UserStatus.ACTIVE);
 
@@ -74,7 +81,9 @@ public class UserStatusServiceImpl implements UserStatusService {
 
         UserProfile savedUser = userProfileRepository.save(user);
         log.info("User unlocked: id={}, username={}", userId, savedUser.getUsername());
-        return userResponseMapper.apply(savedUser);
+        UserResponse response = userResponseMapper.apply(savedUser);
+        log.info("Exiting unlockUser");
+        return response;
     }
 
     private UserProfile findUserById(Long userId) {
