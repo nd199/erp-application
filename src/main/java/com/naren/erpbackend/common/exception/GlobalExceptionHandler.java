@@ -10,19 +10,21 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.net.URI;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final String TYPE_BASE = "urn:erp-backend:problem:";
 
     @ExceptionHandler(UserExistsException.class)
     public ProblemDetail handleUserExists(UserExistsException ex) {
-        log.info("Registration rejected: {}", ex.getMessage());
+        log.warn("Registration rejected: {}", ex.getMessage());
         return problem(HttpStatus.CONFLICT, ex.getMessage(), "user_exists");
     }
 
