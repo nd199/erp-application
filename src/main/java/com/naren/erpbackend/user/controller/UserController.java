@@ -1,13 +1,13 @@
 package com.naren.erpbackend.user.controller;
 
 import com.naren.erpbackend.user.dto.*;
+import com.naren.erpbackend.user.service.RoleService;
 import com.naren.erpbackend.user.service.UserMService;
 import com.naren.erpbackend.user.service.UserQService;
 import com.naren.erpbackend.user.service.UserStatusService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +17,11 @@ import java.util.Set;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
 public class UserController {
-
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserMService userMService;
 
@@ -30,49 +29,57 @@ public class UserController {
 
     private final UserStatusService userStatusService;
 
+    private final RoleService roleService;
+
     @PostMapping
     public ResponseEntity<RegResponse> createUser(@Valid @RequestBody RegRequest regRequest) {
-        logger.info("Creating user with username: {}", regRequest.username());
+        log.info("Create user requested: username={}, email={}", regRequest.username(), regRequest.email());
         RegResponse userProfile = userMService.registerUser(regRequest);
-        logger.info("User created successfully with id: {}", userProfile.username());
-        return ResponseEntity
-                .status(CREATED)
-                .body(userProfile);
+        log.info("User created: username={}, status={}, created_at={}",
+                userProfile.username(), userProfile.status(), userProfile.created_at());
+        return ResponseEntity.status(CREATED).body(userProfile);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable("id") Long id) {
-        logger.info("Fetching user by id: {}", id);
+        log.info("Fetch user requested: id={}", id);
         UserResponse userResponse = userQService.fetchUserById(id);
+        log.info("User fetched: id={}, username={}", userResponse.id(), userResponse.username());
         return ResponseEntity.ok(userResponse);
     }
 
     @GetMapping("/username/{username}")
     public ResponseEntity<UserResponse> getUserByUsername(@PathVariable("username") String username) {
-        logger.info("Fetching user by username: {}", username);
+        log.info("Fetch user requested: username={}", username);
         UserResponse response = userQService.fetchUserByUsername(username);
+        log.info("User fetched: id={}, username={}", response.id(), response.username());
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/email/{email}")
     public ResponseEntity<UserResponse> getUserByEmail(@PathVariable("email") String email) {
-        logger.info("Fetching user by email: {}", email);
+        log.info("Fetch user requested: email={}", email);
         UserResponse response = userQService.fetchUserByEmail(email);
+        log.info("User fetched: id={}, email={}", response.id(), response.email());
         return ResponseEntity.ok(response);
     }
 
-
     @GetMapping
     public ResponseEntity<Page<UserResponse>> getAllUsers(Pageable pageable) {
-        logger.info("Fetching all users with pagination");
-        return ResponseEntity.ok(userQService.findAllUsers(pageable));
+        log.info("Fetch all users requested: page={}, size={}", pageable.getPageNumber(), pageable.getPageSize());
+        Page<UserResponse> page = userQService.findAllUsers(pageable);
+        log.info("Users page fetched: elements={}, total={}", page.getNumberOfElements(), page.getTotalElements());
+        return ResponseEntity.ok(page);
     }
 
     @GetMapping("/search")
     public ResponseEntity<Page<UserResponse>> searchUsers(
             @RequestParam("keyword") String keyword, Pageable pageable) {
-        logger.info("Searching users with keyword: {}", keyword);
-        return ResponseEntity.ok(userQService.searchUsers(keyword, pageable));
+        log.info("Search users requested: keyword={}, page={}, size={}",
+                keyword, pageable.getPageNumber(), pageable.getPageSize());
+        Page<UserResponse> page = userQService.searchUsers(keyword, pageable);
+        log.info("User search completed: keyword={}, matches={}", keyword, page.getNumberOfElements());
+        return ResponseEntity.ok(page);
     }
 
     @PatchMapping("/{id}")
@@ -80,8 +87,10 @@ public class UserController {
             @PathVariable("id") Long id,
             @Valid @RequestBody UserUpdateRequest request
     ) {
-        logger.info("Updating user with id: {}", id);
+        log.info("Update user requested: id={}, fields={}", id, request != null ? "present" : "null");
         UserResponse userResponse = userMService.updateUser(id, request);
+        log.info("User updated: id={}, username={}, last_updated={}",
+                userResponse.id(), userResponse.username(), userResponse.last_updated());
         return ResponseEntity.ok(userResponse);
     }
 
@@ -90,52 +99,69 @@ public class UserController {
             @PathVariable("id") Long id,
             @Valid @RequestBody ChangePasswordRequest changePasswordRequest
     ) {
-        logger.info("Changing password for user id: {}", id);
+        log.info("Change password requested: userId={}", id);
         userMService.changePassword(id, changePasswordRequest);
+        log.info("Password changed: userId={}", id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/activate")
-    public ResponseEntity<UserResponse> activateUser(
-            @PathVariable Long id) {
-        logger.info("Activating user with id: {}", id);
-        return ResponseEntity.ok(
-                userStatusService.activateUser(id)
-        );
+    public ResponseEntity<UserResponse> activateUser(@PathVariable Long id) {
+        log.info("Activate user requested: id={}", id);
+        UserResponse response = userStatusService.activateUser(id);
+        log.info("User activated: id={}, status={}", response.id(), response.status());
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{id}/deactivate")
-    public ResponseEntity<UserResponse> deactivateUser(
-            @PathVariable Long id) {
-        logger.info("Deactivating user with id: {}", id);
-        return ResponseEntity.ok(
-                userStatusService.deactivateUser(id)
-        );
+    public ResponseEntity<UserResponse> deactivateUser(@PathVariable Long id) {
+        log.info("Deactivate user requested: id={}", id);
+        UserResponse response = userStatusService.deactivateUser(id);
+        log.info("User deactivated: id={}, status={}", response.id(), response.status());
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{id}/lock")
-    public ResponseEntity<Void> lockUser(
-            @PathVariable Long id) {
-        logger.info("Locking user with id: {}", id);
+    public ResponseEntity<Void> lockUser(@PathVariable Long id) {
+        log.info("Lock user requested: id={}", id);
         userStatusService.lockUser(id);
+        log.info("User locked: id={}", id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/unlock")
-    public ResponseEntity<Void> unLockUser(
-            @PathVariable Long id) {
-        logger.info("Unlocking user with id: {}", id);
+    public ResponseEntity<Void> unLockUser(@PathVariable Long id) {
+        log.info("Unlock user requested: id={}", id);
         userStatusService.unlockUser(id);
+        log.info("User unlocked: id={}", id);
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{userId}/roles/{roleId}")
+    public ResponseEntity<Void> assignRoleToUser(
+            @PathVariable Long userId,
+            @PathVariable Long roleId) {
+        log.info("Assign role requested: userId={}, roleId={}", userId, roleId);
+        roleService.assignRoleToUser(userId, roleId);
+        log.info("Role assigned: userId={}, roleId={}", userId, roleId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{userId}/roles/{roleId}")
+    public ResponseEntity<Void> removeRoleFromUser(
+            @PathVariable Long userId,
+            @PathVariable Long roleId) {
+        log.info("Remove role requested: userId={}, roleId={}", userId, roleId);
+        roleService.removeRoleFromUser(userId, roleId);
+        log.info("Role removed: userId={}, roleId={}", userId, roleId);
+        return ResponseEntity.noContent().build();
+    }
 
     @GetMapping("/{userId}/roles")
-    public ResponseEntity<Set<RoleResponse>> getRolesByUser(
-            @PathVariable("userId") Long userId) {
-        logger.info("Fetching roles for user with id: {}", userId);
-
-        return ResponseEntity
-                .ok(userQService.findRolesByUser(userId));
+    public ResponseEntity<Set<RoleResponse>> getRolesByUser(@PathVariable("userId") Long userId) {
+        log.info("Fetch user roles requested: userId={}", userId);
+        Set<RoleResponse> roles = userQService.findRolesByUser(userId);
+        log.info("User roles fetched: userId={}, count={}", userId, roles.size());
+        return ResponseEntity.ok(roles);
     }
 }
