@@ -2,16 +2,14 @@ package com.naren.erpbackend.user.service;
 
 import com.naren.erpbackend.user.dto.PermissionResponse;
 import com.naren.erpbackend.user.dto.RoleResponse;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
+@Transactional(readOnly = true)
 public interface RoleService {
 
-    RoleResponse createRole(String name, String description);
-
-    RoleResponse findByName(String name);
-
+    @Transactional
     void addPermission(Long roleId, Long permissionId);
 
     @Transactional
@@ -23,9 +21,5 @@ public interface RoleService {
     @Transactional
     void removeRoleFromUser(Long userId, Long roleId);
 
-    @Transactional
     Set<PermissionResponse> findPermissionsByRole(Long roleId);
-
-    @Transactional
-    boolean hasPermission(Long roleId, Long permissionId);
 }
