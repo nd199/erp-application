@@ -10,7 +10,6 @@ import com.naren.erpbackend.user.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 @Slf4j
@@ -24,65 +23,66 @@ public class UserStatusServiceImpl implements UserStatusService {
     private final UserResponseMapper userResponseMapper;
 
     @Override
-    @Transactional
     public UserResponse activateUser(Long userId) {
-        log.info("Entering activateUser with userId: {}", userId);
+        log.info("Activate user: id={}", userId);
         UserProfile user = findUserById(userId);
+        UserStatus fromStatus = user.getStatus();
 
-        validateTransition(user.getStatus(), UserStatus.ACTIVE);
+        validateTransition(fromStatus, UserStatus.ACTIVE);
 
         user.setStatus(UserStatus.ACTIVE);
         UserProfile savedUser = userProfileRepository.save(user);
-        log.info("User activated: id={}, username={}", userId, savedUser.getUsername());
         UserResponse response = userResponseMapper.apply(savedUser);
-        log.info("Exiting activateUser");
+        log.info("User activated: id={}, username={}, from={}, to={}",
+                response.id(), response.username(), fromStatus, response.status());
         return response;
     }
 
     @Override
-    @Transactional
     public UserResponse deactivateUser(Long userId) {
-        log.info("Entering deactivateUser with userId: {}", userId);
+        log.info("Deactivate user: id={}", userId);
         UserProfile user = findUserById(userId);
+        UserStatus fromStatus = user.getStatus();
 
-        validateTransition(user.getStatus(), UserStatus.INACTIVE);
+        validateTransition(fromStatus, UserStatus.INACTIVE);
 
         user.setStatus(UserStatus.INACTIVE);
         UserProfile savedUser = userProfileRepository.save(user);
-        log.info("User deactivated: id={}, username={}", userId, savedUser.getUsername());
         UserResponse response = userResponseMapper.apply(savedUser);
-        log.info("Exiting deactivateUser");
+        log.info("User deactivated: id={}, username={}, from={}, to={}",
+                response.id(), response.username(), fromStatus, response.status());
         return response;
     }
 
     @Override
-    @Transactional
     public UserResponse lockUser(Long userId) {
-        log.info("Entering lockUser with userId: {}", userId);
+        log.info("Lock user: id={}", userId);
         UserProfile user = findUserById(userId);
-        validateTransition(user.getStatus(), UserStatus.LOCKED);
+        UserStatus fromStatus = user.getStatus();
+        validateTransition(fromStatus, UserStatus.LOCKED);
 
         user.setStatus(UserStatus.LOCKED);
         UserProfile savedUser = userProfileRepository.save(user);
-        log.info("User locked: id={}, username={}", userId, savedUser.getUsername());
         UserResponse response = userResponseMapper.apply(savedUser);
-        log.info("Exiting lockUser");
+        log.info("User locked: id={}, username={}, from={}, to={}",
+                response.id(), response.username(), fromStatus, response.status());
         return response;
     }
 
     @Override
-    @Transactional
     public UserResponse unlockUser(Long userId) {
-        log.info("Entering unlockUser with userId: {}", userId);
+        log.info("Unlock user: id={}", userId);
         UserProfile user = findUserById(userId);
-        validateTransition(user.getStatus(), UserStatus.ACTIVE);
+        UserStatus fromStatus = user.getStatus();
+
+        validateTransition(fromStatus, UserStatus.ACTIVE);
 
         user.setStatus(UserStatus.ACTIVE);
 
         UserProfile savedUser = userProfileRepository.save(user);
-        log.info("User unlocked: id={}, username={}", userId, savedUser.getUsername());
         UserResponse response = userResponseMapper.apply(savedUser);
-        log.info("Exiting unlockUser");
+        log.info("User unlocked: id={}, username={}, from={}, to={}",
+                response.id(), response.username(), fromStatus, response.status());
         return response;
     }
 
@@ -102,6 +102,7 @@ public class UserStatusServiceImpl implements UserStatusService {
         };
 
         if (!isValid) {
+            log.warn("Invalid user state transition rejected: from={}, to={}", currentStatus, targetStatus);
             throw new InvalidUserStateException(
                     "Cannot transition from " + currentStatus + " to " + targetStatus);
         }

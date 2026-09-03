@@ -17,9 +17,10 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public Permission createPermission(String name, String description) {
-        log.info("Entering createPermission with name: {} and description: {}", name, description);
+        log.info("Create permission: name={}", name);
 
         if (permissionRepository.existsByName(name)) {
+            log.warn("Create permission rejected, already exists: name={}", name);
             throw new ResourceExistsException(
                     "Permission already exists: " + name
             );
@@ -30,20 +31,20 @@ public class PermissionServiceImpl implements PermissionService {
                 .description(description)
                 .build();
         Permission savedPermission = permissionRepository.save(permission);
-        log.info("Exiting createPermission");
+        log.info("Permission created: id={}, name={}", savedPermission.getId(), savedPermission.getName());
         return savedPermission;
     }
 
     @Override
     public Permission findByName(String name) {
-        log.info("Entering findByName with name: {}", name);
+        log.info("Fetch permission by name: name={}", name);
         Permission permission = permissionRepository.findByName(name)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Permission not found: " + name
                         )
                 );
-        log.info("Exiting findByName");
+        log.info("Permission fetched by name: id={}, name={}", permission.getId(), permission.getName());
         return permission;
     }
 

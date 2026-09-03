@@ -4,7 +4,11 @@ import com.naren.erpbackend.common.exception.ResourceNotFoundException;
 import com.naren.erpbackend.user.dto.RoleResponse;
 import com.naren.erpbackend.user.dto.UserResponse;
 import com.naren.erpbackend.user.dto.UserResponseMapper;
+import com.naren.erpbackend.user.entity.Permission;
+import com.naren.erpbackend.user.entity.Role;
 import com.naren.erpbackend.user.entity.UserProfile;
+import com.naren.erpbackend.user.repository.PermissionRepository;
+import com.naren.erpbackend.user.repository.RoleRepository;
 import com.naren.erpbackend.user.repository.UserProfileRepository;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,27 +23,30 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class UserQServiceImpl implements UserQService {
 
     private final UserProfileRepository repository;
 
     private final UserResponseMapper userResponseMapper;
 
+    private final RoleRepository roleRepository;
+
+    private final PermissionRepository permissionRepository;
+
     @Override
     public UserResponse fetchUserById(Long id) {
-        log.info("Entering fetchUserById with id: {}", id);
+        log.info("Fetch user by id: id={}", id);
         UserProfile user = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("User Not found with id: " + id)
         );
         UserResponse response = userResponseMapper.apply(user);
-        log.info("Exiting fetchUserById");
+        log.info("User fetched by id: id={}, username={}, status={}", response.id(), response.username(), response.status());
         return response;
     }
 
     @Override
     public UserResponse fetchUserByUsername(String username) {
-        log.info("Entering fetchUserByUsername with username: {}", username);
+        log.info("Fetch user by username: username={}", username);
         if (username == null) {
             throw new ValidationException("username is required");
         }
@@ -49,13 +55,13 @@ public class UserQServiceImpl implements UserQService {
                 () -> new ResourceNotFoundException("User Not found with username: " + username)
         );
         UserResponse response = userResponseMapper.apply(user);
-        log.info("Exiting fetchUserByUsername");
+        log.info("User fetched by username: id={}, username={}, status={}", response.id(), response.username(), response.status());
         return response;
     }
 
     @Override
     public UserResponse fetchUserByEmail(String email) {
-        log.info("Entering fetchUserByEmail with email: {}", email);
+        log.info("Fetch user by email: email={}", email);
         if (email == null) {
             throw new ValidationException("email is required");
         }
@@ -64,13 +70,13 @@ public class UserQServiceImpl implements UserQService {
                 () -> new ResourceNotFoundException("User Not found with email: " + email)
         );
         UserResponse response = userResponseMapper.apply(user);
-        log.info("Exiting fetchUserByEmail");
+        log.info("User fetched by email: id={}, email={}, status={}", response.id(), response.email(), response.status());
         return response;
     }
 
     @Override
     public Page<UserResponse> findAllUsers(Pageable pageable) {
-        log.info("Entering findAllUsers with pageable: {}", pageable);
+        log.info("Fetch all users: page={}, size={}", pageable.getPageNumber(), pageable.getPageSize());
         Page<UserProfile> users = repository.findAllUsers(pageable);
 
         if (users.isEmpty()) {
@@ -78,13 +84,13 @@ public class UserQServiceImpl implements UserQService {
         }
 
         Page<UserResponse> responses = users.map(userResponseMapper);
-        log.info("Exiting findAllUsers");
+        log.info("All users fetched: elements={}, total={}", responses.getNumberOfElements(), responses.getTotalElements());
         return responses;
     }
 
     @Override
     public Page<UserResponse> searchUsers(String keyword, Pageable pageable) {
-        log.info("Entering searchUsers with keyword: {} and pageable: {}", keyword, pageable);
+        log.info("Search users: keyword={}, page={}, size={}", keyword, pageable.getPageNumber(), pageable.getPageSize());
         if (keyword == null || keyword.isBlank()) {
             throw new ValidationException("search keyword is required");
         }
@@ -96,14 +102,13 @@ public class UserQServiceImpl implements UserQService {
         }
 
         Page<UserResponse> responses = users.map(userResponseMapper);
-        log.info("Exiting searchUsers");
+        log.info("User search completed: keyword={}, matches={}", keyword, responses.getNumberOfElements());
         return responses;
     }
 
-    @Transactional(readOnly = true)
     @Override
     public Set<RoleResponse> findRolesByUser(Long userId) {
-        log.info("Entering findRolesByUser with userId: {}", userId);
+        log.info("Fetch roles for user: userId={}", userId);
         UserProfile userProfile = repository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User Not found with id: " + userId)
         );
@@ -115,8 +120,52 @@ public class UserQServiceImpl implements UserQService {
                                 role.getDescription()
                         )
                 ).collect(Collectors.toSet());
-        log.info("Exiting findRolesByUser");
+        log.info("User roles fetched: userId={}, count={}", userId, responses.size());
         return responses;
     }
 
+    @Override
+    public boolean hasRole(Long userId, Long roleId) {
+        log.info("Check user role: userId={}, roleId={}", userId, roleId);
+
+        UserProfile userProfile = repository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User Not found with id: " + userId)
+        );
+
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                "Role not found with roleId :" + roleId
+                        )
+                );
+
+        boolean hasRole = userProfile.getRoles()
+                .stream()
+                .anyMatch(r -> r.getId().equals(role.getId()));
+        log.info("User role check: userId={}, roleId={}, hasRole={}", userId, roleId, hasRole);
+        return hasRole;
+    }
+
+
+    @Override
+    public boolean hasPermission(Long userId, Long permissionId) {
+        log.info("Check user permission: userId={}, permissionId={}", userId, permissionId);
+
+        UserProfile userProfile = repository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User Not found with id: " + userId)
+        );
+
+        Permission permission = permissionRepository.findById(permissionId)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                "Permission not found with permissionId :" + permissionId
+                        )
+                );
+
+        boolean hasPermission = userProfile.getRoles()
+                .stream()
+                .anyMatch(r -> r.getPermissions().contains(permission));
+        log.info("User permission check: userId={}, permissionId={}, hasPermission={}", userId, permissionId, hasPermission);
+        return hasPermission;
+    }
 }

@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Objects;
@@ -31,17 +30,15 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
     private final UserResponseMapper userResponseMapper;
 
     @Override
-    @Transactional
     public RegResponse registerUser(RegRequest regRequest) {
-        log.info("Entering registerUser with username: {} and email: {}", regRequest.username(), regRequest.email());
+        log.info("Register user: username={}, email={}", regRequest.username(), regRequest.email());
         String username = normalizeUsername(regRequest.username());
         String email = normalizeEmail(regRequest.email());
         String phone = normalizePhone(regRequest.phone());
         String address = normalizeAddress(regRequest.address());
 
         if (isUserPresent(username, email)) {
-            log.warn("Registration rejected, identity already in use: " +
-                    "username={}, email={}", username, email);
+            log.warn("Registration rejected, identity already in use: username={}, email={}", username, email);
             throw new UserExistsException("Username or email already exists");
         }
 
@@ -62,14 +59,11 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
 
         try {
             UserProfile savedUserProfile = userProfileRepository.save(userProfile);
-            log.info("User registered successfully: id={}, username={}",
-                    savedUserProfile.getId(), username);
-            RegResponse response = mapper.apply(savedUserProfile);
-            log.info("Exiting registerUser");
-            return response;
+            log.info("User registered: id={}, username={}, status={}",
+                    savedUserProfile.getId(), savedUserProfile.getUsername(), savedUserProfile.getStatus());
+            return mapper.apply(savedUserProfile);
         } catch (DataIntegrityViolationException e) {
-            log.warn("Registration rejected by unique constraint: username={}, " +
-                    "email={}", username, email);
+            log.warn("Registration rejected by unique constraint: username={}, email={}", username, email);
             throw new UserExistsException("Username or email already exists", e);
         }
     }
@@ -79,10 +73,9 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
                 || userProfileRepository.existsByEmail(email);
     }
 
-    @Transactional
     @Override
     public UserResponse updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
-        log.info("Entering updateUser with userId: {}", userId);
+        log.info("Update user: id={}", userId);
 
         UserProfile user = userProfileRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User not found")
@@ -123,19 +116,20 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
             try {
                 userProfileRepository.save(user);
             } catch (DataIntegrityViolationException e) {
-                log.warn("Update rejected by unique constraint: username={}, " +
-                        "email={}", user.getUsername(), user.getEmail());
+                log.warn("Update rejected by unique constraint: id={}, username={}, email={}",
+                        userId, user.getUsername(), user.getEmail());
                 throw new UserExistsException("Username or email already exists", e);
             }
         }
-        log.info("Exiting updateUser");
-        return userResponseMapper.apply(user);
+        UserResponse response = userResponseMapper.apply(user);
+        log.info("User updated: id={}, username={}, status={}",
+                response.id(), response.username(), response.status());
+        return response;
     }
 
-    @Transactional
     @Override
     public void changePassword(Long userId, ChangePasswordRequest request) {
-        log.info("Entering changePassword with userId: {}", userId);
+        log.info("Change password: userId={}", userId);
 
         UserProfile userProfile = userProfileRepository
                 .findById(userId)
@@ -147,6 +141,7 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
                 request.oldPassword(),
                 userProfile.getPassword()
         )) {
+            log.warn("Change password rejected, old password mismatch: userId={}", userId);
             throw new InvalidPasswordException("Old password is incorrect");
         }
 
@@ -154,6 +149,7 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
                 request.newPassword(),
                 userProfile.getPassword()
         )) {
+            log.warn("Change password rejected, new password equals old: userId={}", userId);
             throw new InvalidPasswordException(
                     "New password must be different from old password");
         }
@@ -165,7 +161,7 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
         );
 
         userProfileRepository.save(userProfile);
-        log.info("Exiting changePassword");
+        log.info("Password changed: userId={}, username={}", userId, userProfile.getUsername());
     }
 
 
