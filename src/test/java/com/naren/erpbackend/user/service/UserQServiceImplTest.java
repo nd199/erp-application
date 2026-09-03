@@ -3,8 +3,12 @@ package com.naren.erpbackend.user.service;
 import com.naren.erpbackend.common.exception.ResourceNotFoundException;
 import com.naren.erpbackend.user.dto.UserResponse;
 import com.naren.erpbackend.user.dto.UserResponseMapper;
+import com.naren.erpbackend.user.entity.Permission;
+import com.naren.erpbackend.user.entity.Role;
 import com.naren.erpbackend.user.entity.UserProfile;
 import com.naren.erpbackend.user.entity.UserStatus;
+import com.naren.erpbackend.user.repository.PermissionRepository;
+import com.naren.erpbackend.user.repository.RoleRepository;
 import com.naren.erpbackend.user.repository.UserProfileRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +16,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -29,12 +35,19 @@ class UserQServiceImplTest {
     @Mock
     private UserResponseMapper userResponseMapper;
 
+    @Mock
+    private RoleRepository roleRepository;
+
+    @Mock
+    private PermissionRepository permissionRepository;
+
     private UserQServiceImpl userQService;
 
     @BeforeEach
     void setUp() {
         userQService = new UserQServiceImpl(
-                userProfileRepository, userResponseMapper
+                userProfileRepository, userResponseMapper,
+                roleRepository, permissionRepository
         );
     }
 
@@ -202,6 +215,78 @@ class UserQServiceImplTest {
 
         // Verify
         verify(userProfileRepository).findByEmail(email);
+    }
+
+    @Test
+    void hasPermissionReturnsTrueWhenAnyRoleContainsThePermission() {
+        Long userId = 1L;
+        Long permissionId = 10L;
+
+        Permission permission = Permission.builder().id(permissionId).name("USER_READ").build();
+        Role role = Role.builder()
+                .id(1L)
+                .name("ADMIN")
+                .permissions(new HashSet<>(Set.of(permission)))
+                .build();
+        UserProfile user = UserProfile.builder()
+                .id(userId)
+                .roles(new HashSet<>(Set.of(role)))
+                .build();
+
+        when(userProfileRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(permissionRepository.findById(permissionId)).thenReturn(Optional.of(permission));
+
+        boolean result = userQService.hasPermission(userId, permissionId);
+
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void hasPermissionReturnsFalseWhenNoRoleContainsThePermission() {
+        Long userId = 1L;
+        Long permissionId = 10L;
+
+        Permission permission = Permission.builder().id(permissionId).name("USER_READ").build();
+        Role role = Role.builder()
+                .id(1L)
+                .name("EMPLOYEE")
+                .permissions(new HashSet<>())
+                .build();
+        UserProfile user = UserProfile.builder()
+                .id(userId)
+                .roles(new HashSet<>(Set.of(role)))
+                .build();
+
+        when(userProfileRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(permissionRepository.findById(permissionId)).thenReturn(Optional.of(permission));
+
+        boolean result = userQService.hasPermission(userId, permissionId);
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void hasPermissionThrowsWhenUserNotFound() {
+        when(userProfileRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> userQService.hasPermission(1L, 10L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("User Not found with id: 1");
+    }
+
+    @Test
+    void hasPermissionThrowsWhenPermissionNotFound() {
+        UserProfile user = UserProfile.builder()
+                .id(1L)
+                .username("u")
+                .build();
+
+        when(userProfileRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(permissionRepository.findById(10L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> userQService.hasPermission(1L, 10L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Permission not found");
     }
 
 }
