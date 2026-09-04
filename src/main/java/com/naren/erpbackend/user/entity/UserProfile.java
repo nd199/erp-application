@@ -13,15 +13,7 @@ import java.util.Set;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "user_profile",
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "uk_user_profile_username", columnNames = "user_name"
-                ),
-                @UniqueConstraint(
-                        name = "uk_user_profile_email", columnNames = "email"
-                )
-        })
+@Table(name = "user_profile")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -32,6 +24,7 @@ public class UserProfile {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "user_name", nullable = false, length = 50)
@@ -52,16 +45,20 @@ public class UserProfile {
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
-    @Column(name = "phone", length = 20)
+    @Column(name = "phone", nullable = false, length = 20)
     private String phone;
 
-    @Column(name = "address", length = 254)
+    @Column(name = "address", nullable = false)
     private String address;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private UserStatus status = UserStatus.ACTIVE;
+
+    @Column(name = "deleted", nullable = false)
+    @Builder.Default
+    private boolean deleted = false;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
@@ -70,5 +67,4 @@ public class UserProfile {
     @Column(name = "last_updated", nullable = false)
     @LastModifiedDate
     private Instant lastUpdated;
-
 }

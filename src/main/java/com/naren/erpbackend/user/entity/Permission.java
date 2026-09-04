@@ -11,19 +11,19 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @Builder
-@Table(name = "Permission", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_name_permission", columnNames = "name")
+@Table(name = "permissions", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_permissions_name", columnNames = "name")
 })
 public class Permission {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
+    @Column(name = "description")
     private String description;
-
-
 }

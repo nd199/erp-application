@@ -10,8 +10,8 @@ import java.util.Set;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "Roles", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_name_roles", columnNames = {"name"})
+@Table(name = "roles", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_roles_name", columnNames = {"name"})
 })
 @Getter
 @Setter
@@ -22,11 +22,13 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
+    @Column(name = "description")
     private String description;
 
     @ManyToMany

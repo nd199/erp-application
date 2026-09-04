@@ -1,6 +1,7 @@
 package com.naren.erpbackend.user.repository;
 
 import com.naren.erpbackend.user.entity.UserProfile;
+import com.naren.erpbackend.user.entity.UserStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,20 +12,23 @@ import java.util.Optional;
 
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
 
-    Optional<UserProfile> findByUsername(String username);
+    Optional<UserProfile> findByUsernameAndDeletedFalse(String username);
 
-    Optional<UserProfile> findByEmail(String email);
+    Optional<UserProfile> findByEmailAndDeletedFalse(String email);
 
-    boolean existsByUsername(String username);
+    boolean existsByUsernameAndDeletedFalse(String username);
 
-    boolean existsByEmail(String email);
+    boolean existsByEmailAndDeletedFalse(String email);
 
-    @Query("SELECT u FROM UserProfile u")
+    @Query("SELECT u FROM UserProfile u WHERE u.deleted = false")
     Page<UserProfile> findAllUsers(Pageable pageable);
 
     @Query("SELECT u FROM UserProfile u " +
-            "WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "WHERE u.deleted = false " +
+            "AND (LOWER(u.username) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-            "OR LOWER(u.phone) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+            "OR LOWER(u.phone) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     Page<UserProfile> searchUsers(@Param("keyword") String keyword, Pageable pageable);
+
+    Optional<UserProfile> findByIdAndStatusAndDeletedFalse(Long id, UserStatus status);
 }
