@@ -74,7 +74,7 @@ class UserQServiceImplTest {
                 null
         );
 
-        when(userProfileRepository.findById(id))
+        when(userProfileRepository.findByIdAndStatusAndDeletedFalse(id, UserStatus.ACTIVE))
                 .thenReturn(Optional.of(user));
 
         when(userResponseMapper.apply(user))
@@ -84,7 +84,7 @@ class UserQServiceImplTest {
         UserResponse response = userQService.fetchUserById(id);
 
         //Assert
-        verify(userProfileRepository).findById(id);
+        verify(userProfileRepository).findByIdAndStatusAndDeletedFalse(id, UserStatus.ACTIVE);
 
         assertThat(response.id()).isEqualTo(id);
         assertThat(response.username()).isEqualTo("testuser");
@@ -95,7 +95,7 @@ class UserQServiceImplTest {
     void fetchUserByIdFailsIfUserNotFound() {
         //Arrange
         Long id = 1L;
-        when(userProfileRepository.findById(id))
+        when(userProfileRepository.findByIdAndStatusAndDeletedFalse(id, UserStatus.ACTIVE))
                 .thenReturn(Optional.empty());
 
         //Act + Assert
@@ -103,7 +103,7 @@ class UserQServiceImplTest {
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("User Not found with id: " + id);
 
-        verify(userProfileRepository).findById(id);
+        verify(userProfileRepository).findByIdAndStatusAndDeletedFalse(id, UserStatus.ACTIVE);
     }
 
     @Test
@@ -127,7 +127,7 @@ class UserQServiceImplTest {
                 null
         );
 
-        when(userProfileRepository.findByUsername(username))
+        when(userProfileRepository.findByUsernameAndDeletedFalse(username))
                 .thenReturn(Optional.of(user));
 
         when(userResponseMapper.apply(user))
@@ -138,7 +138,7 @@ class UserQServiceImplTest {
         UserResponse response = userQService.fetchUserByUsername(username);
 
         //Assert
-        verify(userProfileRepository).findByUsername(username);
+        verify(userProfileRepository).findByUsernameAndDeletedFalse(username);
         assertThat(response.username()).isEqualTo(username);
         assertThat(response.email()).isEqualTo("test@example.com");
     }
@@ -148,7 +148,7 @@ class UserQServiceImplTest {
 
         // Arrange
         String username = "testuser";
-        when(userProfileRepository.findByUsername(username))
+        when(userProfileRepository.findByUsernameAndDeletedFalse(username))
                 .thenReturn(Optional.empty());
 
         // Act + Assert
@@ -158,7 +158,7 @@ class UserQServiceImplTest {
                 .hasMessage("User Not found with username: " + username);
 
         // Verify
-        verify(userProfileRepository).findByUsername(username);
+        verify(userProfileRepository).findByUsernameAndDeletedFalse(username);
     }
 
 
@@ -182,7 +182,7 @@ class UserQServiceImplTest {
                 null
         );
 
-        when(userProfileRepository.findByEmail(email))
+        when(userProfileRepository.findByEmailAndDeletedFalse(email))
                 .thenReturn(Optional.of(user));
 
         when(userResponseMapper.apply(user))
@@ -192,7 +192,7 @@ class UserQServiceImplTest {
         UserResponse response = userQService.fetchUserByEmail(email);
 
         //Assert
-        verify(userProfileRepository).findByEmail(email);
+        verify(userProfileRepository).findByEmailAndDeletedFalse(email);
         assertThat(response.email()).isEqualTo(email);
         assertThat(response.username()).isEqualTo("testuser");
         assertThat(response.id()).isEqualTo(1L);
@@ -204,7 +204,7 @@ class UserQServiceImplTest {
 
         // Arrange
         String email = "test@example.com";
-        when(userProfileRepository.findByEmail(email))
+        when(userProfileRepository.findByEmailAndDeletedFalse(email))
                 .thenReturn(Optional.empty());
 
         // Act + Assert
@@ -214,7 +214,7 @@ class UserQServiceImplTest {
                 .hasMessage("User Not found with email: " + email);
 
         // Verify
-        verify(userProfileRepository).findByEmail(email);
+        verify(userProfileRepository).findByEmailAndDeletedFalse(email);
     }
 
     @Test
@@ -233,7 +233,7 @@ class UserQServiceImplTest {
                 .roles(new HashSet<>(Set.of(role)))
                 .build();
 
-        when(userProfileRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userProfileRepository.findByIdAndStatusAndDeletedFalse(userId, UserStatus.ACTIVE)).thenReturn(Optional.of(user));
         when(permissionRepository.findById(permissionId)).thenReturn(Optional.of(permission));
 
         boolean result = userQService.hasPermission(userId, permissionId);
@@ -257,7 +257,7 @@ class UserQServiceImplTest {
                 .roles(new HashSet<>(Set.of(role)))
                 .build();
 
-        when(userProfileRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userProfileRepository.findByIdAndStatusAndDeletedFalse(userId, UserStatus.ACTIVE)).thenReturn(Optional.of(user));
         when(permissionRepository.findById(permissionId)).thenReturn(Optional.of(permission));
 
         boolean result = userQService.hasPermission(userId, permissionId);
@@ -267,7 +267,7 @@ class UserQServiceImplTest {
 
     @Test
     void hasPermissionThrowsWhenUserNotFound() {
-        when(userProfileRepository.findById(1L)).thenReturn(Optional.empty());
+        when(userProfileRepository.findByIdAndStatusAndDeletedFalse(1L, UserStatus.ACTIVE)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userQService.hasPermission(1L, 10L))
                 .isInstanceOf(ResourceNotFoundException.class)
@@ -281,7 +281,7 @@ class UserQServiceImplTest {
                 .username("u")
                 .build();
 
-        when(userProfileRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userProfileRepository.findByIdAndStatusAndDeletedFalse(1L, UserStatus.ACTIVE)).thenReturn(Optional.of(user));
         when(permissionRepository.findById(10L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userQService.hasPermission(1L, 10L))

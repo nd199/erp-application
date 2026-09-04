@@ -52,8 +52,8 @@ class UserMServiceImplTest {
                 "1234567890", "123 Main St", "RawPass123"
         );
 
-        when(userProfileRepository.existsByUsername("johndoe")).thenReturn(false);
-        when(userProfileRepository.existsByEmail("john@example.com")).thenReturn(false);
+        when(userProfileRepository.existsByUsernameAndDeletedFalse("johndoe")).thenReturn(false);
+        when(userProfileRepository.existsByEmailAndDeletedFalse("john@example.com")).thenReturn(false);
         when(passwordEncoder.encode("RawPass123")).thenReturn("$2a$12$encodedHash");
         when(userProfileRepository.save(any(UserProfile.class))).thenAnswer(
                 invocation -> {
@@ -77,8 +77,8 @@ class UserMServiceImplTest {
         RegRequest request = new RegRequest(
                 "  JohnDoe  ", "  JOHN@Example.COM ", "1234567890", "123 Main St", "RawPass123");
 
-        when(userProfileRepository.existsByUsername("JohnDoe")).thenReturn(false);
-        when(userProfileRepository.existsByEmail("john@example.com")).thenReturn(false);
+        when(userProfileRepository.existsByUsernameAndDeletedFalse("JohnDoe")).thenReturn(false);
+        when(userProfileRepository.existsByEmailAndDeletedFalse("john@example.com")).thenReturn(false);
         when(passwordEncoder.encode("RawPass123")).thenReturn("$2a$12$encodedHash");
         when(userProfileRepository.save(any(UserProfile.class))).thenAnswer(invocation -> {
             UserProfile u = invocation.getArgument(0);
@@ -98,8 +98,8 @@ class UserMServiceImplTest {
         RegRequest request = new RegRequest(
                 "johndoe", "john@example.com", "1234567890", "456 Oak Ave", "RawPass123");
 
-        when(userProfileRepository.existsByUsername("johndoe")).thenReturn(false);
-        when(userProfileRepository.existsByEmail("john@example.com")).thenReturn(false);
+        when(userProfileRepository.existsByUsernameAndDeletedFalse("johndoe")).thenReturn(false);
+        when(userProfileRepository.existsByEmailAndDeletedFalse("john@example.com")).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("$2a$12$encodedHash");
         when(userProfileRepository.save(any(UserProfile.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -117,7 +117,7 @@ class UserMServiceImplTest {
         RegRequest request = new RegRequest(
                 "johndoe", "john@example.com", "1234567890", "789 Pine Rd", "RawPass123");
 
-        when(userProfileRepository.existsByUsername("johndoe")).thenReturn(true);
+        when(userProfileRepository.existsByUsernameAndDeletedFalse("johndoe")).thenReturn(true);
 
         assertThatThrownBy(() -> userService.registerUser(request))
                 .isInstanceOf(UserExistsException.class)
@@ -131,8 +131,8 @@ class UserMServiceImplTest {
         RegRequest request = new RegRequest(
                 "johndoe", "john@example.com", "1234567890", "789 Pine Rd", "RawPass123");
 
-        when(userProfileRepository.existsByUsername("johndoe")).thenReturn(false);
-        when(userProfileRepository.existsByEmail("john@example.com")).thenReturn(true);
+        when(userProfileRepository.existsByUsernameAndDeletedFalse("johndoe")).thenReturn(false);
+        when(userProfileRepository.existsByEmailAndDeletedFalse("john@example.com")).thenReturn(true);
 
         assertThatThrownBy(() -> userService.registerUser(request))
                 .isInstanceOf(UserExistsException.class)
@@ -146,8 +146,8 @@ class UserMServiceImplTest {
         RegRequest request = new RegRequest(
                 "johndoe", "john@example.com", "1234567890", "789 Pine Rd", "RawPass123");
 
-        when(userProfileRepository.existsByUsername("johndoe")).thenReturn(false);
-        when(userProfileRepository.existsByEmail("john@example.com")).thenReturn(false);
+        when(userProfileRepository.existsByUsernameAndDeletedFalse("johndoe")).thenReturn(false);
+        when(userProfileRepository.existsByEmailAndDeletedFalse("john@example.com")).thenReturn(false);
         when(userProfileRepository.save(any(UserProfile.class)))
                 .thenThrow(new DataIntegrityViolationException("duplicate key"));
 
