@@ -164,4 +164,10 @@ public class UserController {
         log.info("User roles fetched: userId={}, count={}", userId, roles.size());
         return ResponseEntity.ok(roles);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userMService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
 }
