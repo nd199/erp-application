@@ -15,4 +15,7 @@ public interface UserMService {
 
     @Transactional
     void changePassword(Long userId, ChangePasswordRequest changePasswordRequest);
+
+    @Transactional
+    void deleteUser(Long userId);
 }

@@ -15,6 +15,8 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.Objects;
 
+import static com.naren.erpbackend.user.entity.UserStatus.INACTIVE;
+
 @Slf4j
 @Service
 @Validated
@@ -69,8 +71,8 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
     }
 
     private boolean isUserPresent(String username, String email) {
-        return userProfileRepository.existsByUsername(username)
-                || userProfileRepository.existsByEmail(email);
+        return userProfileRepository.existsByUsernameAndDeletedFalse(username)
+                || userProfileRepository.existsByEmailAndDeletedFalse(email);
     }
 
     @Override
@@ -164,5 +166,16 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
         log.info("Password changed: userId={}, username={}", userId, userProfile.getUsername());
     }
 
+    @Override
+    public void deleteUser(Long userId) {
+        log.info("Delete user: userId={}", userId);
 
+        UserProfile user = userProfileRepository.findById(userId)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("User not found")
+                );
+        user.setDeleted(true);
+        user.setStatus(INACTIVE);
+        userProfileRepository.save(user);
+    }
 }

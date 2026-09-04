@@ -7,6 +7,7 @@ import com.naren.erpbackend.user.dto.UserResponseMapper;
 import com.naren.erpbackend.user.entity.Permission;
 import com.naren.erpbackend.user.entity.Role;
 import com.naren.erpbackend.user.entity.UserProfile;
+import com.naren.erpbackend.user.entity.UserStatus;
 import com.naren.erpbackend.user.repository.PermissionRepository;
 import com.naren.erpbackend.user.repository.RoleRepository;
 import com.naren.erpbackend.user.repository.UserProfileRepository;
@@ -36,7 +37,7 @@ public class UserQServiceImpl implements UserQService {
     @Override
     public UserResponse fetchUserById(Long id) {
         log.info("Fetch user by id: id={}", id);
-        UserProfile user = repository.findById(id).orElseThrow(
+        UserProfile user = repository.findByIdAndStatusAndDeletedFalse(id, UserStatus.ACTIVE).orElseThrow(
                 () -> new ResourceNotFoundException("User Not found with id: " + id)
         );
         UserResponse response = userResponseMapper.apply(user);
@@ -51,7 +52,7 @@ public class UserQServiceImpl implements UserQService {
             throw new ValidationException("username is required");
         }
 
-        UserProfile user = repository.findByUsername(username).orElseThrow(
+        UserProfile user = repository.findByUsernameAndDeletedFalse(username).orElseThrow(
                 () -> new ResourceNotFoundException("User Not found with username: " + username)
         );
         UserResponse response = userResponseMapper.apply(user);
@@ -66,7 +67,7 @@ public class UserQServiceImpl implements UserQService {
             throw new ValidationException("email is required");
         }
 
-        UserProfile user = repository.findByEmail(email).orElseThrow(
+        UserProfile user = repository.findByEmailAndDeletedFalse(email).orElseThrow(
                 () -> new ResourceNotFoundException("User Not found with email: " + email)
         );
         UserResponse response = userResponseMapper.apply(user);
@@ -109,7 +110,7 @@ public class UserQServiceImpl implements UserQService {
     @Override
     public Set<RoleResponse> findRolesByUser(Long userId) {
         log.info("Fetch roles for user: userId={}", userId);
-        UserProfile userProfile = repository.findById(userId).orElseThrow(
+        UserProfile userProfile = repository.findByIdAndStatusAndDeletedFalse(userId, UserStatus.ACTIVE).orElseThrow(
                 () -> new ResourceNotFoundException("User Not found with id: " + userId)
         );
         Set<RoleResponse> responses = userProfile.getRoles()
@@ -128,7 +129,7 @@ public class UserQServiceImpl implements UserQService {
     public boolean hasRole(Long userId, Long roleId) {
         log.info("Check user role: userId={}, roleId={}", userId, roleId);
 
-        UserProfile userProfile = repository.findById(userId).orElseThrow(
+        UserProfile userProfile = repository.findByIdAndStatusAndDeletedFalse(userId, UserStatus.ACTIVE).orElseThrow(
                 () -> new ResourceNotFoundException("User Not found with id: " + userId)
         );
 
@@ -151,7 +152,7 @@ public class UserQServiceImpl implements UserQService {
     public boolean hasPermission(Long userId, Long permissionId) {
         log.info("Check user permission: userId={}, permissionId={}", userId, permissionId);
 
-        UserProfile userProfile = repository.findById(userId).orElseThrow(
+        UserProfile userProfile = repository.findByIdAndStatusAndDeletedFalse(userId, UserStatus.ACTIVE).orElseThrow(
                 () -> new ResourceNotFoundException("User Not found with id: " + userId)
         );
 
