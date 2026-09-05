@@ -1,6 +1,5 @@
 package com.naren.erpbackend.user.service;
 
-import com.naren.erpbackend.common.exception.InvalidPasswordException;
 import com.naren.erpbackend.common.exception.ResourceNotFoundException;
 import com.naren.erpbackend.common.exception.UserExistsException;
 import com.naren.erpbackend.user.dto.*;
@@ -57,11 +56,11 @@ class UserMServiceImplTest {
         when(passwordEncoder.encode("RawPass123")).thenReturn("$2a$12$encodedHash");
         when(userProfileRepository.save(any(UserProfile.class))).thenAnswer(
                 invocation -> {
-            UserProfile u = invocation.getArgument(0);
-            u.setId(1L);
-            u.setCreatedAt(java.time.Instant.now());
-            return u;
-        });
+                    UserProfile u = invocation.getArgument(0);
+                    u.setId(1L);
+                    u.setCreatedAt(java.time.Instant.now());
+                    return u;
+                });
 
         RegResponse response = userService.registerUser(request);
 
@@ -262,80 +261,5 @@ class UserMServiceImplTest {
         assertThatThrownBy(() -> userService.updateUser(userId, updateReq))
                 .isInstanceOf(UserExistsException.class)
                 .hasMessageContaining("already exists");
-    }
-
-    // ==================== changePassword ====================
-
-    @Test
-    void shouldChangePasswordSuccessfully() {
-        Long userId = 1L;
-        UserProfile user = UserProfile.builder()
-                .id(userId)
-                .username("johndoe")
-                .password("oldEncodedPass")
-                .build();
-
-        when(userProfileRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("OldPass1", "oldEncodedPass")).thenReturn(true);
-        when(passwordEncoder.matches("NewPass123", "oldEncodedPass")).thenReturn(false);
-        when(passwordEncoder.encode("NewPass123")).thenReturn("newEncodedPass");
-
-        ChangePasswordRequest req = new ChangePasswordRequest("OldPass1", "NewPass123");
-
-        userService.changePassword(userId, req);
-
-        assertThat(user.getPassword()).isEqualTo("newEncodedPass");
-        verify(userProfileRepository).save(user);
-    }
-
-    @Test
-    void shouldRejectChangeIfOldPasswordWrong() {
-        Long userId = 1L;
-        UserProfile user = UserProfile.builder()
-                .id(userId)
-                .password("oldEncodedPass")
-                .build();
-
-        when(userProfileRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("WrongPass", "oldEncodedPass")).thenReturn(false);
-
-        ChangePasswordRequest req = new ChangePasswordRequest("WrongPass", "NewPass123");
-
-        assertThatThrownBy(() -> userService.changePassword(userId, req))
-                .isInstanceOf(InvalidPasswordException.class)
-                .hasMessageContaining("Old password is incorrect");
-
-        verify(userProfileRepository, never()).save(any());
-    }
-
-    @Test
-    void shouldRejectChangeIfNewPasswordSameAsOld() {
-        Long userId = 1L;
-        UserProfile user = UserProfile.builder()
-                .id(userId)
-                .password("oldEncodedPass")
-                .build();
-
-        when(userProfileRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("SamePass1", "oldEncodedPass")).thenReturn(true);
-
-        ChangePasswordRequest req = new ChangePasswordRequest("SamePass1", "SamePass1");
-
-        assertThatThrownBy(() -> userService.changePassword(userId, req))
-                .isInstanceOf(InvalidPasswordException.class)
-                .hasMessageContaining("New password must be different");
-
-        verify(userProfileRepository, never()).save(any());
-    }
-
-    @Test
-    void shouldThrowWhenUserNotFoundOnPasswordChange() {
-        when(userProfileRepository.findById(99L)).thenReturn(Optional.empty());
-
-        ChangePasswordRequest req = new ChangePasswordRequest("OldPass1", "NewPass123");
-
-        assertThatThrownBy(() -> userService.changePassword(99L, req))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("User not found");
     }
 }

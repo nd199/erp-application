@@ -1,7 +1,6 @@
 package com.naren.erpbackend.user.service;
 
 import com.naren.erpbackend.user.dto.PermissionResponse;
-import com.naren.erpbackend.user.dto.RoleResponse;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;

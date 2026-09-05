@@ -55,9 +55,7 @@ public class UserRoleController {
     }
 
     @GetMapping("/{userId}/roles/{roleId}/check")
-    public ResponseEntity<Boolean> hasRole(
-            @PathVariable Long userId,
-            @PathVariable Long roleId) {
+    public ResponseEntity<Boolean> hasRole(@PathVariable Long userId, @PathVariable Long roleId) {
         log.info("Checked hasRole");
         return ResponseEntity.ok(userRoleService.hasRole(userId, roleId));
     }

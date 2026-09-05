@@ -11,9 +11,8 @@ import com.naren.erpbackend.user.repository.RoleRepository;
 import com.naren.erpbackend.user.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -38,7 +37,13 @@ public class UserRoleServiceImpl implements UserRoleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Role Not found"));
 
         userProfile.getRoles().add(role);
-        userRepository.save(userProfile);
+
+        try {
+            userRepository.save(userProfile);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Assign role rejected by constraint violation: userId={}, roleId={}", userId, roleId);
+            throw new ResourceNotFoundException("Failed to assign role: User or Role not found", e);
+        }
     }
 
     @Override
@@ -53,7 +58,13 @@ public class UserRoleServiceImpl implements UserRoleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Role Not found"));
 
         userProfile.getRoles().remove(role);
-        userRepository.save(userProfile);
+
+        try {
+            userRepository.save(userProfile);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Remove role rejected by constraint violation: userId={}, roleId={}", userId, roleId);
+            throw new ResourceNotFoundException("Failed to remove role: User or Role not found", e);
+        }
     }
 
     @Override

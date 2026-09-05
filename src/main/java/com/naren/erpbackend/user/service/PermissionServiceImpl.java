@@ -6,6 +6,7 @@ import com.naren.erpbackend.user.entity.Permission;
 import com.naren.erpbackend.user.repository.PermissionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,9 +31,15 @@ public class PermissionServiceImpl implements PermissionService {
                 .name(name)
                 .description(description)
                 .build();
-        Permission savedPermission = permissionRepository.save(permission);
-        log.info("Permission created: id={}, name={}", savedPermission.getId(), savedPermission.getName());
-        return savedPermission;
+
+        try {
+            Permission savedPermission = permissionRepository.save(permission);
+            log.info("Permission created: id={}, name={}", savedPermission.getId(), savedPermission.getName());
+            return savedPermission;
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Create permission rejected by unique constraint: name={}", name);
+            throw new ResourceExistsException("Permission already exists: " + name, e);
+        }
     }
 
     @Override

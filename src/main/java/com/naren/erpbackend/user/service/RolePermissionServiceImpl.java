@@ -9,6 +9,7 @@ import com.naren.erpbackend.user.repository.PermissionRepository;
 import com.naren.erpbackend.user.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -33,7 +34,13 @@ public class RolePermissionServiceImpl implements RolePermissionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Permission not found"));
 
         role.getPermissions().add(permission);
-        roleRepository.save(role);
+
+        try {
+            roleRepository.save(role);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Assign permission rejected by constraint violation: roleId={}, permissionId={}", roleId, permissionId);
+            throw new ResourceNotFoundException("Failed to assign permission: Role or Permission not found", e);
+        }
     }
 
     @Override
@@ -47,7 +54,13 @@ public class RolePermissionServiceImpl implements RolePermissionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Permission not found"));
 
         role.getPermissions().remove(permission);
-        roleRepository.save(role);
+
+        try {
+            roleRepository.save(role);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Remove permission rejected by constraint violation: roleId={}, permissionId={}", roleId, permissionId);
+            throw new ResourceNotFoundException("Failed to remove permission: Role or Permission not found", e);
+        }
     }
 
     @Override

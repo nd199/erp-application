@@ -22,6 +22,18 @@ public class GlobalExceptionHandler {
 
     private static final String TYPE_BASE = "urn:erp-backend:problem:";
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ProblemDetail handleResourceNotFound(ResourceNotFoundException ex) {
+        log.warn("Resource not found: {}", ex.getMessage());
+        return problem(HttpStatus.NOT_FOUND, ex.getMessage(), "resource_not_found");
+    }
+
+    @ExceptionHandler(ResourceExistsException.class)
+    public ProblemDetail handleResourceExists(ResourceExistsException ex) {
+        log.warn("Resource conflict: {}", ex.getMessage());
+        return problem(HttpStatus.CONFLICT, ex.getMessage(), "resource_exists");
+    }
+
     @ExceptionHandler(UserExistsException.class)
     public ProblemDetail handleUserExists(UserExistsException ex) {
         log.warn("Registration rejected: {}", ex.getMessage());

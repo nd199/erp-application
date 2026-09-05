@@ -1,6 +1,5 @@
 package com.naren.erpbackend.user.service;
 
-import com.naren.erpbackend.common.exception.InvalidPasswordException;
 import com.naren.erpbackend.common.exception.ResourceNotFoundException;
 import com.naren.erpbackend.common.exception.UserExistsException;
 import com.naren.erpbackend.user.dto.*;
@@ -130,43 +129,6 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
     }
 
     @Override
-    public void changePassword(Long userId, ChangePasswordRequest request) {
-        log.info("Change password: userId={}", userId);
-
-        UserProfile userProfile = userProfileRepository
-                .findById(userId)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("User not found")
-                );
-
-        if (!passwordEncoder.matches(
-                request.oldPassword(),
-                userProfile.getPassword()
-        )) {
-            log.warn("Change password rejected, old password mismatch: userId={}", userId);
-            throw new InvalidPasswordException("Old password is incorrect");
-        }
-
-        if (passwordEncoder.matches(
-                request.newPassword(),
-                userProfile.getPassword()
-        )) {
-            log.warn("Change password rejected, new password equals old: userId={}", userId);
-            throw new InvalidPasswordException(
-                    "New password must be different from old password");
-        }
-
-        userProfile.setPassword(
-                passwordEncoder.encode(
-                        request.newPassword()
-                )
-        );
-
-        userProfileRepository.save(userProfile);
-        log.info("Password changed: userId={}, username={}", userId, userProfile.getUsername());
-    }
-
-    @Override
     public void deleteUser(Long userId) {
         log.info("Delete user: userId={}", userId);
 
@@ -176,6 +138,12 @@ public class UserMServiceImpl extends UserUtility implements UserMService {
                 );
         user.setDeleted(true);
         user.setStatus(INACTIVE);
-        userProfileRepository.save(user);
+
+        try {
+            userProfileRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Delete user rejected by constraint violation: userId={}", userId);
+            throw new ResourceNotFoundException("Failed to delete user: User not found", e);
+        }
     }
 }

@@ -94,17 +94,6 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
-    @PatchMapping("/{id}/password")
-    public ResponseEntity<Void> changePassword(
-            @PathVariable("id") Long id,
-            @Valid @RequestBody ChangePasswordRequest changePasswordRequest
-    ) {
-        log.info("Change password requested: userId={}", id);
-        userMService.changePassword(id, changePasswordRequest);
-        log.info("Password changed: userId={}", id);
-        return ResponseEntity.noContent().build();
-    }
-
     @PatchMapping("/{id}/activate")
     public ResponseEntity<UserResponse> activateUser(@PathVariable Long id) {
         log.info("Activate user requested: id={}", id);

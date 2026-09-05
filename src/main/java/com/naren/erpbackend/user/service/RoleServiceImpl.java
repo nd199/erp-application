@@ -10,6 +10,7 @@ import com.naren.erpbackend.user.repository.RoleRepository;
 import com.naren.erpbackend.user.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -45,7 +46,13 @@ public class RoleServiceImpl implements RoleService {
                 );
         role.getPermissions().add(permission);
 
-        roleRepository.save(role);
+        try {
+            roleRepository.save(role);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Add permission to role rejected by constraint violation: roleId={}, permissionId={}", roleId, permissionId);
+            throw new ResourceNotFoundException("Failed to add permission: Role or Permission not found", e);
+        }
+
         log.info("Permission added to role: roleId={}, permissionId={}, role={}", roleId, permissionId, role.getName());
     }
 
@@ -74,7 +81,13 @@ public class RoleServiceImpl implements RoleService {
             );
         }
 
-        roleRepository.save(role);
+        try {
+            roleRepository.save(role);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Remove permission from role rejected by constraint violation: roleId={}, permissionId={}", roleId, permissionId);
+            throw new ResourceNotFoundException("Failed to remove permission: Role or Permission not found", e);
+        }
+
         log.info("Permission removed from role: roleId={}, permissionId={}, role={}", roleId, permissionId, role.getName());
     }
 
@@ -96,7 +109,13 @@ public class RoleServiceImpl implements RoleService {
                 );
 
         if (userProfile.getRoles().add(role)) {
-            userProfileRepository.save(userProfile);
+            try {
+                userProfileRepository.save(userProfile);
+            } catch (DataIntegrityViolationException e) {
+                log.warn("Assign role to user rejected by constraint violation: userId={}, roleId={}", userId, roleId);
+                throw new ResourceNotFoundException("Failed to assign role: User or Role not found", e);
+            }
+
             log.info("Role assigned to user: userId={}, roleId={}, role={}", userId, roleId, role.getName());
         } else {
             log.info("Role already assigned to user: userId={}, roleId={}, role={}", userId, roleId, role.getName());
@@ -128,7 +147,13 @@ public class RoleServiceImpl implements RoleService {
             );
         }
 
-        userProfileRepository.save(userProfile);
+        try {
+            userProfileRepository.save(userProfile);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Remove role from user rejected by constraint violation: userId={}, roleId={}", userId, roleId);
+            throw new ResourceNotFoundException("Failed to remove role: User or Role not found", e);
+        }
+
         log.info("Role removed from user: userId={}, roleId={}, role={}", userId, roleId, role.getName());
     }
 

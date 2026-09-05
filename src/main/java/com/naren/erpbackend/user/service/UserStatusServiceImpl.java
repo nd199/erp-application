@@ -9,6 +9,7 @@ import com.naren.erpbackend.user.entity.UserStatus;
 import com.naren.erpbackend.user.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -31,11 +32,17 @@ public class UserStatusServiceImpl implements UserStatusService {
         validateTransition(fromStatus, UserStatus.ACTIVE);
 
         user.setStatus(UserStatus.ACTIVE);
-        UserProfile savedUser = userProfileRepository.save(user);
-        UserResponse response = userResponseMapper.apply(savedUser);
-        log.info("User activated: id={}, username={}, from={}, to={}",
-                response.id(), response.username(), fromStatus, response.status());
-        return response;
+
+        try {
+            UserProfile savedUser = userProfileRepository.save(user);
+            UserResponse response = userResponseMapper.apply(savedUser);
+            log.info("User activated: id={}, username={}, from={}, to={}",
+                    response.id(), response.username(), fromStatus, response.status());
+            return response;
+        } catch (DataIntegrityViolationException e) {
+            log.error("Activate user failed due to constraint violation: id={}", userId);
+            throw new InvalidUserStateException("Failed to activate user", e);
+        }
     }
 
     @Override
@@ -47,11 +54,17 @@ public class UserStatusServiceImpl implements UserStatusService {
         validateTransition(fromStatus, UserStatus.INACTIVE);
 
         user.setStatus(UserStatus.INACTIVE);
-        UserProfile savedUser = userProfileRepository.save(user);
-        UserResponse response = userResponseMapper.apply(savedUser);
-        log.info("User deactivated: id={}, username={}, from={}, to={}",
-                response.id(), response.username(), fromStatus, response.status());
-        return response;
+
+        try {
+            UserProfile savedUser = userProfileRepository.save(user);
+            UserResponse response = userResponseMapper.apply(savedUser);
+            log.info("User deactivated: id={}, username={}, from={}, to={}",
+                    response.id(), response.username(), fromStatus, response.status());
+            return response;
+        } catch (DataIntegrityViolationException e) {
+            log.error("Deactivate user failed due to constraint violation: id={}", userId);
+            throw new InvalidUserStateException("Failed to deactivate user", e);
+        }
     }
 
     @Override
@@ -62,11 +75,17 @@ public class UserStatusServiceImpl implements UserStatusService {
         validateTransition(fromStatus, UserStatus.LOCKED);
 
         user.setStatus(UserStatus.LOCKED);
-        UserProfile savedUser = userProfileRepository.save(user);
-        UserResponse response = userResponseMapper.apply(savedUser);
-        log.info("User locked: id={}, username={}, from={}, to={}",
-                response.id(), response.username(), fromStatus, response.status());
-        return response;
+
+        try {
+            UserProfile savedUser = userProfileRepository.save(user);
+            UserResponse response = userResponseMapper.apply(savedUser);
+            log.info("User locked: id={}, username={}, from={}, to={}",
+                    response.id(), response.username(), fromStatus, response.status());
+            return response;
+        } catch (DataIntegrityViolationException e) {
+            log.error("Lock user failed due to constraint violation: id={}", userId);
+            throw new InvalidUserStateException("Failed to lock user", e);
+        }
     }
 
     @Override
@@ -79,11 +98,16 @@ public class UserStatusServiceImpl implements UserStatusService {
 
         user.setStatus(UserStatus.ACTIVE);
 
-        UserProfile savedUser = userProfileRepository.save(user);
-        UserResponse response = userResponseMapper.apply(savedUser);
-        log.info("User unlocked: id={}, username={}, from={}, to={}",
-                response.id(), response.username(), fromStatus, response.status());
-        return response;
+        try {
+            UserProfile savedUser = userProfileRepository.save(user);
+            UserResponse response = userResponseMapper.apply(savedUser);
+            log.info("User unlocked: id={}, username={}, from={}, to={}",
+                    response.id(), response.username(), fromStatus, response.status());
+            return response;
+        } catch (DataIntegrityViolationException e) {
+            log.error("Unlock user failed due to constraint violation: id={}", userId);
+            throw new InvalidUserStateException("Failed to unlock user", e);
+        }
     }
 
     private UserProfile findUserById(Long userId) {
