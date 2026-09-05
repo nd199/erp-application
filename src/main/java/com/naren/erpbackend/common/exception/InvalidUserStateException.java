@@ -1,5 +1,9 @@
 package com.naren.erpbackend.common.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.CONFLICT)
 public class InvalidUserStateException extends RuntimeException {
 
     public InvalidUserStateException(String message) {

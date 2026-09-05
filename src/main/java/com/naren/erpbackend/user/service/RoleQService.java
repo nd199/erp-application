@@ -14,6 +14,8 @@ public interface RoleQService {
 
     RoleResponse findRoleById(Long roleId);
 
+    RoleResponse findRoleByName(String name);
+
     Page<RoleResponse> findAllRoles(Pageable pageable);
 
     Page<RoleResponse> searchRoles(String keyword, Pageable pageable);

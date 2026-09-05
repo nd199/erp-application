@@ -1,8 +1,12 @@
 package com.naren.erpbackend.user.controller;
 
+import com.naren.erpbackend.user.dto.PermissionRequest;
 import com.naren.erpbackend.user.dto.PermissionResponse;
 import com.naren.erpbackend.user.dto.RoleResponse;
+import com.naren.erpbackend.user.entity.Permission;
+import com.naren.erpbackend.user.service.PermissionService;
 import com.naren.erpbackend.user.service.PermissionQService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -12,13 +16,44 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/permissions")
 @Slf4j
 public class PermissionController {
 
+    private final PermissionService permissionService;
     private final PermissionQService permissionQService;
+
+    @PostMapping
+    public ResponseEntity<PermissionResponse> createPermission(@Valid @RequestBody PermissionRequest request) {
+        log.info("Create permission requested: name={}", request.name());
+        Permission permission = permissionService.createPermission(request.name(), request.description());
+        PermissionResponse response = new PermissionResponse(permission.getId(), permission.getName(), permission.getDescription());
+        log.info("Permission created: id={}, name={}", response.id(), response.name());
+        return ResponseEntity.status(CREATED).body(response);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<PermissionResponse> updatePermission(
+            @PathVariable Long id,
+            @Valid @RequestBody PermissionRequest request) {
+        log.info("Update permission requested: id={}, name={}", id, request.name());
+        Permission permission = permissionService.updatePermission(id, request.name(), request.description());
+        PermissionResponse response = new PermissionResponse(permission.getId(), permission.getName(), permission.getDescription());
+        log.info("Permission updated: id={}, name={}", response.id(), response.name());
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePermission(@PathVariable Long id) {
+        log.info("Delete permission requested: id={}", id);
+        permissionService.deletePermission(id);
+        log.info("Permission deleted: id={}", id);
+        return ResponseEntity.noContent().build();
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<PermissionResponse> getPermissionById(@PathVariable Long id) {
