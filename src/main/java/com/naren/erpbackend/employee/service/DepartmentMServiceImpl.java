@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class DepartmentMServiceImpl implements DepartmentMService {
+public class DepartmentMServiceImpl extends DepartmentUtil implements DepartmentMService {
 
     private final DepartmentRepository departmentRepository;
     private final DepartmentResponseMapper responseMapper;
@@ -24,7 +24,7 @@ public class DepartmentMServiceImpl implements DepartmentMService {
     public DepartmentResponse createDepartment(DepartmentRequest request) {
         log.info("Creating department: name={}", request.name());
 
-        if (departmentRepository.existsByName(request.name().trim())) {
+        if (departmentRepository.existsByName(normalizeName(request.name()))) {
             throw new ResourceExistsException(
                     "Department with name " + request.name() + " taken"
             );
@@ -33,9 +33,8 @@ public class DepartmentMServiceImpl implements DepartmentMService {
         try {
             Department department = Department
                     .builder()
-                    .name(request.name().trim())
-                    .description(request.description() != null ? request.description().trim()
-                            : null)
+                    .name(normalizeName(request.name()))
+                    .description(normalizeDescription(request.description()))
                     .build();
             Department saved = departmentRepository.save(department);
             log.info("Department created: id={}, name={}", saved.getId(), saved.getName());
@@ -56,9 +55,8 @@ public class DepartmentMServiceImpl implements DepartmentMService {
                         "Department not found with id: " + id)
                 );
 
-        department.setName(request.name().trim());
-        department.setDescription(request.description() != null ?
-                request.description().trim() : null);
+        department.setName(normalizeName(request.name()));
+        department.setDescription(normalizeDescription(request.description()));
 
         try {
             Department saved = departmentRepository.save(department);
