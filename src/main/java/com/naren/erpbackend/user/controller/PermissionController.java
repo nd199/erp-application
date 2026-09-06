@@ -2,6 +2,7 @@ package com.naren.erpbackend.user.controller;
 
 import com.naren.erpbackend.user.dto.PermissionRequest;
 import com.naren.erpbackend.user.dto.PermissionResponse;
+import com.naren.erpbackend.user.dto.PermissionResponseMapper;
 import com.naren.erpbackend.user.dto.RoleResponse;
 import com.naren.erpbackend.user.entity.Permission;
 import com.naren.erpbackend.user.service.PermissionService;
@@ -26,12 +27,13 @@ public class PermissionController {
 
     private final PermissionService permissionService;
     private final PermissionQService permissionQService;
+    private final PermissionResponseMapper permissionResponseMapper;
 
     @PostMapping
     public ResponseEntity<PermissionResponse> createPermission(@Valid @RequestBody PermissionRequest request) {
         log.info("Create permission requested: name={}", request.name());
         Permission permission = permissionService.createPermission(request.name(), request.description());
-        PermissionResponse response = new PermissionResponse(permission.getId(), permission.getName(), permission.getDescription());
+        PermissionResponse response = permissionResponseMapper.apply(permission);
         log.info("Permission created: id={}, name={}", response.id(), response.name());
         return ResponseEntity.status(CREATED).body(response);
     }
@@ -42,7 +44,7 @@ public class PermissionController {
             @Valid @RequestBody PermissionRequest request) {
         log.info("Update permission requested: id={}, name={}", id, request.name());
         Permission permission = permissionService.updatePermission(id, request.name(), request.description());
-        PermissionResponse response = new PermissionResponse(permission.getId(), permission.getName(), permission.getDescription());
+        PermissionResponse response = permissionResponseMapper.apply(permission);
         log.info("Permission updated: id={}, name={}", response.id(), response.name());
         return ResponseEntity.ok(response);
     }

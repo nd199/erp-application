@@ -2,6 +2,7 @@ package com.naren.erpbackend.user.service;
 
 import com.naren.erpbackend.common.exception.ResourceNotFoundException;
 import com.naren.erpbackend.user.dto.RoleResponse;
+import com.naren.erpbackend.user.dto.RoleResponseMapper;
 import com.naren.erpbackend.user.dto.UserResponse;
 import com.naren.erpbackend.user.dto.UserResponseMapper;
 import com.naren.erpbackend.user.entity.Permission;
@@ -29,6 +30,8 @@ public class UserQServiceImpl implements UserQService {
     private final UserProfileRepository repository;
 
     private final UserResponseMapper userResponseMapper;
+
+    private final RoleResponseMapper roleResponseMapper;
 
     private final RoleRepository roleRepository;
 
@@ -114,13 +117,8 @@ public class UserQServiceImpl implements UserQService {
                 () -> new ResourceNotFoundException("User Not found with id: " + userId)
         );
         Set<RoleResponse> responses = userProfile.getRoles()
-                .stream().map(role ->
-                        new RoleResponse(
-                                role.getId(),
-                                role.getName(),
-                                role.getDescription()
-                        )
-                ).collect(Collectors.toSet());
+                .stream().map(roleResponseMapper)
+                .collect(Collectors.toSet());
         log.info("User roles fetched: userId={}, count={}", userId, responses.size());
         return responses;
     }

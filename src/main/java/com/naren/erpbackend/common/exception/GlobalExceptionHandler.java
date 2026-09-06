@@ -46,6 +46,12 @@ public class GlobalExceptionHandler {
         return problem(HttpStatus.CONFLICT, ex.getMessage(), "invalid_user_state");
     }
 
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ProblemDetail handleInvalidPassword(InvalidPasswordException ex) {
+        log.warn("Invalid password: {}", ex.getMessage());
+        return problem(HttpStatus.BAD_REQUEST, ex.getMessage(), "invalid_password");
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         log.error("Data integrity violation", ex);

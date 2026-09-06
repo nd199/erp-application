@@ -2,11 +2,11 @@ package com.naren.erpbackend.user.dto;
 
 
 import com.naren.erpbackend.user.entity.Role;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
 
-@Service
+@Component
 public class RoleResponseMapper implements Function<Role, RoleResponse> {
 
     @Override

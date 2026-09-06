@@ -1,11 +1,11 @@
 package com.naren.erpbackend.user.dto;
 
 import com.naren.erpbackend.user.entity.Permission;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
 
-@Service
+@Component
 public class PermissionResponseMapper implements Function<Permission, PermissionResponse> {
 
     @Override

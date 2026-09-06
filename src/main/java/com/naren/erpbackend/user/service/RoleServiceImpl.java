@@ -3,7 +3,9 @@ package com.naren.erpbackend.user.service;
 import com.naren.erpbackend.common.exception.ResourceExistsException;
 import com.naren.erpbackend.common.exception.ResourceNotFoundException;
 import com.naren.erpbackend.user.dto.PermissionResponse;
+import com.naren.erpbackend.user.dto.PermissionResponseMapper;
 import com.naren.erpbackend.user.dto.RoleResponse;
+import com.naren.erpbackend.user.dto.RoleResponseMapper;
 import com.naren.erpbackend.user.entity.Permission;
 import com.naren.erpbackend.user.entity.Role;
 import com.naren.erpbackend.user.entity.UserProfile;
@@ -26,6 +28,8 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
     private final UserProfileRepository userProfileRepository;
+    private final RoleResponseMapper roleResponseMapper;
+    private final PermissionResponseMapper permissionResponseMapper;
 
     @Override
     public RoleResponse createRole(String name, String description) {
@@ -44,7 +48,7 @@ public class RoleServiceImpl implements RoleService {
         try {
             Role saved = roleRepository.save(role);
             log.info("Role created: id={}, name={}", saved.getId(), saved.getName());
-            return new RoleResponse(saved.getId(), saved.getName(), saved.getDescription());
+            return roleResponseMapper.apply(saved);
         } catch (DataIntegrityViolationException e) {
             log.warn("Create role rejected by unique constraint: name={}", name);
             throw new ResourceExistsException("Role already exists: " + name, e);
@@ -142,11 +146,7 @@ public class RoleServiceImpl implements RoleService {
         Role role = findRoleById(roleId);
 
         Set<PermissionResponse> responses = role.getPermissions().stream()
-                .map(permission -> new PermissionResponse(
-                        permission.getId(),
-                        permission.getName(),
-                        permission.getDescription()
-                ))
+                .map(permissionResponseMapper)
                 .collect(Collectors.toSet());
 
         log.info("Role permissions fetched: roleId={}, role={}, count={}", roleId, role.getName(), responses.size());
