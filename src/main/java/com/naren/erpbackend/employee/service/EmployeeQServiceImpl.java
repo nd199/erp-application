@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -21,7 +20,6 @@ public class EmployeeQServiceImpl implements EmployeeQService {
     private final EmployeeResponseMapper employeeResponseMapper;
 
     @Override
-    @Transactional(readOnly = true)
     public EmployeeResponse findEmployeeById(Long id) {
         log.info("Fetch employee: id={}", id);
         Employee employee = employeeRepository.findById(id)
@@ -34,7 +32,6 @@ public class EmployeeQServiceImpl implements EmployeeQService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public EmployeeResponse findEmployeeByEmail(String email) {
         log.info("Fetch employee: email={}", email);
         Employee employee = employeeRepository
@@ -46,7 +43,6 @@ public class EmployeeQServiceImpl implements EmployeeQService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Page<EmployeeResponse> findAllEmployees(Pageable pageable) {
         log.info("Fetch all employees: page={}, size={}", pageable.getPageNumber(),
                 pageable.getPageSize());
@@ -55,7 +51,6 @@ public class EmployeeQServiceImpl implements EmployeeQService {
                 .map(employeeResponseMapper);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public Page<EmployeeResponse> searchEmployees(String keyword, Pageable pageable) {
         log.info("Search employees: keyword={}", keyword);
@@ -65,7 +60,6 @@ public class EmployeeQServiceImpl implements EmployeeQService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Page<EmployeeResponse> findEmployeesByDepartment(Long departmentId, Pageable pageable) {
         log.info("Fetch employees by department: departmentId={}", departmentId);
         return employeeRepository
