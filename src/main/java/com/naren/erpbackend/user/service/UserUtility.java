@@ -1,22 +1,22 @@
 package com.naren.erpbackend.user.service;
 
-import java.util.Locale;
+import com.naren.erpbackend.common.util.StringNormalizeUtil;
 
-public abstract class UserUtility {
+public abstract class UserUtility extends StringNormalizeUtil {
 
     protected static String normalizeUsername(String username) {
-        return username.trim();
+        return normalize(username);
     }
 
     protected static String normalizeEmail(String email) {
-        return email.trim().toLowerCase(Locale.ROOT);
+        return normalizeLowerCase(email);
     }
 
     protected static String normalizePhone(String phone) {
-        return phone.trim();
+        return normalize(phone);
     }
 
     protected static String normalizeAddress(String address) {
-        return address.trim();
+        return normalize(address);
     }
 }

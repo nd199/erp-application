@@ -16,12 +16,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmployeeMServiceImpl implements EmployeeMService {
+public class EmployeeMServiceImpl extends EmployeeUtil implements EmployeeMService {
 
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
@@ -29,11 +28,10 @@ public class EmployeeMServiceImpl implements EmployeeMService {
     private final EmployeeResponseMapper employeeResponseMapper;
 
     @Override
-    @Transactional
     public EmployeeResponse createEmployee(EmployeeRequest request) {
         log.info("Create employee: email={}", request.email());
 
-        if (employeeRepository.existsByEmailAndDeletedFalse(request.email().trim())) {
+        if (employeeRepository.existsByEmailAndDeletedFalse(normalizeEmail(request.email()))) {
             throw new ResourceExistsException("Employee already exists with email: " + request.email());
         }
 
@@ -48,12 +46,12 @@ public class EmployeeMServiceImpl implements EmployeeMService {
             }
 
             Employee employee = Employee.builder()
-                    .firstName(request.firstName().trim())
-                    .lastName(request.lastName().trim())
-                    .email(request.email().trim().toLowerCase())
-                    .phone(request.phone().trim())
+                    .firstName(normalizeName(request.firstName()))
+                    .lastName(normalizeName(request.lastName()))
+                    .email(normalizeEmail(request.email()))
+                    .phone(normalizePhone(request.phone()))
                     .hireDate(request.hireDate())
-                    .jobTitle(request.jobTitle().trim())
+                    .jobTitle(normalizeName(request.jobTitle()))
                     .department(department)
                     .userProfile(userProfile)
                     .build();
@@ -67,7 +65,6 @@ public class EmployeeMServiceImpl implements EmployeeMService {
     }
 
     @Override
-    @Transactional
     public EmployeeResponse updateEmployee(Long id, EmployeeRequest request) {
         log.info("Update employee: id={}", id);
 
@@ -77,12 +74,12 @@ public class EmployeeMServiceImpl implements EmployeeMService {
         Department department = departmentRepository.findById(request.departmentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + request.departmentId()));
 
-        employee.setFirstName(request.firstName().trim());
-        employee.setLastName(request.lastName().trim());
-        employee.setEmail(request.email().trim().toLowerCase());
-        employee.setPhone(request.phone().trim());
+        employee.setFirstName(normalizeName(request.firstName()));
+        employee.setLastName(normalizeName(request.lastName()));
+        employee.setEmail(normalizeEmail(request.email()));
+        employee.setPhone(normalizePhone(request.phone()));
         employee.setHireDate(request.hireDate());
-        employee.setJobTitle(request.jobTitle().trim());
+        employee.setJobTitle(normalizeName(request.jobTitle()));
         employee.setDepartment(department);
 
         if (request.userProfileId() != null) {
@@ -97,7 +94,6 @@ public class EmployeeMServiceImpl implements EmployeeMService {
     }
 
     @Override
-    @Transactional
     public void deleteEmployee(Long id) {
         log.info("Delete employee: id={}", id);
 
