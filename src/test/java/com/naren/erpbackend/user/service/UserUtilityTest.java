@@ -7,11 +7,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserUtilityTest {
 
     private static class TestableUtility extends UserUtility {
-        static String normalize(String username) {
+        static String testNormalize(String username) {
             return normalizeUsername(username);
         }
 
-        static String normalizeMail(String email) {
+        static String testNormalizeEmail(String email) {
             return normalizeEmail(email);
         }
     }
@@ -19,28 +19,28 @@ class UserUtilityTest {
     @Test
     void trimsUsername() {
         assertThat(TestableUtility
-                .normalize("  johndoe  ")
+                .testNormalize("  johndoe  ")
         ).isEqualTo("johndoe");
     }
 
     @Test
     void preservesUsernameCase() {
         assertThat(TestableUtility
-                .normalize("John.Doe")
+                .testNormalize("John.Doe")
         ).isEqualTo("John.Doe");
     }
 
     @Test
     void trimsAndLowercasesEmail() {
         assertThat(TestableUtility
-                .normalizeMail("  JOHN@Example.COM  ")
+                .testNormalizeEmail("  JOHN@Example.COM  ")
         ).isEqualTo("john@example.com");
     }
 
     @Test
     void lowercasesEmailUsingRootLocale() {
         assertThat(TestableUtility
-                .normalizeMail("JOHN@EXAMPLE.COM")
+                .testNormalizeEmail("JOHN@EXAMPLE.COM")
         ).isEqualTo("john@example.com");
     }
 }

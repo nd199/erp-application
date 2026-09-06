@@ -1,6 +1,7 @@
 package com.naren.erpbackend.user.service;
 
 import com.naren.erpbackend.common.exception.ResourceNotFoundException;
+import com.naren.erpbackend.user.dto.RoleResponseMapper;
 import com.naren.erpbackend.user.dto.UserResponse;
 import com.naren.erpbackend.user.dto.UserResponseMapper;
 import com.naren.erpbackend.user.entity.Permission;
@@ -36,6 +37,9 @@ class UserQServiceImplTest {
     private UserResponseMapper userResponseMapper;
 
     @Mock
+    private RoleResponseMapper roleResponseMapper;
+
+    @Mock
     private RoleRepository roleRepository;
 
     @Mock
@@ -47,7 +51,7 @@ class UserQServiceImplTest {
     void setUp() {
         userQService = new UserQServiceImpl(
                 userProfileRepository, userResponseMapper,
-                roleRepository, permissionRepository
+                roleResponseMapper, roleRepository, permissionRepository
         );
     }
 

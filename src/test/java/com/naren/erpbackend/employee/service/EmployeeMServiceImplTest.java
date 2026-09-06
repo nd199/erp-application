@@ -167,7 +167,7 @@ class EmployeeMServiceImplTest {
                 null, null
         );
 
-        when(employeeRepository.existsByEmailAndDeletedFalse("John@Example.com"))
+        when(employeeRepository.existsByEmailAndDeletedFalse("john@example.com"))
                 .thenReturn(false);
         when(departmentRepository.findById(1L))
                 .thenReturn(Optional.of(department));
