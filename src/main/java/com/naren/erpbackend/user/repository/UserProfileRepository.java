@@ -14,6 +14,9 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
 
     Optional<UserProfile> findByUsernameAndDeletedFalse(String username);
 
+    @Query("SELECT u FROM UserProfile u JOIN FETCH u.roles r JOIN FETCH r.permissions WHERE u.username = :username AND u.deleted = false")
+    Optional<UserProfile> findByUsernameWithRolesAndPermissions(@Param("username") String username);
+
     Optional<UserProfile> findByEmailAndDeletedFalse(String email);
 
     boolean existsByUsernameAndDeletedFalse(String username);

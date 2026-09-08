@@ -12,4 +12,4 @@ services:
     volumes:
       - erp_postgres_data:/var/lib/postgresql/data
 volumes:
-    erp_postgres_data:
+  erp_postgres_data:

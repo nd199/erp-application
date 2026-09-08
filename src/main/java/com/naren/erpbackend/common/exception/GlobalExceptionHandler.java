@@ -7,10 +7,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import io.jsonwebtoken.JwtException;
 
 import java.net.URI;
 import java.util.Map;
@@ -90,6 +93,18 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleUnreadable(HttpMessageNotReadableException ex) {
         log.warn("Malformed request body", ex);
         return problem(HttpStatus.BAD_REQUEST, "Malformed request body", "malformed_request");
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ProblemDetail handleBadCredentials(BadCredentialsException ex) {
+        log.warn("Authentication failed: {}", ex.getMessage());
+        return problem(HttpStatus.UNAUTHORIZED, "Invalid username or password", "authentication_failed");
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ProblemDetail handleJwtException(JwtException ex) {
+        log.warn("JWT error: {}", ex.getMessage());
+        return problem(HttpStatus.UNAUTHORIZED, "Invalid or expired token", "jwt_error");
     }
 
     @ExceptionHandler(Exception.class)

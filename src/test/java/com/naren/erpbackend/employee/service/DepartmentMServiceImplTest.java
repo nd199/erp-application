@@ -24,12 +24,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class DepartmentMServiceImplTest {
 
-    @Mock
-    private DepartmentRepository departmentRepository;
-
     private final DepartmentResponseMapper responseMapper
             = new DepartmentResponseMapper();
-
+    @Mock
+    private DepartmentRepository departmentRepository;
     private DepartmentMServiceImpl underTest;
 
     @BeforeEach

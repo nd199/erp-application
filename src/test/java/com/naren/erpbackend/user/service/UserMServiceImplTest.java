@@ -25,15 +25,12 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserMServiceImplTest {
 
-    @Mock
-    private UserProfileRepository userProfileRepository;
-
-    @Mock
-    private PasswordEncoder passwordEncoder;
-
     private final RegResponseMapper regResponseMapper = new RegResponseMapper();
     private final UserResponseMapper userResponseMapper = new UserResponseMapper();
-
+    @Mock
+    private UserProfileRepository userProfileRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
     private UserMServiceImpl userService;
 
     @BeforeEach

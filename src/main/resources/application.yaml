@@ -15,9 +15,28 @@ spring:
       minimum-idle: 2
       connection-timeout: 30000
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
 app:
   security:
     bcrypt-strength: ${BCRYPT_STRENGTH:12}
+    jwt:
+      secret: ${JWT_SECRET}
+      access-expiration-ms: ${JWT_EXPIRATION:3600000}
+      refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION:604800000}
+      issuer: ${JWT_ISSUER:erp-backend}
+  seeder:
+    admin:
+      username: ${ADMIN_USERNAME:superadmin}
+      email: ${ADMIN_EMAIL:admin@erp.local}
+      password: ${ADMIN_PASSWORD:admin123}
 
 logging:
   level:

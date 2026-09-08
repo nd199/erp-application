@@ -6,16 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class UserUtilityTest {
 
-    private static class TestableUtility extends UserUtility {
-        static String testNormalize(String username) {
-            return normalizeUsername(username);
-        }
-
-        static String testNormalizeEmail(String email) {
-            return normalizeEmail(email);
-        }
-    }
-
     @Test
     void trimsUsername() {
         assertThat(TestableUtility
@@ -42,5 +32,15 @@ class UserUtilityTest {
         assertThat(TestableUtility
                 .testNormalizeEmail("JOHN@EXAMPLE.COM")
         ).isEqualTo("john@example.com");
+    }
+
+    private static class TestableUtility extends UserUtility {
+        static String testNormalize(String username) {
+            return normalizeUsername(username);
+        }
+
+        static String testNormalizeEmail(String email) {
+            return normalizeEmail(email);
+        }
     }
 }

@@ -4,15 +4,15 @@ import java.util.Locale;
 
 public abstract class StringNormalizeUtil {
 
-    protected static String normalize(String value) {
+    public static String normalize(String value) {
         return value.trim();
     }
 
-    protected static String normalizeLowerCase(String value) {
+    public static String normalizeLowerCase(String value) {
         return value.trim().toLowerCase(Locale.ROOT);
     }
 
-    protected static String normalizeNullable(String value) {
+    public static String normalizeNullable(String value) {
         return value != null ? value.trim() : null;
     }
 }
