@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -24,6 +25,7 @@ public class EmployeeController {
     private final EmployeeQService employeeQService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('EMPLOYEE_CREATE')")
     public ResponseEntity<EmployeeResponse> createEmployee(
             @Valid @RequestBody EmployeeRequest request) {
         log.info("Create employee: email={}", request.email());
@@ -33,6 +35,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('EMPLOYEE_READ')")
     public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable Long id) {
         log.info("Fetch employee: id={}", id);
         EmployeeResponse response = employeeQService.findEmployeeById(id);
@@ -41,12 +44,14 @@ public class EmployeeController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('EMPLOYEE_READ')")
     public ResponseEntity<Page<EmployeeResponse>> getAllEmployees(Pageable pageable) {
         log.info("Fetch all employees: page={}, size={}", pageable.getPageNumber(), pageable.getPageSize());
         return ResponseEntity.ok(employeeQService.findAllEmployees(pageable));
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAuthority('EMPLOYEE_READ')")
     public ResponseEntity<Page<EmployeeResponse>> searchEmployees(
             @RequestParam("keyword") String keyword, Pageable pageable) {
         log.info("Search employees: keyword={}", keyword);
@@ -54,6 +59,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/department/{departmentId}")
+    @PreAuthorize("hasAuthority('EMPLOYEE_READ')")
     public ResponseEntity<Page<EmployeeResponse>> getEmployeesByDepartment(
             @PathVariable Long departmentId, Pageable pageable) {
         log.info("Fetch employees by department: departmentId={}", departmentId);
@@ -61,6 +67,7 @@ public class EmployeeController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('EMPLOYEE_UPDATE')")
     public ResponseEntity<EmployeeResponse> updateEmployee(
             @PathVariable Long id,
             @Valid @RequestBody EmployeeRequest request) {
@@ -71,6 +78,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('EMPLOYEE_DELETE')")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         log.info("Delete employee: id={}", id);
         employeeMService.deleteEmployee(id);

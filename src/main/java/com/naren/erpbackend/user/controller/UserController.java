@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -32,6 +33,7 @@ public class UserController {
     private final RoleService roleService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('USER_CREATE')")
     public ResponseEntity<RegResponse> createUser(@Valid @RequestBody RegRequest regRequest) {
         log.info("Create user requested: username={}, email={}", regRequest.username(), regRequest.email());
         RegResponse userProfile = userMService.registerUser(regRequest);
@@ -41,6 +43,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER_READ')")
     public ResponseEntity<UserResponse> getUserById(@PathVariable("id") Long id) {
         log.info("Fetch user requested: id={}", id);
         UserResponse userResponse = userQService.fetchUserById(id);
@@ -49,6 +52,7 @@ public class UserController {
     }
 
     @GetMapping("/username/{username}")
+    @PreAuthorize("hasAuthority('USER_READ')")
     public ResponseEntity<UserResponse> getUserByUsername(@PathVariable("username") String username) {
         log.info("Fetch user requested: username={}", username);
         UserResponse response = userQService.fetchUserByUsername(username);
@@ -57,6 +61,7 @@ public class UserController {
     }
 
     @GetMapping("/email/{email}")
+    @PreAuthorize("hasAuthority('USER_READ')")
     public ResponseEntity<UserResponse> getUserByEmail(@PathVariable("email") String email) {
         log.info("Fetch user requested: email={}", email);
         UserResponse response = userQService.fetchUserByEmail(email);
@@ -65,6 +70,7 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('USER_READ')")
     public ResponseEntity<Page<UserResponse>> getAllUsers(Pageable pageable) {
         log.info("Fetch all users requested: page={}, size={}", pageable.getPageNumber(), pageable.getPageSize());
         Page<UserResponse> page = userQService.findAllUsers(pageable);
@@ -73,6 +79,7 @@ public class UserController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAuthority('USER_READ')")
     public ResponseEntity<Page<UserResponse>> searchUsers(
             @RequestParam("keyword") String keyword, Pageable pageable) {
         log.info("Search users requested: keyword={}, page={}, size={}",
@@ -83,6 +90,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER_UPDATE')")
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable("id") Long id,
             @Valid @RequestBody UserUpdateRequest request
@@ -95,6 +103,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/activate")
+    @PreAuthorize("hasAuthority('USER_ACTIVATE')")
     public ResponseEntity<UserResponse> activateUser(@PathVariable Long id) {
         log.info("Activate user requested: id={}", id);
         UserResponse response = userStatusService.activateUser(id);
@@ -103,6 +112,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/deactivate")
+    @PreAuthorize("hasAuthority('USER_DEACTIVATE')")
     public ResponseEntity<UserResponse> deactivateUser(@PathVariable Long id) {
         log.info("Deactivate user requested: id={}", id);
         UserResponse response = userStatusService.deactivateUser(id);
@@ -111,6 +121,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/lock")
+    @PreAuthorize("hasAuthority('USER_LOCK')")
     public ResponseEntity<Void> lockUser(@PathVariable Long id) {
         log.info("Lock user requested: id={}", id);
         userStatusService.lockUser(id);
@@ -119,6 +130,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/unlock")
+    @PreAuthorize("hasAuthority('USER_UNLOCK')")
     public ResponseEntity<Void> unLockUser(@PathVariable Long id) {
         log.info("Unlock user requested: id={}", id);
         userStatusService.unlockUser(id);
@@ -127,6 +139,7 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/roles/{roleId}")
+    @PreAuthorize("hasAuthority('ROLE_ASSIGN')")
     public ResponseEntity<Void> assignRoleToUser(
             @PathVariable Long userId,
             @PathVariable Long roleId) {
@@ -137,6 +150,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}/roles/{roleId}")
+    @PreAuthorize("hasAuthority('ROLE_REMOVE')")
     public ResponseEntity<Void> removeRoleFromUser(
             @PathVariable Long userId,
             @PathVariable Long roleId) {
@@ -147,6 +161,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/roles")
+    @PreAuthorize("hasAuthority('USER_READ')")
     public ResponseEntity<Set<RoleResponse>> getRolesByUser(@PathVariable("userId") Long userId) {
         log.info("Fetch user roles requested: userId={}", userId);
         Set<RoleResponse> roles = userQService.findRolesByUser(userId);
@@ -155,6 +170,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER_DELETE')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userMService.deleteUser(id);
         return ResponseEntity.noContent().build();

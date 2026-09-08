@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -30,6 +31,7 @@ public class PermissionController {
     private final PermissionResponseMapper permissionResponseMapper;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<PermissionResponse> createPermission(@Valid @RequestBody PermissionRequest request) {
         log.info("Create permission requested: name={}", request.name());
         Permission permission = permissionService.createPermission(request.name(), request.description());
@@ -39,6 +41,7 @@ public class PermissionController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<PermissionResponse> updatePermission(
             @PathVariable Long id,
             @Valid @RequestBody PermissionRequest request) {
@@ -50,6 +53,7 @@ public class PermissionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<Void> deletePermission(@PathVariable Long id) {
         log.info("Delete permission requested: id={}", id);
         permissionService.deletePermission(id);
@@ -58,6 +62,7 @@ public class PermissionController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('PERMISSION_READ')")
     public ResponseEntity<PermissionResponse> getPermissionById(@PathVariable Long id) {
         log.info("Fetch permission requested: id={}", id);
         PermissionResponse response = permissionQService.findPermissionById(id);
@@ -66,6 +71,7 @@ public class PermissionController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('PERMISSION_READ')")
     public ResponseEntity<Page<PermissionResponse>> getAllPermissions(Pageable pageable) {
         log.info("Fetch all permissions requested: page={}, size={}", pageable.getPageNumber(), pageable.getPageSize());
         Page<PermissionResponse> page = permissionQService.findAllPermissions(pageable);
@@ -74,6 +80,7 @@ public class PermissionController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAuthority('PERMISSION_READ')")
     public ResponseEntity<Page<PermissionResponse>> searchPermissions(
             @RequestParam String keyword,
             Pageable pageable) {
@@ -84,6 +91,7 @@ public class PermissionController {
     }
 
     @GetMapping("/{permissionId}/roles")
+    @PreAuthorize("hasAuthority('PERMISSION_READ')")
     public ResponseEntity<Set<RoleResponse>> getRolesByPermission(@PathVariable Long permissionId) {
         log.info("Fetch roles for permission requested: permissionId={}", permissionId);
         Set<RoleResponse> roles = permissionQService.findRolesByPermission(permissionId);

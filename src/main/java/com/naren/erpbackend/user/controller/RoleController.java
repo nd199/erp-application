@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -30,6 +31,7 @@ public class RoleController {
     private final PermissionService permissionService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<RoleResponse> createRole(@Valid @RequestBody RoleRequest request) {
         log.info("Create role requested: name={}", request.name());
         RoleResponse response = roleService.createRole(request.name(), request.description());
@@ -38,6 +40,7 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_READ')")
     public ResponseEntity<RoleResponse> getRoleById(@PathVariable Long id) {
         log.info("Fetch role requested: id={}", id);
         RoleResponse response = roleQService.findRoleById(id);
@@ -46,6 +49,7 @@ public class RoleController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_READ')")
     public ResponseEntity<Page<RoleResponse>> getAllRoles(Pageable pageable) {
         log.info("Fetch all roles requested: page={}, size={}", pageable.getPageNumber(), pageable.getPageSize());
         Page<RoleResponse> page = roleQService.findAllRoles(pageable);
@@ -54,6 +58,7 @@ public class RoleController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAuthority('ROLE_READ')")
     public ResponseEntity<Page<RoleResponse>> searchRoles(
             @RequestParam String keyword,
             Pageable pageable) {
@@ -64,6 +69,7 @@ public class RoleController {
     }
 
     @PostMapping("/{roleId}/permissions/{permissionId}")
+    @PreAuthorize("hasAuthority('PERMISSION_ASSIGN')")
     public ResponseEntity<Void> addPermission(
             @PathVariable Long roleId,
             @PathVariable Long permissionId) {
@@ -74,6 +80,7 @@ public class RoleController {
     }
 
     @DeleteMapping("/{roleId}/permissions/{permissionId}")
+    @PreAuthorize("hasAuthority('PERMISSION_REMOVE')")
     public ResponseEntity<Void> removePermission(
             @PathVariable Long roleId,
             @PathVariable Long permissionId) {
@@ -84,6 +91,7 @@ public class RoleController {
     }
 
     @GetMapping("/{roleId}/permissions")
+    @PreAuthorize("hasAuthority('ROLE_READ')")
     public ResponseEntity<Set<PermissionResponse>> getPermissions(@PathVariable Long roleId) {
         log.info("Fetch permissions for role requested: roleId={}", roleId);
         Set<PermissionResponse> permissions = roleService.findPermissionsByRole(roleId);
@@ -92,6 +100,7 @@ public class RoleController {
     }
 
     @GetMapping("/{roleId}/permissions/{permissionId}")
+    @PreAuthorize("hasAuthority('ROLE_READ')")
     public ResponseEntity<Boolean> hasPermission(
             @PathVariable Long roleId,
             @PathVariable Long permissionId) {
@@ -102,6 +111,7 @@ public class RoleController {
     }
 
     @GetMapping("/{roleId}/users")
+    @PreAuthorize("hasAuthority('ROLE_READ')")
     public ResponseEntity<Set<UserResponse>> getUsersByRole(@PathVariable Long roleId) {
         log.info("Fetch users for role requested: roleId={}", roleId);
         Set<UserResponse> users = roleQService.findUsersByRole(roleId);

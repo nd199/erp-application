@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -24,6 +25,7 @@ public class DepartmentController {
     private final DepartmentQService departmentQService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('EMPLOYEE_CREATE')")
     public ResponseEntity<DepartmentResponse> createDepartment(
             @Valid @RequestBody DepartmentRequest request) {
         log.info("Create department: name={}", request.name());
@@ -33,6 +35,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('EMPLOYEE_READ')")
     public ResponseEntity<DepartmentResponse> getDepartmentById(@PathVariable Long id) {
         log.info("Fetch department: id={}", id);
         DepartmentResponse response = departmentQService.findDepartmentById(id);
@@ -41,12 +44,14 @@ public class DepartmentController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('EMPLOYEE_READ')")
     public ResponseEntity<Page<DepartmentResponse>> getAllDepartments(Pageable pageable) {
         log.info("Fetch all departments: page={}, size={}", pageable.getPageNumber(), pageable.getPageSize());
         return ResponseEntity.ok(departmentQService.findAllDepartments(pageable));
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAuthority('EMPLOYEE_READ')")
     public ResponseEntity<Page<DepartmentResponse>> searchDepartments(
             @RequestParam("keyword") String keyword, Pageable pageable) {
         log.info("Search departments: keyword={}", keyword);
@@ -54,6 +59,7 @@ public class DepartmentController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('EMPLOYEE_UPDATE')")
     public ResponseEntity<DepartmentResponse> updateDepartment(
             @PathVariable Long id,
             @Valid @RequestBody DepartmentRequest request) {
@@ -64,6 +70,7 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('EMPLOYEE_DELETE')")
     public ResponseEntity<Void> deleteDepartment(@PathVariable Long id) {
         log.info("Delete department: id={}", id);
         departmentMService.deleteDepartment(id);
