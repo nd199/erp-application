@@ -1,6 +1,7 @@
 ### Build ###
 target/
 build/
+dist/
 
 ### IDE ###
 .idea/
@@ -17,12 +18,16 @@ build/
 .sts4-cache
 nbproject/private/
 nbbuild/
-dist/
 nbdist/
 .nb-gradle/
 
 ### Maven wrapper ###
 .mvn/
+
+### Node ###
+node_modules/
+.npm
+*.tsbuildinfo
 
 ### OS ###
 .DS_Store
