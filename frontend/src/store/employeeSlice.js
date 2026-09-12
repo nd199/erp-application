@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {createEmployee, deleteEmployee, fetchById, fetchEmployees, updateEmployee,
+import {createEmployee, deleteEmployee, fetchById, fetchEmployees, fetchByDepartment, updateEmployee,
 searchEmployee} from './employeeThunks.js'
 
 const pending = (state) => {
@@ -89,6 +89,16 @@ const employeeSlice = createSlice({
                 state.employees = action.payload
             })
             .addCase(searchEmployee.rejected, (state, action) => {
+                rejected(state, action)
+            })
+            .addCase(fetchByDepartment.pending, (state) => {
+                pending(state)
+            })
+            .addCase(fetchByDepartment.fulfilled, (state, action) => {
+                state.loading = false
+                state.employees = action.payload
+            })
+            .addCase(fetchByDepartment.rejected, (state, action) => {
                 rejected(state, action)
             })
     }
