@@ -6,7 +6,7 @@ const fetchEmployees = createAsyncThunk(
     'employees/fetchAll',
     async (params) => {
         const {data} = await employeesAPI.getAll(params)
-        return data;
+        return data.content || data;
     }
 )
 
@@ -46,7 +46,7 @@ const searchEmployee = createAsyncThunk(
     'employees/search',
     async ({keyword, params}) => {
         const {data} = await employeesAPI.search(keyword, params)
-        return data
+        return data.content || data
     }
 )
 
@@ -56,7 +56,7 @@ const fetchByDepartment = createAsyncThunk(
         const {data} = await employeesAPI.getByDepartment(
             deptId, params
         )
-        return data
+        return data.content || data
     }
 )
 

@@ -5,7 +5,7 @@ const fetchRoles = createAsyncThunk(
     'roles/fetchAll',
     async (params) => {
         const {data} = await rolesAPI.getAll(params)
-        return data;
+        return data.content || data;
     }
 )
 
@@ -29,7 +29,7 @@ const searchRole = createAsyncThunk(
     'roles/search',
     async ({keyword, params}) => {
         const {data} = await rolesAPI.search(keyword, params)
-        return data
+        return data.content || data
     }
 )
 

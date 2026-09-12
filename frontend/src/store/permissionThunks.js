@@ -5,7 +5,7 @@ const fetchPermissions = createAsyncThunk(
     'permissions/fetchAll',
     async (params) => {
         const {data} = await permissionsAPI.getAll(params)
-        return data;
+        return data.content || data;
     }
 )
 
@@ -45,7 +45,7 @@ const searchPermission = createAsyncThunk(
     'permissions/search',
     async ({keyword, params}) => {
         const {data} = await permissionsAPI.search(keyword, params)
-        return data
+        return data.content || data
     }
 )
 

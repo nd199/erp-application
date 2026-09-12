@@ -5,7 +5,7 @@ const fetchDepartments = createAsyncThunk(
     'departments/fetchAll',
     async (params) => {
         const {data} = await departmentsAPI.getAll(params)
-        return data;
+        return data.content || data;
     }
 )
 
@@ -45,7 +45,7 @@ const searchDepartment = createAsyncThunk(
     'departments/search',
     async ({keyword, params}) => {
         const {data} = await departmentsAPI.search(keyword, params)
-        return data
+        return data.content || data
     }
 )
 

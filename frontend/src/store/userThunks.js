@@ -5,7 +5,7 @@ const fetchUsers = createAsyncThunk(
     'users/fetchAll',
     async (params) => {
         const {data} = await usersAPI.getAll(params)
-        return data;
+        return data.content || data;
     }
 )
 
@@ -45,7 +45,7 @@ const searchUser = createAsyncThunk(
     'users/search',
     async ({keyword, params}) => {
         const {data} = await usersAPI.search(keyword, params)
-        return data
+        return data.content || data
     }
 )
 
