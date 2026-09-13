@@ -7,6 +7,7 @@ import Departments from './pages/Departments'
 import Users from './pages/Users'
 import Roles from './pages/Roles'
 import Permissions from './pages/Permissions'
+import Analytics from './pages/Analytics'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -35,6 +36,7 @@ function App() {
                         <Route path="/users" element={<Users />} />
                         <Route path="/roles" element={<Roles />} />
                         <Route path="/permissions" element={<Permissions />} />
+                        <Route path="/analytics" element={<Analytics />} />
                     </Route>
                 </Route>
 

@@ -1,46 +1,49 @@
-function FormField({ label, name, type = 'text', as = 'input', options, error, ...props }) {
-    const baseClasses = `w-full px-4 py-2.5 text-sm text-white/80 placeholder-white/30 rounded-xl border bg-white/5 backdrop-blur-xl focus:outline-none transition-all ${
-        error
-            ? 'border-red-500/50 focus:border-red-500/70'
-            : 'border-white/15 focus:border-blue-500/50'
-    }`
+import { Field, ErrorMessage } from 'formik'
 
-    return (
-        <div className="mb-4">
-            <label className="block text-sm font-medium text-white/60 mb-1.5">
-                {label}
-            </label>
+function FormField({ name, label, type = 'text', placeholder, options, as = 'input', rows = 3 }) {
+  return (
+    <div className="group/field">
+      <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-2">
+        {label}
+      </label>
 
-            {as === 'select' ? (
-                <select name={name} className={baseClasses} {...props}>
-                    <option value="">Select {label}</option>
-                    {options?.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                            {opt.label}
-                        </option>
-                    ))}
-                </select>
-            ) : as === 'textarea' ? (
-                <textarea
-                    name={name}
-                    rows={4}
-                    className={baseClasses}
-                    {...props}
-                />
-            ) : (
-                <input
-                    type={type}
-                    name={name}
-                    className={baseClasses}
-                    {...props}
-                />
-            )}
+      {as === 'select' ? (
+        <Field
+          name={name}
+          as="select"
+          className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white outline-none focus:border-blue-500/40 focus:bg-white/[0.05] focus:shadow-[0_0_20px_-5px_rgba(59,130,246,0.15)] transition-all duration-300 appearance-none cursor-pointer"
+        >
+          <option value="" className="bg-gray-900">Select {label}</option>
+          {options?.map((opt) => (
+            <option key={opt.value} value={opt.value} className="bg-gray-900">
+              {opt.label}
+            </option>
+          ))}
+        </Field>
+      ) : as === 'textarea' ? (
+        <Field
+          name={name}
+          as="textarea"
+          rows={rows}
+          placeholder={placeholder}
+          className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white placeholder-gray-600 outline-none focus:border-blue-500/40 focus:bg-white/[0.05] focus:shadow-[0_0_20px_-5px_rgba(59,130,246,0.15)] transition-all duration-300 resize-none"
+        />
+      ) : (
+        <Field
+          name={name}
+          type={type}
+          placeholder={placeholder}
+          className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white placeholder-gray-600 outline-none focus:border-blue-500/40 focus:bg-white/[0.05] focus:shadow-[0_0_20px_-5px_rgba(59,130,246,0.15)] transition-all duration-300"
+        />
+      )}
 
-            {error && (
-                <p className="mt-1 text-xs text-red-400">{error}</p>
-            )}
-        </div>
-    )
+      <ErrorMessage
+        name={name}
+        component="p"
+        className="text-red-400 text-xs mt-1.5 ml-1"
+      />
+    </div>
+  )
 }
 
 export default FormField

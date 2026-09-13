@@ -1,12 +1,31 @@
 import api from './axios'
+import { isDevMode } from '../lib/devMode'
+import { fakeRoles } from '../lib/fakeData'
+import { mockList, mockCreate } from '../lib/mockApi'
+
+const store = [...fakeRoles]
 
 export const rolesAPI = {
-  getAll: (params) => api.get('/roles', { params }),
-  getById: (id) => api.get(`/roles/${id}`),
-  create: (data) => api.post('/roles', data),
-  search: (keyword, params) => api.get('/roles/search', { params: { keyword, ...params } }),
-  getPermissions: (roleId) => api.get(`/roles/${roleId}/permissions`),
-  assignPermission: (roleId, permissionId) => api.post(`/roles/${roleId}/permissions/${permissionId}`),
-  removePermission: (roleId, permissionId) => api.delete(`/roles/${roleId}/permissions/${permissionId}`),
-  getUsers: (roleId) => api.get(`/roles/${roleId}/users`),
+  getAll: (params) => isDevMode() ? mockList(store, params) : api.get('/roles', { params }),
+  getById: (id) => isDevMode()
+    ? Promise.resolve({ data: store.find((r) => r.id === id) })
+    : api.get(`/roles/${id}`),
+  create: (data) => isDevMode() ? mockCreate(store, data) : api.post('/roles', data),
+  search: (keyword, params) => isDevMode()
+    ? mockList(store.filter((r) =>
+        `${r.name} ${r.description}`.toLowerCase().includes(keyword.toLowerCase())
+      ))
+    : api.get('/roles/search', { params: { keyword, ...params } }),
+  getPermissions: (roleId) => isDevMode()
+    ? Promise.resolve({ data: store.find((r) => r.id === roleId)?.permissions || [] })
+    : api.get(`/roles/${roleId}/permissions`),
+  assignPermission: (roleId, permissionId) => isDevMode()
+    ? Promise.resolve({ data: { roleId, permissionId } })
+    : api.post(`/roles/${roleId}/permissions/${permissionId}`),
+  removePermission: (roleId, permissionId) => isDevMode()
+    ? Promise.resolve({ data: { roleId, permissionId } })
+    : api.delete(`/roles/${roleId}/permissions/${permissionId}`),
+  getUsers: (roleId) => isDevMode()
+    ? Promise.resolve({ data: [] })
+    : api.get(`/roles/${roleId}/users`),
 }

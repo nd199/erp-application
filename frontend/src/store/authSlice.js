@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { jwtDecode } from 'jwt-decode'
+import { isDevMode } from '../lib/devMode'
+import { fakeDevUser } from '../lib/fakeData'
 
 function parseUserFromToken(accessToken) {
     if (!accessToken) return null
@@ -16,11 +18,13 @@ function parseUserFromToken(accessToken) {
     }
 }
 
+const devUser = isDevMode() ? fakeDevUser : null
+
 const initialState = {
-    user: parseUserFromToken(localStorage.getItem('accessToken')),
-    accessToken: localStorage.getItem('accessToken') || null,
-    refreshToken: localStorage.getItem('refreshToken') || null,
-    isLoggedIn: !!localStorage.getItem('accessToken'),
+    user: devUser || parseUserFromToken(localStorage.getItem('accessToken')),
+    accessToken: devUser ? 'dev-token' : (localStorage.getItem('accessToken') || null),
+    refreshToken: devUser ? 'dev-refresh' : (localStorage.getItem('refreshToken') || null),
+    isLoggedIn: devUser ? true : !!localStorage.getItem('accessToken'),
 }
 
 const authSlice = createSlice({

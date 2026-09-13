@@ -1,20 +1,18 @@
 import { FiInbox } from 'react-icons/fi'
 
-function EmptyState({ message = 'No data found', onAdd, addLabel }) {
-    return (
-        <div className="flex flex-col items-center justify-center py-20 rounded-xl border border-white/10 bg-white/5">
-            <FiInbox className="w-12 h-12 text-white/20 mb-4" />
-            <p className="text-white/50 text-sm mb-4">{message}</p>
-            {onAdd && (
-                <button
-                    onClick={onAdd}
-                    className="px-4 py-2 text-sm font-medium text-blue-400 border border-blue-500/30 rounded-lg hover:bg-blue-500/10 transition-colors cursor-pointer"
-                >
-                    {addLabel || 'Add New'}
-                </button>
-            )}
+function EmptyState({ icon: Icon = FiInbox, title = 'No data found', description = 'There are no records to display.' }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-24 animate-fade-in">
+      <div className="relative mb-5">
+        <div className="w-20 h-20 rounded-3xl glass flex items-center justify-center animate-float">
+          <Icon className="w-8 h-8 text-gray-600" />
         </div>
-    )
+        <div className="absolute inset-0 rounded-3xl bg-white/[0.02] blur-xl" />
+      </div>
+      <h3 className="text-sm font-semibold text-gray-400 mb-1">{title}</h3>
+      <p className="text-xs text-gray-600 max-w-[240px] text-center leading-relaxed">{description}</p>
+    </div>
+  )
 }
 
 export default EmptyState

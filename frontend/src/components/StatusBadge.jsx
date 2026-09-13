@@ -1,18 +1,18 @@
+const config = {
+  ACTIVE: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', dot: 'bg-emerald-400', border: 'border-emerald-500/20', label: 'Active' },
+  INACTIVE: { bg: 'bg-gray-500/10', text: 'text-gray-400', dot: 'bg-gray-400', border: 'border-gray-500/20', label: 'Inactive' },
+  LOCKED: { bg: 'bg-red-500/10', text: 'text-red-400', dot: 'bg-red-400', border: 'border-red-500/20', label: 'Locked' },
+}
+
 function StatusBadge({ status }) {
-    const styles = {
-        ACTIVE: 'bg-green-500/15 border-green-500/30 text-green-400',
-        INACTIVE: 'bg-gray-500/15 border-gray-500/30 text-gray-400',
-        PENDING: 'bg-yellow-500/15 border-yellow-500/30 text-yellow-400',
-        LOCKED: 'bg-red-500/15 border-red-500/30 text-red-400',
-    }
+  const style = config[status] || config.INACTIVE
 
-    const style = styles[status] || styles.ACTIVE
-
-    return (
-        <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full border ${style}`}>
-            {status}
-        </span>
-    )
+  return (
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full ${style.bg} ${style.text} border ${style.border}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${style.dot} animate-glow-pulse`} />
+      {style.label}
+    </span>
+  )
 }
 
 export default StatusBadge

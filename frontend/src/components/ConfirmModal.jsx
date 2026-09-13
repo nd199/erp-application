@@ -1,67 +1,58 @@
-import { useEffect } from 'react'
+import { FiAlertTriangle } from 'react-icons/fi'
 
-function ConfirmModal({ isOpen, title, message, onConfirm, onCancel }) {
+function ConfirmModal({ isOpen, onClose, onConfirm, title, message, confirmLabel = 'Delete', loading = false }) {
+  if (!isOpen) return null
 
-    useEffect(() => {
-        const handleEsc = (e) => {
-            if (e.key === 'Escape') onCancel()
-        }
-        if (isOpen) document.addEventListener('keydown', handleEsc)
-        return () => document.removeEventListener('keydown', handleEsc)
-    }, [isOpen, onCancel])
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div
+        className="absolute inset-0 bg-black/70 backdrop-blur-md animate-fade-in"
+        onClick={onClose}
+      />
 
-    if (!isOpen) return null
+      <div className="relative w-full max-w-md animate-scale-in">
+        {/* Glow */}
+        <div className="absolute -inset-1 bg-gradient-to-r from-red-600/10 to-orange-600/10 rounded-3xl blur-xl opacity-50" />
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div
-                className="absolute inset-0 bg-black/40 backdrop-blur-md"
-                onClick={onCancel}
-            />
+        <div className="relative glass-strong rounded-3xl shadow-2xl shadow-black/60 p-6 overflow-hidden">
+          {/* Top gradient edge */}
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent" />
 
-            <div className="relative w-full max-w-md mx-4 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] overflow-hidden">
-                <div className="h-1 w-full bg-gradient-to-r from-red-500 via-orange-400 to-red-500" />
-
-                <div className="px-8 py-7">
-                    <div className="flex justify-center mb-5">
-                        <div className="w-16 h-16 rounded-full bg-red-500/15 border border-red-500/30 flex items-center justify-center">
-                            <svg
-                                className="w-8 h-8 text-red-400"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth="1.5"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
-                                />
-                            </svg>
-                        </div>
-                    </div>
-
-                    <h2 className="text-xl font-bold text-white text-center mb-2">{title}</h2>
-                    <p className="text-white/60 text-center text-sm leading-relaxed">{message}</p>
-                </div>
-
-                <div className="px-8 pb-7 flex gap-3">
-                    <button
-                        onClick={onCancel}
-                        className="flex-1 px-5 py-3 text-sm font-semibold text-white/80 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 hover:border-white/25 transition-all duration-200 cursor-pointer"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        onClick={onConfirm}
-                        className="flex-1 px-5 py-3 text-sm font-semibold text-white rounded-xl border border-red-500/40 bg-red-500/20 hover:bg-red-500/30 hover:border-red-500/60 transition-all duration-200 shadow-[0_0_15px_rgba(239,68,68,0.15)] cursor-pointer"
-                    >
-                        Delete
-                    </button>
-                </div>
+          <div className="flex items-start gap-4 mb-6">
+            <div className="p-3 rounded-2xl bg-red-500/10 border border-red-500/20 animate-bounce-in shrink-0">
+              <FiAlertTriangle className="w-6 h-6 text-red-400" />
             </div>
+            <div>
+              <h3 className="text-lg font-bold text-gradient">{title}</h3>
+              <p className="text-sm text-gray-400 mt-1 leading-relaxed">{message}</p>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3">
+            <button
+              onClick={onClose}
+              disabled={loading}
+              className="px-5 py-2.5 text-sm font-medium text-gray-400 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] rounded-xl transition-all duration-200 cursor-pointer disabled:opacity-50"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={onConfirm}
+              disabled={loading}
+              className="px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 rounded-xl transition-all duration-300 shadow-lg shadow-red-600/20 hover:shadow-red-500/30 cursor-pointer disabled:opacity-50"
+            >
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Processing...
+                </span>
+              ) : confirmLabel}
+            </button>
+          </div>
         </div>
-    )
+      </div>
+    </div>
+  )
 }
 
 export default ConfirmModal

@@ -1,13 +1,11 @@
 import { useSelector } from 'react-redux'
 import { Navigate, Outlet } from 'react-router-dom'
+import { isDevMode } from '../lib/devMode'
 
 function ProtectedRoute() {
-    // const isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
-
-    // if (!isLoggedIn) {
-    //     return <Navigate to="/login" replace />
-    // }
-
+    if (isDevMode()) return <Outlet />
+    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
+    if (!isLoggedIn) return <Navigate to="/login" replace />
     return <Outlet />
 }
 
