@@ -9,6 +9,17 @@ export const fakeDepartments = [
   { id: 8, name: 'Customer Support', description: 'Client onboarding, ticket resolution, and customer satisfaction' },
 ];
 
+export const fakeProducts = [
+  { id: 1, name: 'Laptop Pro 14"', sku: 'LP-14X', description: '14-inch ultrabook, 16GB RAM, 512GB SSD', price: 119900, quantity: 25, active: true, imageUrl: 'https://picsum.photos/seed/laptop/150' },
+  { id: 2, name: 'Mechanical Keyboard', sku: 'KB-200', description: 'RGB backlit mechanical keyboard with hot-swap switches', price: 8999, quantity: 60, active: true, imageUrl: 'https://picsum.photos/seed/keyboard/150' },
+  { id: 3, name: 'Wireless Mouse', sku: 'MS-1001', description: '2.4GHz wireless mouse, silent clicks', price: 1999, quantity: 120, active: true, imageUrl: 'https://picsum.photos/seed/mouse/150' },
+  { id: 4, name: '27" 4K Monitor', sku: 'MN-27K', description: '27-inch 4K IPS display, USB-C power delivery', price: 44999, quantity: 15, active: true, imageUrl: 'https://picsum.photos/seed/monitor/150' },
+  { id: 5, name: 'USB-C Docking Station', sku: 'DK-C03', description: '9-in-1 docking station with 4K HDMI and ethernet', price: 13499, quantity: 0, active: true, imageUrl: 'https://picsum.photos/seed/dock/150' },
+  { id: 6, name: 'Noise Cancelling Headphones', sku: 'HP-NC7', description: 'Over-ear ANC headphones, 30h battery', price: 25999, quantity: 40, active: true, imageUrl: 'https://picsum.photos/seed/headphones/150' },
+  { id: 7, name: '1080p Webcam', sku: 'WC-1080', description: 'Full HD webcam with privacy shutter', price: 4999, quantity: 3, active: false, imageUrl: 'https://picsum.photos/seed/webcam/150' },
+  { id: 8, name: 'Bluetooth Speaker', sku: 'SP-BT2', description: 'Portable Bluetooth 5.3 speaker, IPX7 rated', price: 7999, quantity: 35, active: true, imageUrl: 'https://picsum.photos/seed/speaker/150' },
+];
+
 export const fakeEmployees = [
   { id: 1, firstName: 'Raj', lastName: 'Kumar', email: 'raj.kumar@nexacorp.com', phone: '+91-98765-43210', hireDate: '2022-01-15', jobTitle: 'Senior Software Engineer', department: fakeDepartments[0], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=1' },
   { id: 2, firstName: 'Priya', lastName: 'Sharma', email: 'priya.sharma@nexacorp.com', phone: '+91-98765-43211', hireDate: '2021-06-20', jobTitle: 'HR Manager', department: fakeDepartments[1], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=2' },

@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage'
 import Dashboard from './pages/Dashboard'
 import Employees from './pages/Employees'
 import Departments from './pages/Departments'
+import Products from './pages/Products'
 import Users from './pages/Users'
 import Roles from './pages/Roles'
 import Permissions from './pages/Permissions'
@@ -33,6 +34,7 @@ function App() {
                         <Route path="/" element={<Dashboard />} />
                         <Route path="/employees" element={<Employees />} />
                         <Route path="/departments" element={<Departments />} />
+                        <Route path="/products" element={<Products />} />
                         <Route path="/users" element={<Users />} />
                         <Route path="/roles" element={<Roles />} />
                         <Route path="/permissions" element={<Permissions />} />

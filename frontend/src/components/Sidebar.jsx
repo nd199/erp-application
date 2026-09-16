@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { FiGrid, FiUsers, FiHome, FiUser, FiKey, FiShield, FiChevronRight, FiZap, FiBarChart2 } from 'react-icons/fi'
+import { FiGrid, FiUsers, FiHome, FiBox, FiUser, FiKey, FiShield, FiChevronRight, FiZap, FiBarChart2 } from 'react-icons/fi'
 import { isDevMode } from '../lib/devMode'
 
 const navItems = [
@@ -7,6 +7,7 @@ const navItems = [
     { to: '/analytics', label: 'Analytics', icon: FiBarChart2 },
     { to: '/employees', label: 'Employees', icon: FiUsers },
     { to: '/departments', label: 'Departments', icon: FiHome },
+    { to: '/products', label: 'Products', icon: FiBox },
     { to: '/users', label: 'Users', icon: FiUser },
     { to: '/roles', label: 'Roles', icon: FiKey },
     { to: '/permissions', label: 'Permissions', icon: FiShield },
