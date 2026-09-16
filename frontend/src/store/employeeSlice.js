@@ -16,6 +16,7 @@ const employeeSlice = createSlice({
     initialState: {
         employees: [],
         currEmployee: null,
+        total: 0,
         loading: false,
         error: null
     },
@@ -33,7 +34,8 @@ const employeeSlice = createSlice({
             })
             .addCase(fetchEmployees.fulfilled, (state, action) => {
                     state.loading = false
-                    state.employees = action.payload
+                    state.employees = action.payload.rows
+                    state.total = action.payload.total
             })
             .addCase(fetchEmployees.rejected, (state, action) => {
                 rejected(state, action)
@@ -54,6 +56,7 @@ const employeeSlice = createSlice({
             .addCase(createEmployee.fulfilled, (state, action) => {
                 state.loading = false;
                 state.employees.push(action.payload)
+                state.total += 1
             })
             .addCase(createEmployee.rejected, (state, action) => {
                 rejected(state, action)
@@ -77,6 +80,7 @@ const employeeSlice = createSlice({
                 state.loading = false
                 state.employees = state.employees
                     .filter(e => e.id !== action.payload)
+                state.total = Math.max(0, state.total - 1)
             })
             .addCase(deleteEmployee.rejected, (state, action) => {
                 rejected(state, action)

@@ -13,8 +13,11 @@ import ConfirmModal from '../components/ConfirmModal'
 import FormField from '../components/FormField'
 import LoadingSpinner from '../components/LoadingSpinner'
 import EmptyState from '../components/EmptyState'
+import Avatar from '../components/Avatar'
+import ImageUpload from '../components/ImageUpload'
 import { fetchEmployees, createEmployee, updateEmployee, deleteEmployee } from '../store/employeeThunks'
-import { fakeDepartments } from '../lib/fakeData'
+import { fetchDepartments } from '../store/departmentThunks'
+import { formatDate } from '../utils/format'
 
 const schema = Yup.object({
   firstName: Yup.string().trim().required('Required'),
@@ -26,30 +29,52 @@ const schema = Yup.object({
   departmentId: Yup.number().required('Required'),
 })
 
+const PAGE_SIZE = 8
+
+const sortFieldFor = (key) => (key === 'departmentName' ? 'department.name' : key)
+
 function Employees() {
   const dispatch = useDispatch()
-  const { employees, loading } = useSelector((s) => s.employees)
+  const { employees, loading, total } = useSelector((s) => s.employees)
+  const departments = useSelector((s) => s.departments.departments)
   const [search, setSearch] = useState('')
+  const [query, setQuery] = useState('')
+  const [status, setStatus] = useState('')
+  const [departmentId, setDepartmentId] = useState('')
+  const [page, setPage] = useState(1)
+  const [sortKey, setSortKey] = useState(null)
+  const [sortDir, setSortDir] = useState('asc')
   const [modalOpen, setModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState('create')
   const [selected, setSelected] = useState(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
-  const [page, setPage] = useState(1)
-  const perPage = 8
 
-  useEffect(() => { dispatch(fetchEmployees()) }, [dispatch])
+  useEffect(() => { dispatch(fetchDepartments()) }, [dispatch])
 
-  const filtered = employees.filter((e) =>
-    `${e.firstName} ${e.lastName} ${e.email} ${e.jobTitle}`.toLowerCase().includes(search.toLowerCase())
-  )
-  const totalPages = Math.ceil(filtered.length / perPage)
-  const paged = filtered.slice((page - 1) * perPage, page * perPage)
+  useEffect(() => {
+    const t = setTimeout(() => { setQuery(search); setPage(1) }, 350)
+    return () => clearTimeout(t)
+  }, [search])
+
+  useEffect(() => {
+    const params = { page: page - 1, size: PAGE_SIZE }
+    if (query) params.search = query
+    if (status) params.status = status
+    if (departmentId) params.departmentId = Number(departmentId)
+    if (sortKey && sortDir) params.sort = `${sortFieldFor(sortKey)},${sortDir}`
+    dispatch(fetchEmployees(params))
+  }, [dispatch, query, page, status, departmentId, sortKey, sortDir])
 
   const openModal = (mode, row = null) => { setModalMode(mode); setSelected(row); setModalOpen(true) }
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    const dept = fakeDepartments.find((d) => d.id === Number(values.departmentId))
-    const payload = { ...values, department: dept, departmentId: undefined }
+    const dept = departments.find((d) => d.id === Number(values.departmentId))
+    const payload = {
+      ...values,
+      departmentId: Number(values.departmentId),
+      departmentName: dept?.name,
+      department: undefined,
+    }
     try {
       if (modalMode === 'create') {
         await dispatch(createEmployee(payload)).unwrap()
@@ -64,16 +89,18 @@ function Employees() {
   }
 
   const handleDelete = async () => {
-    try { await dispatch(deleteEmployee(selected.id)).unwrap(); toast.success('Employee deleted'); setConfirmOpen(false) }
-    catch (err) { toast.error(err.message || 'Failed') }
+    try {
+      await dispatch(deleteEmployee(selected.id)).unwrap()
+      toast.success('Employee deleted')
+      setConfirmOpen(false)
+      if (employees.length === 1 && page > 1) setPage((p) => p - 1)
+    } catch (err) { toast.error(err.message || 'Failed') }
   }
 
   const columns = [
     { key: 'firstName', label: 'Employee', render: (_, row) => (
       <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500/15 to-violet-500/10 border border-white/[0.06] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
-          <span className="text-[10px] font-bold text-blue-400">{row.firstName[0]}{row.lastName[0]}</span>
-        </div>
+        <Avatar src={row.imageUrl} name={`${row.firstName} ${row.lastName}`} size="md" />
         <div>
           <p className="text-white font-semibold text-sm">{row.firstName} {row.lastName}</p>
           <p className="text-[11px] text-gray-500">{row.email}</p>
@@ -81,9 +108,9 @@ function Employees() {
       </div>
     )},
     { key: 'jobTitle', label: 'Position' },
-    { key: 'department', label: 'Department', render: (val) => val?.name || '-' },
+    { key: 'departmentName', label: 'Department', render: (val, row) => val || row.department?.name || '-', exportValue: (row) => row.departmentName || row.department?.name || '' },
     { key: 'phone', label: 'Phone' },
-    { key: 'hireDate', label: 'Joined', render: (val) => new Date(val).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) },
+    { key: 'hireDate', label: 'Joined', render: formatDate },
     { key: 'status', label: 'Status', render: (val) => <StatusBadge status={val} /> },
     { key: 'id', label: '', render: (_, row) => (
       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -93,29 +120,62 @@ function Employees() {
     )},
   ]
 
+  const selectCls = "bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] rounded-xl pl-3 pr-8 py-2.5 text-sm text-gray-300 outline-none transition-colors cursor-pointer"
+
   return (
     <div>
       <PageHeader title="Employees" subtitle="Manage your workforce" icon={FiUsers} actionLabel="Add Employee" onAction={() => openModal('create')} actionIcon={FiPlus} />
-      <div className="flex items-center gap-3 mb-6">
-        <div className="flex-1 max-w-sm"><SearchBar value={search} onChange={(v) => { setSearch(v); setPage(1) }} placeholder="Search employees..." /></div>
-        <span className="text-[11px] text-gray-600 font-medium">{filtered.length} employees</span>
+
+      <div className="flex flex-wrap items-center gap-3 mb-6">
+        <div className="flex-1 min-w-[240px] max-w-sm"><SearchBar value={search} onChange={setSearch} placeholder="Search employees..." /></div>
+        <select value={status} onChange={(e) => { setStatus(e.target.value); setPage(1) }} className={selectCls}>
+          <option value="">All Status</option>
+          <option value="ACTIVE">Active</option>
+          <option value="INACTIVE">Inactive</option>
+          <option value="LOCKED">Locked</option>
+        </select>
+        <select value={departmentId} onChange={(e) => { setDepartmentId(e.target.value); setPage(1) }} className={selectCls}>
+          <option value="">All Departments</option>
+          {departments.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+        </select>
       </div>
 
-      {loading && employees.length === 0 ? <LoadingSpinner /> : paged.length === 0 ? <EmptyState title="No employees found" description="Add your first employee to get started." /> : (
-        <DataTable columns={columns} data={paged} onRowClick={(row) => openModal('edit', row)} />
+      {loading && employees.length === 0 ? <LoadingSpinner /> : total === 0 && !query && !status && !departmentId ? (
+        <EmptyState title="No employees found" description="Add your first employee to get started." />
+      ) : (
+        <DataTable
+          columns={columns}
+          data={employees}
+          onRowClick={(row) => openModal('edit', row)}
+          paginated
+          pageSize={PAGE_SIZE}
+          external
+          page={page}
+          totalPages={Math.ceil(total / PAGE_SIZE)}
+          totalRecords={total}
+          onPageChange={setPage}
+          sortKey={sortKey}
+          sortDir={sortDir}
+          onSortChange={(key, dir) => { setSortKey(dir === null ? null : key); setSortDir(dir === null ? 'asc' : dir); setPage(1) }}
+          exportable
+          exportFilename="employees"
+        />
       )}
 
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={modalMode === 'create' ? 'Add Employee' : 'Edit Employee'} subtitle={modalMode === 'create' ? 'Add a new team member.' : `Editing ${selected?.firstName} ${selected?.lastName}`} size="lg">
-        <Formik initialValues={{ firstName: selected?.firstName || '', lastName: selected?.lastName || '', email: selected?.email || '', phone: selected?.phone || '', hireDate: selected?.hireDate || '', jobTitle: selected?.jobTitle || '', departmentId: selected?.department?.id || '' }} validationSchema={schema} onSubmit={handleSubmit} enableReinitialize>
-          {({ isSubmitting }) => (
+        <Formik initialValues={{ firstName: selected?.firstName || '', lastName: selected?.lastName || '', email: selected?.email || '', phone: selected?.phone || '', hireDate: selected?.hireDate || '', jobTitle: selected?.jobTitle || '', departmentId: selected?.departmentId || selected?.department?.id || '', imageUrl: selected?.imageUrl || '' }} validationSchema={schema} onSubmit={handleSubmit} enableReinitialize>
+          {({ isSubmitting, values, setFieldValue }) => (
             <Form className="grid grid-cols-2 gap-4">
+              <div className="col-span-2">
+                <ImageUpload value={values.imageUrl} onChange={(url) => setFieldValue('imageUrl', url)} name={`${values.firstName} ${values.lastName}`} />
+              </div>
               <FormField name="firstName" label="First Name" placeholder="First name" />
               <FormField name="lastName" label="Last Name" placeholder="Last name" />
               <FormField name="email" label="Email" type="email" placeholder="email@example.com" />
               <FormField name="phone" label="Phone" placeholder="Phone number" />
               <FormField name="hireDate" label="Hire Date" type="date" />
               <FormField name="jobTitle" label="Job Title" placeholder="Job title" />
-              <div className="col-span-2"><FormField name="departmentId" label="Department" as="select" options={fakeDepartments.map((d) => ({ value: d.id, label: d.name }))} /></div>
+              <div className="col-span-2"><FormField name="departmentId" label="Department" as="select" options={departments.map((d) => ({ value: d.id, label: d.name }))} /></div>
               <div className="col-span-2 flex justify-end gap-3 mt-2">
                 <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2.5 text-sm font-medium text-gray-400 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] rounded-xl transition-all cursor-pointer">Cancel</button>
                 <button type="submit" disabled={isSubmitting} className="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 rounded-xl transition-all duration-300 shadow-lg shadow-blue-600/20 cursor-pointer disabled:opacity-50">{isSubmitting ? 'Saving...' : modalMode === 'create' ? 'Create' : 'Save Changes'}</button>
