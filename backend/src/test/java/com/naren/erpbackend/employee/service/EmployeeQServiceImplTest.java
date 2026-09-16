@@ -16,12 +16,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -68,7 +71,7 @@ class EmployeeQServiceImplTest {
         return new EmployeeResponse(
                 id, firstName, lastName,
                 firstName.toLowerCase() + "@example.com", "+1234567890",
-                null, "Engineer",
+                null, null, "Engineer",
                 1L, "Engineering", null, UserStatus.ACTIVE,
                 null, null
         );
@@ -298,5 +301,72 @@ class EmployeeQServiceImplTest {
         //Assert
         assertThat(result.getContent()).isEmpty();
         assertThat(result.getTotalElements()).isEqualTo(0);
+    }
+
+    @Test
+    void filterEmployeesCombinesAllFilters() {
+        //Arrange
+        Pageable pageable = PageRequest.of(0, 10);
+        Employee employee = createEmployee(1L, "John", "Doe", false);
+        EmployeeResponse response = createEmployeeResponse(1L, "John", "Doe");
+
+        Page<Employee> employeePage = new PageImpl<>(
+                List.of(employee), pageable, 1
+        );
+
+        when(employeeRepository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(employeePage);
+        when(employeeResponseMapper.apply(employee))
+                .thenReturn(response);
+
+        //Act
+        Page<EmployeeResponse> result = underTest.filterEmployees(
+                "john", UserStatus.ACTIVE, 1L, pageable
+        );
+
+        //Assert
+        assertThat(result.getContent()).hasSize(1);
+        assertThat(result.getTotalElements()).isEqualTo(1);
+        assertThat(result.getContent().get(0).firstName()).isEqualTo("John");
+        verify(employeeRepository).findAll(any(Specification.class), any(Pageable.class));
+    }
+
+    @Test
+    void filterEmployeesWithoutFiltersDelegatesNotDeleted() {
+        //Arrange
+        Pageable pageable = PageRequest.of(0, 10);
+        Employee employee = createEmployee(1L, "John", "Doe", false);
+
+        Page<Employee> employeePage = new PageImpl<>(
+                List.of(employee), pageable, 1
+        );
+
+        when(employeeRepository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(employeePage);
+
+        //Act
+        Page<EmployeeResponse> result = underTest.filterEmployees(null, null, null, pageable);
+
+        //Assert
+        assertThat(result.getTotalElements()).isEqualTo(1);
+        verify(employeeRepository).findAll(any(Specification.class), any(Pageable.class));
+    }
+
+    @Test
+    void filterEmployeesReturnsEmptyPage() {
+        //Arrange
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Employee> emptyPage = new PageImpl<>(List.of(), pageable, 0);
+
+        when(employeeRepository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(emptyPage);
+
+        //Act
+        Page<EmployeeResponse> result = underTest.filterEmployees("nobody", null, null, pageable);
+
+        //Assert
+        assertThat(result.getContent()).isEmpty();
+        assertThat(result.getTotalElements()).isEqualTo(0);
+        verify(employeeRepository).findAll(any(Specification.class), any(Pageable.class));
     }
 }

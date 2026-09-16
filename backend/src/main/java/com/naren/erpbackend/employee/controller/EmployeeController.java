@@ -4,6 +4,7 @@ import com.naren.erpbackend.employee.dto.EmployeeRequest;
 import com.naren.erpbackend.employee.dto.EmployeeResponse;
 import com.naren.erpbackend.employee.service.EmployeeMService;
 import com.naren.erpbackend.employee.service.EmployeeQService;
+import com.naren.erpbackend.user.entity.UserStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,9 +46,17 @@ public class EmployeeController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('EMPLOYEE_READ')")
-    public ResponseEntity<Page<EmployeeResponse>> getAllEmployees(Pageable pageable) {
-        log.info("Fetch all employees: page={}, size={}", pageable.getPageNumber(), pageable.getPageSize());
-        return ResponseEntity.ok(employeeQService.findAllEmployees(pageable));
+    public ResponseEntity<Page<EmployeeResponse>> getAllEmployees(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) Long departmentId,
+            Pageable pageable) {
+        log.info("Fetch employees: search={}, status={}, departmentId={}, page={}, size={}",
+                search, status, departmentId, pageable.getPageNumber(), pageable.getPageSize());
+        UserStatus userStatus = (status == null || status.isBlank())
+                ? null
+                : UserStatus.valueOf(status.trim().toUpperCase());
+        return ResponseEntity.ok(employeeQService.filterEmployees(search, userStatus, departmentId, pageable));
     }
 
     @GetMapping("/search")
