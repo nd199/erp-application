@@ -12,6 +12,7 @@ public record EmployeeResponse(
         String lastName,
         String email,
         String phone,
+        String imageUrl,
         LocalDate hireDate,
         String jobTitle,
         Long departmentId,

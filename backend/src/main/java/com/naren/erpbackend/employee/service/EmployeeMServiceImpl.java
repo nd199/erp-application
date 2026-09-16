@@ -50,6 +50,7 @@ public class EmployeeMServiceImpl extends EmployeeUtil implements EmployeeMServi
                     .lastName(normalizeName(request.lastName()))
                     .email(normalizeEmail(request.email()))
                     .phone(normalizePhone(request.phone()))
+                    .imageUrl(normalizeNullable(request.imageUrl()))
                     .hireDate(request.hireDate())
                     .jobTitle(normalizeName(request.jobTitle()))
                     .department(department)
@@ -78,6 +79,7 @@ public class EmployeeMServiceImpl extends EmployeeUtil implements EmployeeMServi
         employee.setLastName(normalizeName(request.lastName()));
         employee.setEmail(normalizeEmail(request.email()));
         employee.setPhone(normalizePhone(request.phone()));
+        employee.setImageUrl(normalizeNullable(request.imageUrl()));
         employee.setHireDate(request.hireDate());
         employee.setJobTitle(normalizeName(request.jobTitle()));
         employee.setDepartment(department);

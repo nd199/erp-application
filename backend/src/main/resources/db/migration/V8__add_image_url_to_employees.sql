@@ -1,0 +1,3 @@
+ALTER TABLE employees
+    ADD COLUMN image_url TEXT,
+    ADD COLUMN version BIGINT NOT NULL DEFAULT 0;

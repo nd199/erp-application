@@ -83,7 +83,8 @@ class EmployeeMServiceImplTest {
                 LocalDate.of(2024, 1, 15),
                 "Software Engineer",
                 1L,
-                null
+                null,
+                "https://example.com/avatar.png"
         );
     }
 
@@ -107,6 +108,7 @@ class EmployeeMServiceImplTest {
 
         EmployeeResponse response = new EmployeeResponse(
                 1L, "John", "Doe", "john@example.com", "+1234567890",
+                "https://example.com/avatar.png",
                 LocalDate.of(2024, 1, 15), "Software Engineer",
                 1L, "Engineering", null, UserStatus.ACTIVE,
                 null, null
@@ -143,7 +145,8 @@ class EmployeeMServiceImplTest {
                 LocalDate.of(2024, 1, 15),
                 "  Software Engineer  ",
                 1L,
-                null
+                null,
+                "  https://example.com/avatar.png  "
         );
 
         Department department = createDepartment(1L, "Engineering");
@@ -154,6 +157,7 @@ class EmployeeMServiceImplTest {
                 .lastName("Doe")
                 .email("john@example.com")
                 .phone("+1234567890")
+                .imageUrl("https://example.com/avatar.png")
                 .hireDate(LocalDate.of(2024, 1, 15))
                 .jobTitle("Software Engineer")
                 .department(department)
@@ -162,6 +166,7 @@ class EmployeeMServiceImplTest {
 
         EmployeeResponse response = new EmployeeResponse(
                 1L, "John", "Doe", "john@example.com", "+1234567890",
+                "https://example.com/avatar.png",
                 LocalDate.of(2024, 1, 15), "Software Engineer",
                 1L, "Engineering", null, UserStatus.ACTIVE,
                 null, null
@@ -187,6 +192,7 @@ class EmployeeMServiceImplTest {
         assertThat(captor.getValue().getEmail()).isEqualTo("john@example.com");
         assertThat(captor.getValue().getPhone()).isEqualTo("+1234567890");
         assertThat(captor.getValue().getJobTitle()).isEqualTo("Software Engineer");
+        assertThat(captor.getValue().getImageUrl()).isEqualTo("https://example.com/avatar.png");
     }
 
     @Test
@@ -195,7 +201,7 @@ class EmployeeMServiceImplTest {
         EmployeeRequest request = new EmployeeRequest(
                 "John", "Doe", "john@example.com", "+1234567890",
                 LocalDate.of(2024, 1, 15), "Software Engineer",
-                1L, 10L
+                1L, 10L, null
         );
 
         Department department = createDepartment(1L, "Engineering");
@@ -216,6 +222,7 @@ class EmployeeMServiceImplTest {
 
         EmployeeResponse response = new EmployeeResponse(
                 1L, "John", "Doe", "john@example.com", "+1234567890",
+                null,
                 LocalDate.of(2024, 1, 15), "Software Engineer",
                 1L, "Engineering", 10L, UserStatus.ACTIVE,
                 null, null
@@ -281,7 +288,7 @@ class EmployeeMServiceImplTest {
         EmployeeRequest request = new EmployeeRequest(
                 "John", "Doe", "john@example.com", "+1234567890",
                 LocalDate.of(2024, 1, 15), "Software Engineer",
-                1L, 999L
+                1L, 999L, null
         );
 
         Department department = createDepartment(1L, "Engineering");
@@ -329,7 +336,7 @@ class EmployeeMServiceImplTest {
         EmployeeRequest request = new EmployeeRequest(
                 "Jane", "Smith", "jane@example.com", "+0987654321",
                 LocalDate.of(2023, 6, 1), "Senior Engineer",
-                2L, null
+                2L, null, "https://example.com/new-avatar.png"
         );
 
         Department department = createDepartment(2L, "Platform");
@@ -340,6 +347,7 @@ class EmployeeMServiceImplTest {
                 .lastName("Doe")
                 .email("john@example.com")
                 .phone("+1234567890")
+                .imageUrl("https://example.com/old-avatar.png")
                 .hireDate(LocalDate.of(2024, 1, 15))
                 .jobTitle("Software Engineer")
                 .department(createDepartment(1L, "Engineering"))
@@ -352,6 +360,7 @@ class EmployeeMServiceImplTest {
                 .lastName("Smith")
                 .email("jane@example.com")
                 .phone("+0987654321")
+                .imageUrl("https://example.com/new-avatar.png")
                 .hireDate(LocalDate.of(2023, 6, 1))
                 .jobTitle("Senior Engineer")
                 .department(department)
@@ -360,6 +369,7 @@ class EmployeeMServiceImplTest {
 
         EmployeeResponse response = new EmployeeResponse(
                 1L, "Jane", "Smith", "jane@example.com", "+0987654321",
+                "https://example.com/new-avatar.png",
                 LocalDate.of(2023, 6, 1), "Senior Engineer",
                 2L, "Platform", null, UserStatus.ACTIVE,
                 null, null
@@ -383,6 +393,7 @@ class EmployeeMServiceImplTest {
         assertThat(captor.getValue().getFirstName()).isEqualTo("Jane");
         assertThat(captor.getValue().getLastName()).isEqualTo("Smith");
         assertThat(captor.getValue().getEmail()).isEqualTo("jane@example.com");
+        assertThat(captor.getValue().getImageUrl()).isEqualTo("https://example.com/new-avatar.png");
         assertThat(captor.getValue().getDepartment()).isEqualTo(department);
     }
 
@@ -437,7 +448,7 @@ class EmployeeMServiceImplTest {
         EmployeeRequest request = new EmployeeRequest(
                 "John", "Doe", "john@example.com", "+1234567890",
                 LocalDate.of(2024, 1, 15), "Software Engineer",
-                1L, 999L
+                1L, 999L, null
         );
 
         Department department = createDepartment(1L, "Engineering");

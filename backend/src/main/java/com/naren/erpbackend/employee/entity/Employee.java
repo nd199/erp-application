@@ -40,6 +40,9 @@ public class Employee {
 
     private String phone;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(name = "hire_date", nullable = false)
     private LocalDate hireDate;
 
@@ -62,6 +65,11 @@ public class Employee {
     @Column(nullable = false)
     @Builder.Default
     private boolean deleted = false;
+
+    @Version
+    @Column(nullable = false)
+    @Builder.Default
+    private Long version = 0L;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
