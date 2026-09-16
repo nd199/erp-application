@@ -49,11 +49,18 @@ function Roles() {
       <PageHeader title="Roles" subtitle="Define access levels" icon={FiKey} actionLabel="Add Role" onAction={() => setModalOpen(true)} actionIcon={FiPlus} />
       <div className="flex items-center gap-3 mb-6">
         <div className="flex-1 max-w-sm"><SearchBar value={search} onChange={setSearch} placeholder="Search roles..." /></div>
-        <span className="text-[11px] text-gray-600 font-medium">{filtered.length} roles</span>
       </div>
 
       {loading && roles.length === 0 ? <LoadingSpinner /> : filtered.length === 0 ? <EmptyState title="No roles found" description="Create your first role." /> : (
-        <DataTable columns={columns} data={filtered} />
+        <DataTable
+          columns={columns}
+          data={filtered}
+          paginated
+          pageSize={8}
+          resetKey={search}
+          exportable
+          exportFilename="roles"
+        />
       )}
 
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="Add Role" subtitle="Create a new access role.">

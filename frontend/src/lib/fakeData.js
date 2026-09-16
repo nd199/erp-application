@@ -10,26 +10,26 @@ export const fakeDepartments = [
 ];
 
 export const fakeEmployees = [
-  { id: 1, firstName: 'Raj', lastName: 'Kumar', email: 'raj.kumar@nexacorp.com', phone: '+91-98765-43210', hireDate: '2022-01-15', jobTitle: 'Senior Software Engineer', department: fakeDepartments[0], status: 'ACTIVE' },
-  { id: 2, firstName: 'Priya', lastName: 'Sharma', email: 'priya.sharma@nexacorp.com', phone: '+91-98765-43211', hireDate: '2021-06-20', jobTitle: 'HR Manager', department: fakeDepartments[1], status: 'ACTIVE' },
-  { id: 3, firstName: 'Amit', lastName: 'Patel', email: 'amit.patel@nexacorp.com', phone: '+91-98765-43212', hireDate: '2023-03-10', jobTitle: 'Marketing Lead', department: fakeDepartments[2], status: 'ACTIVE' },
-  { id: 4, firstName: 'Sneha', lastName: 'Reddy', email: 'sneha.reddy@nexacorp.com', phone: '+91-98765-43213', hireDate: '2020-09-01', jobTitle: 'Finance Analyst', department: fakeDepartments[3], status: 'ACTIVE' },
-  { id: 5, firstName: 'Vikram', lastName: 'Singh', email: 'vikram.singh@nexacorp.com', phone: '+91-98765-43214', hireDate: '2019-07-18', jobTitle: 'Sales Executive', department: fakeDepartments[4], status: 'INACTIVE' },
-  { id: 6, firstName: 'Ananya', lastName: 'Iyer', email: 'ananya.iyer@nexacorp.com', phone: '+91-98765-43215', hireDate: '2023-01-05', jobTitle: 'DevOps Engineer', department: fakeDepartments[0], status: 'ACTIVE' },
-  { id: 7, firstName: 'Mohit', lastName: 'Gupta', email: 'mohit.gupta@nexacorp.com', phone: '+91-98765-43216', hireDate: '2021-11-22', jobTitle: 'Operations Manager', department: fakeDepartments[5], status: 'ACTIVE' },
-  { id: 8, firstName: 'Kavitha', lastName: 'Nair', email: 'kavitha.nair@nexacorp.com', phone: '+91-98765-43217', hireDate: '2022-04-12', jobTitle: 'Legal Counsel', department: fakeDepartments[6], status: 'ACTIVE' },
-  { id: 9, firstName: 'Arjun', lastName: 'Mehta', email: 'arjun.mehta@nexacorp.com', phone: '+91-98765-43218', hireDate: '2023-08-01', jobTitle: 'Support Engineer', department: fakeDepartments[7], status: 'ACTIVE' },
-  { id: 10, firstName: 'Deepa', lastName: 'Menon', email: 'deepa.menon@nexacorp.com', phone: '+91-98765-43219', hireDate: '2018-02-14', jobTitle: 'Tech Lead', department: fakeDepartments[0], status: 'LOCKED' },
-  { id: 11, firstName: 'Rohan', lastName: 'Desai', email: 'rohan.desai@nexacorp.com', phone: '+91-98765-43220', hireDate: '2024-02-19', jobTitle: 'Software Developer', department: fakeDepartments[0], status: 'ACTIVE' },
-  { id: 12, firstName: 'Fatima', lastName: 'Khan', email: 'fatima.khan@nexacorp.com', phone: '+91-98765-43221', hireDate: '2023-10-30', jobTitle: 'UI/UX Designer', department: fakeDepartments[2], status: 'ACTIVE' },
-  { id: 13, firstName: 'Sanjay', lastName: 'Rao', email: 'sanjay.rao@nexacorp.com', phone: '+91-98765-43222', hireDate: '2017-05-08', jobTitle: 'Accountant', department: fakeDepartments[3], status: 'INACTIVE' },
-  { id: 14, firstName: 'Neha', lastName: 'Joshi', email: 'neha.joshi@nexacorp.com', phone: '+91-98765-43223', hireDate: '2022-08-25', jobTitle: 'Sales Manager', department: fakeDepartments[4], status: 'ACTIVE' },
-  { id: 15, firstName: 'Kiran', lastName: 'Bedi', email: 'kiran.bedi@nexacorp.com', phone: '+91-98765-43224', hireDate: '2021-02-11', jobTitle: 'Customer Success Lead', department: fakeDepartments[7], status: 'ACTIVE' },
-  { id: 16, firstName: 'Manish', lastName: 'Agarwal', email: 'manish.agarwal@nexacorp.com', phone: '+91-98765-43225', hireDate: '2023-06-14', jobTitle: 'QA Engineer', department: fakeDepartments[0], status: 'ACTIVE' },
-  { id: 17, firstName: 'Divya', lastName: 'Pillai', email: 'divya.pillai@nexacorp.com', phone: '+91-98765-43226', hireDate: '2022-12-02', jobTitle: 'Data Analyst', department: fakeDepartments[3], status: 'ACTIVE' },
-  { id: 18, firstName: 'Rahul', lastName: 'Verma', email: 'rahul.verma@nexacorp.com', phone: '+91-98765-43227', hireDate: '2019-09-16', jobTitle: 'Network Administrator', department: fakeDepartments[5], status: 'LOCKED' },
-  { id: 19, firstName: 'Pooja', lastName: 'Bhat', email: 'pooja.bhat@nexacorp.com', phone: '+91-98765-43228', hireDate: '2024-04-22', jobTitle: 'Talent Acquisition Specialist', department: fakeDepartments[1], status: 'ACTIVE' },
-  { id: 20, firstName: 'Ashwin', lastName: 'Nambiar', email: 'ashwin.nambiar@nexacorp.com', phone: '+91-98765-43229', hireDate: '2020-11-09', jobTitle: 'Security Analyst', department: fakeDepartments[5], status: 'INACTIVE' },
+  { id: 1, firstName: 'Raj', lastName: 'Kumar', email: 'raj.kumar@nexacorp.com', phone: '+91-98765-43210', hireDate: '2022-01-15', jobTitle: 'Senior Software Engineer', department: fakeDepartments[0], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=1' },
+  { id: 2, firstName: 'Priya', lastName: 'Sharma', email: 'priya.sharma@nexacorp.com', phone: '+91-98765-43211', hireDate: '2021-06-20', jobTitle: 'HR Manager', department: fakeDepartments[1], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=2' },
+  { id: 3, firstName: 'Amit', lastName: 'Patel', email: 'amit.patel@nexacorp.com', phone: '+91-98765-43212', hireDate: '2023-03-10', jobTitle: 'Marketing Lead', department: fakeDepartments[2], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=3' },
+  { id: 4, firstName: 'Sneha', lastName: 'Reddy', email: 'sneha.reddy@nexacorp.com', phone: '+91-98765-43213', hireDate: '2020-09-01', jobTitle: 'Finance Analyst', department: fakeDepartments[3], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=4' },
+  { id: 5, firstName: 'Vikram', lastName: 'Singh', email: 'vikram.singh@nexacorp.com', phone: '+91-98765-43214', hireDate: '2019-07-18', jobTitle: 'Sales Executive', department: fakeDepartments[4], status: 'INACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=5' },
+  { id: 6, firstName: 'Ananya', lastName: 'Iyer', email: 'ananya.iyer@nexacorp.com', phone: '+91-98765-43215', hireDate: '2023-01-05', jobTitle: 'DevOps Engineer', department: fakeDepartments[0], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=6' },
+  { id: 7, firstName: 'Mohit', lastName: 'Gupta', email: 'mohit.gupta@nexacorp.com', phone: '+91-98765-43216', hireDate: '2021-11-22', jobTitle: 'Operations Manager', department: fakeDepartments[5], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=7' },
+  { id: 8, firstName: 'Kavitha', lastName: 'Nair', email: 'kavitha.nair@nexacorp.com', phone: '+91-98765-43217', hireDate: '2022-04-12', jobTitle: 'Legal Counsel', department: fakeDepartments[6], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=8' },
+  { id: 9, firstName: 'Arjun', lastName: 'Mehta', email: 'arjun.mehta@nexacorp.com', phone: '+91-98765-43218', hireDate: '2023-08-01', jobTitle: 'Support Engineer', department: fakeDepartments[7], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=9' },
+  { id: 10, firstName: 'Deepa', lastName: 'Menon', email: 'deepa.menon@nexacorp.com', phone: '+91-98765-43219', hireDate: '2018-02-14', jobTitle: 'Tech Lead', department: fakeDepartments[0], status: 'LOCKED', imageUrl: 'https://i.pravatar.cc/150?img=10' },
+  { id: 11, firstName: 'Rohan', lastName: 'Desai', email: 'rohan.desai@nexacorp.com', phone: '+91-98765-43220', hireDate: '2024-02-19', jobTitle: 'Software Developer', department: fakeDepartments[0], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=11' },
+  { id: 12, firstName: 'Fatima', lastName: 'Khan', email: 'fatima.khan@nexacorp.com', phone: '+91-98765-43221', hireDate: '2023-10-30', jobTitle: 'UI/UX Designer', department: fakeDepartments[2], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=12' },
+  { id: 13, firstName: 'Sanjay', lastName: 'Rao', email: 'sanjay.rao@nexacorp.com', phone: '+91-98765-43222', hireDate: '2017-05-08', jobTitle: 'Accountant', department: fakeDepartments[3], status: 'INACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=13' },
+  { id: 14, firstName: 'Neha', lastName: 'Joshi', email: 'neha.joshi@nexacorp.com', phone: '+91-98765-43223', hireDate: '2022-08-25', jobTitle: 'Sales Manager', department: fakeDepartments[4], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=14' },
+  { id: 15, firstName: 'Kiran', lastName: 'Bedi', email: 'kiran.bedi@nexacorp.com', phone: '+91-98765-43224', hireDate: '2021-02-11', jobTitle: 'Customer Success Lead', department: fakeDepartments[7], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=15' },
+  { id: 16, firstName: 'Manish', lastName: 'Agarwal', email: 'manish.agarwal@nexacorp.com', phone: '+91-98765-43225', hireDate: '2023-06-14', jobTitle: 'QA Engineer', department: fakeDepartments[0], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=16' },
+  { id: 17, firstName: 'Divya', lastName: 'Pillai', email: 'divya.pillai@nexacorp.com', phone: '+91-98765-43226', hireDate: '2022-12-02', jobTitle: 'Data Analyst', department: fakeDepartments[3], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=17' },
+  { id: 18, firstName: 'Rahul', lastName: 'Verma', email: 'rahul.verma@nexacorp.com', phone: '+91-98765-43227', hireDate: '2019-09-16', jobTitle: 'Network Administrator', department: fakeDepartments[5], status: 'LOCKED', imageUrl: 'https://i.pravatar.cc/150?img=18' },
+  { id: 19, firstName: 'Pooja', lastName: 'Bhat', email: 'pooja.bhat@nexacorp.com', phone: '+91-98765-43228', hireDate: '2024-04-22', jobTitle: 'Talent Acquisition Specialist', department: fakeDepartments[1], status: 'ACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=19' },
+  { id: 20, firstName: 'Ashwin', lastName: 'Nambiar', email: 'ashwin.nambiar@nexacorp.com', phone: '+91-98765-43229', hireDate: '2020-11-09', jobTitle: 'Security Analyst', department: fakeDepartments[5], status: 'INACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=20' },
 ];
 
 export const fakeRoles = [
@@ -70,16 +70,16 @@ export const fakePermissions = [
 ];
 
 export const fakeUsers = [
-  { id: 1, username: 'admin', email: 'admin@nexacorp.com', phone: '+91-98765-00001', address: '1 MG Road, Bangalore 560001', status: 'ACTIVE', roles: [fakeRoles[0]] },
-  { id: 2, username: 'priya.hr', email: 'priya.sharma@nexacorp.com', phone: '+91-98765-00002', address: '22 Park Street, Kolkata 700016', status: 'ACTIVE', roles: [fakeRoles[1]] },
-  { id: 3, username: 'amit.mkt', email: 'amit.patel@nexacorp.com', phone: '+91-98765-00003', address: '7 Andheri West, Mumbai 400058', status: 'ACTIVE', roles: [fakeRoles[2]] },
-  { id: 4, username: 'sneha.fin', email: 'sneha.reddy@nexacorp.com', phone: '+91-98765-00004', address: '15 Banjara Hills, Hyderabad 500034', status: 'ACTIVE', roles: [fakeRoles[3]] },
-  { id: 5, username: 'viewer01', email: 'viewer@nexacorp.com', phone: '+91-98765-00005', address: '30 Anna Salai, Chennai 600002', status: 'INACTIVE', roles: [fakeRoles[5]] },
-  { id: 6, username: 'deepa.tech', email: 'deepa.menon@nexacorp.com', phone: '+91-98765-00006', address: '18 Koramangala, Bangalore 560095', status: 'LOCKED', roles: [fakeRoles[2]] },
-  { id: 7, username: 'rahul.ops', email: 'rahul.verma@nexacorp.com', phone: '+91-98765-00007', address: '5 Gomti Nagar, Lucknow 226010', status: 'INACTIVE', roles: [fakeRoles[4]] },
-  { id: 8, username: 'neha.sales', email: 'neha.joshi@nexacorp.com', phone: '+91-98765-00008', address: '27 Sarvapriya Vihar, Delhi 110016', status: 'ACTIVE', roles: [fakeRoles[2]] },
-  { id: 9, username: 'kiran.support', email: 'kiran.bedi@nexacorp.com', phone: '+91-98765-00009', address: '11 Civil Lines, Pune 411001', status: 'ACTIVE', roles: [fakeRoles[6]] },
-  { id: 10, username: 'ashwin.ops', email: 'ashwin.nambiar@nexacorp.com', phone: '+91-98765-00010', address: '33 Vyttila, Kochi 682019', status: 'LOCKED', roles: [fakeRoles[4]] },
+  { id: 1, username: 'admin', email: 'admin@nexacorp.com', phone: '+91-98765-00001', address: '1 MG Road, Bangalore 560001', status: 'ACTIVE', roles: [fakeRoles[0]], imageUrl: 'https://i.pravatar.cc/150?img=21' },
+  { id: 2, username: 'priya.hr', email: 'priya.sharma@nexacorp.com', phone: '+91-98765-00002', address: '22 Park Street, Kolkata 700016', status: 'ACTIVE', roles: [fakeRoles[1]], imageUrl: 'https://i.pravatar.cc/150?img=22' },
+  { id: 3, username: 'amit.mkt', email: 'amit.patel@nexacorp.com', phone: '+91-98765-00003', address: '7 Andheri West, Mumbai 400058', status: 'ACTIVE', roles: [fakeRoles[2]], imageUrl: 'https://i.pravatar.cc/150?img=23' },
+  { id: 4, username: 'sneha.fin', email: 'sneha.reddy@nexacorp.com', phone: '+91-98765-00004', address: '15 Banjara Hills, Hyderabad 500034', status: 'ACTIVE', roles: [fakeRoles[3]], imageUrl: 'https://i.pravatar.cc/150?img=24' },
+  { id: 5, username: 'viewer01', email: 'viewer@nexacorp.com', phone: '+91-98765-00005', address: '30 Anna Salai, Chennai 600002', status: 'INACTIVE', roles: [fakeRoles[5]], imageUrl: 'https://i.pravatar.cc/150?img=25' },
+  { id: 6, username: 'deepa.tech', email: 'deepa.menon@nexacorp.com', phone: '+91-98765-00006', address: '18 Koramangala, Bangalore 560095', status: 'LOCKED', roles: [fakeRoles[2]], imageUrl: 'https://i.pravatar.cc/150?img=26' },
+  { id: 7, username: 'rahul.ops', email: 'rahul.verma@nexacorp.com', phone: '+91-98765-00007', address: '5 Gomti Nagar, Lucknow 226010', status: 'INACTIVE', roles: [fakeRoles[4]], imageUrl: 'https://i.pravatar.cc/150?img=27' },
+  { id: 8, username: 'neha.sales', email: 'neha.joshi@nexacorp.com', phone: '+91-98765-00008', address: '27 Sarvapriya Vihar, Delhi 110016', status: 'ACTIVE', roles: [fakeRoles[2]], imageUrl: 'https://i.pravatar.cc/150?img=28' },
+  { id: 9, username: 'kiran.support', email: 'kiran.bedi@nexacorp.com', phone: '+91-98765-00009', address: '11 Civil Lines, Pune 411001', status: 'ACTIVE', roles: [fakeRoles[6]], imageUrl: 'https://i.pravatar.cc/150?img=29' },
+  { id: 10, username: 'ashwin.ops', email: 'ashwin.nambiar@nexacorp.com', phone: '+91-98765-00010', address: '33 Vyttila, Kochi 682019', status: 'LOCKED', roles: [fakeRoles[4]], imageUrl: 'https://i.pravatar.cc/150?img=30' },
 ];
 
 export const fakeDevUser = {

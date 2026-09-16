@@ -65,11 +65,19 @@ function Departments() {
       <PageHeader title="Departments" subtitle="Organize your teams" icon={FiHome} actionLabel="Add Department" onAction={() => openModal('create')} actionIcon={FiPlus} />
       <div className="flex items-center gap-3 mb-6">
         <div className="flex-1 max-w-sm"><SearchBar value={search} onChange={setSearch} placeholder="Search departments..." /></div>
-        <span className="text-[11px] text-gray-600 font-medium">{filtered.length} departments</span>
       </div>
 
       {loading && departments.length === 0 ? <LoadingSpinner /> : filtered.length === 0 ? <EmptyState title="No departments found" description="Create your first department." /> : (
-        <DataTable columns={columns} data={filtered} onRowClick={(row) => openModal('edit', row)} />
+        <DataTable
+          columns={columns}
+          data={filtered}
+          onRowClick={(row) => openModal('edit', row)}
+          paginated
+          pageSize={8}
+          resetKey={search}
+          exportable
+          exportFilename="departments"
+        />
       )}
 
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={modalMode === 'create' ? 'Add Department' : 'Edit Department'} subtitle={modalMode === 'create' ? 'Create a new department.' : `Editing ${selected?.name}`}>

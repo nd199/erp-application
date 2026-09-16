@@ -65,11 +65,19 @@ function Permissions() {
       <PageHeader title="Permissions" subtitle="Granular access control" icon={FiShield} actionLabel="Add Permission" onAction={() => openModal('create')} actionIcon={FiPlus} />
       <div className="flex items-center gap-3 mb-6">
         <div className="flex-1 max-w-sm"><SearchBar value={search} onChange={setSearch} placeholder="Search permissions..." /></div>
-        <span className="text-[11px] text-gray-600 font-medium">{filtered.length} permissions</span>
       </div>
 
       {loading && permissions.length === 0 ? <LoadingSpinner /> : filtered.length === 0 ? <EmptyState title="No permissions found" description="Create your first permission." /> : (
-        <DataTable columns={columns} data={filtered} onRowClick={(row) => openModal('edit', row)} />
+        <DataTable
+          columns={columns}
+          data={filtered}
+          onRowClick={(row) => openModal('edit', row)}
+          paginated
+          pageSize={8}
+          resetKey={search}
+          exportable
+          exportFilename="permissions"
+        />
       )}
 
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={modalMode === 'create' ? 'Add Permission' : 'Edit Permission'}>

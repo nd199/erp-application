@@ -13,6 +13,7 @@ import ConfirmModal from '../components/ConfirmModal'
 import FormField from '../components/FormField'
 import LoadingSpinner from '../components/LoadingSpinner'
 import EmptyState from '../components/EmptyState'
+import Avatar from '../components/Avatar'
 import { fetchUsers, createUser, updateUser, deleteUser, activateUser, deactivateUser, lockUser, unlockUser } from '../store/userThunks'
 
 const schema = Yup.object({ username: Yup.string().trim().required('Required'), email: Yup.string().email('Invalid email').required('Required'), phone: Yup.string().required('Required'), address: Yup.string().required('Required') })
@@ -50,7 +51,7 @@ function Users() {
   const columns = [
     { key: 'username', label: 'User', render: (val, row) => (
       <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500/15 to-teal-500/10 border border-white/[0.06] flex items-center justify-center shrink-0"><span className="text-[10px] font-bold text-emerald-400">{val[0].toUpperCase()}</span></div>
+        <Avatar src={row.imageUrl} name={val} size="md" />
         <div>
           <p className="text-white font-semibold text-sm">{val}</p>
           <p className="text-[11px] text-gray-500">{row.email}</p>
@@ -80,11 +81,23 @@ function Users() {
       <PageHeader title="Users" subtitle="Manage user accounts" icon={FiUser} actionLabel="Add User" onAction={() => openModal('create')} actionIcon={FiPlus} />
       <div className="flex items-center gap-3 mb-6">
         <div className="flex-1 max-w-sm"><SearchBar value={search} onChange={setSearch} placeholder="Search users..." /></div>
-        <span className="text-[11px] text-gray-600 font-medium">{filtered.length} users</span>
       </div>
 
       {loading && users.length === 0 ? <LoadingSpinner /> : filtered.length === 0 ? <EmptyState title="No users found" description="Create your first user account." /> : (
-        <DataTable columns={columns} data={filtered} onRowClick={(row) => openModal('edit', row)} />
+        <DataTable
+          columns={columns}
+          data={filtered}
+          onRowClick={(row) => openModal('edit', row)}
+          paginated
+          pageSize={8}
+          resetKey={search}
+          exportable
+          exportFilename="users"
+          filters={[
+            { key: 'status', label: 'Status', valueLabel: (v) => v?.toLowerCase().replace(/^./, (c) => c.toUpperCase()) },
+            { key: 'role', label: 'Role', getValue: (row) => row.roles?.[0]?.name },
+          ]}
+        />
       )}
 
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={modalMode === 'create' ? 'Add User' : 'Edit User'}>
