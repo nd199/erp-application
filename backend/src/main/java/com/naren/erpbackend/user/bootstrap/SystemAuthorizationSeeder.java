@@ -115,6 +115,11 @@ public class SystemAuthorizationSeeder implements CommandLineRunner {
         permissions.put("EMPLOYEE_UPDATE", "Update employee records");
         permissions.put("EMPLOYEE_DELETE", "Delete an employee record");
 
+        permissions.put("PRODUCT_CREATE", "Create a product");
+        permissions.put("PRODUCT_READ", "Read product details");
+        permissions.put("PRODUCT_UPDATE", "Update product details");
+        permissions.put("PRODUCT_DELETE", "Delete a product");
+
         return permissions;
     }
 
@@ -134,19 +139,22 @@ public class SystemAuthorizationSeeder implements CommandLineRunner {
                 "USER_CHANGE_PASSWORD",
                 "ROLE_READ", "ROLE_ASSIGN", "ROLE_REMOVE",
                 "PERMISSION_READ", "PERMISSION_ASSIGN", "PERMISSION_REMOVE",
-                "EMPLOYEE_CREATE", "EMPLOYEE_READ", "EMPLOYEE_UPDATE", "EMPLOYEE_DELETE"
+                "EMPLOYEE_CREATE", "EMPLOYEE_READ", "EMPLOYEE_UPDATE", "EMPLOYEE_DELETE",
+                "PRODUCT_CREATE", "PRODUCT_READ", "PRODUCT_UPDATE", "PRODUCT_DELETE"
         );
 
         Set<String> managerPermissions = Set.of(
                 "USER_READ",
                 "ROLE_READ",
                 "PERMISSION_READ",
-                "EMPLOYEE_CREATE", "EMPLOYEE_READ", "EMPLOYEE_UPDATE"
+                "EMPLOYEE_CREATE", "EMPLOYEE_READ", "EMPLOYEE_UPDATE",
+                "PRODUCT_READ", "PRODUCT_CREATE", "PRODUCT_UPDATE"
         );
 
         Set<String> employeePermissions = Set.of(
                 "USER_READ",
-                "EMPLOYEE_READ"
+                "EMPLOYEE_READ",
+                "PRODUCT_READ"
         );
 
         Map<String, Set<String>> mapping = new LinkedHashMap<>();
