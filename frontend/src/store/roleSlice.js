@@ -3,6 +3,8 @@ import {
     fetchRoles,
     fetchRoleById,
     createRole,
+    updateRole,
+    deleteRole,
     searchRole,
     getRolePermissions,
     assignPermission,
@@ -73,6 +75,28 @@ const roleSlice = createSlice({
                 state.roles.push(action.payload)
             })
             .addCase(createRole.rejected, (state, action) => {
+                rejected(state, action)
+            })
+            .addCase(updateRole.pending, (state) => {
+                pending(state)
+            })
+            .addCase(updateRole.fulfilled, (state, action) => {
+                state.loading = false
+                state.roles = state.roles
+                    .map(r => r.id === action.payload.id ? action.payload : r)
+            })
+            .addCase(updateRole.rejected, (state, action) => {
+                rejected(state, action)
+            })
+            .addCase(deleteRole.pending, (state) => {
+                pending(state)
+            })
+            .addCase(deleteRole.fulfilled, (state, action) => {
+                state.loading = false
+                state.roles = state.roles
+                    .filter(r => r.id !== action.payload)
+            })
+            .addCase(deleteRole.rejected, (state, action) => {
                 rejected(state, action)
             })
             .addCase(searchRole.pending, (state) => {

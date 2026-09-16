@@ -13,6 +13,12 @@ public interface RoleService {
     RoleResponse createRole(String name, String description);
 
     @Transactional
+    RoleResponse updateRole(Long id, String name, String description);
+
+    @Transactional
+    void deleteRole(Long id);
+
+    @Transactional
     void addPermission(Long roleId, Long permissionId);
 
     @Transactional

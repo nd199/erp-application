@@ -56,6 +56,46 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public RoleResponse updateRole(Long id, String name, String description) {
+        log.info("Update role: id={}", id);
+
+        Role role = findRoleById(id);
+
+        if (roleRepository.existsByName(name) && !role.getName().equalsIgnoreCase(name)) {
+            log.warn("Update role rejected, name already exists: id={}, name={}", id, name);
+            throw new ResourceExistsException("Role already exists: " + name);
+        }
+
+        role.setName(name);
+        role.setDescription(description);
+
+        try {
+            Role saved = roleRepository.save(role);
+            log.info("Role updated: id={}, name={}", saved.getId(), saved.getName());
+            return roleResponseMapper.apply(saved);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Update role rejected by unique constraint: id={}, name={}", id, name);
+            throw new ResourceExistsException("Role already exists: " + name, e);
+        }
+    }
+
+    @Override
+    public void deleteRole(Long id) {
+        log.info("Delete role: id={}", id);
+
+        Role role = findRoleById(id);
+
+        try {
+            roleRepository.delete(role);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Delete role rejected by constraint violation: id={}", id);
+            throw new ResourceExistsException("Role cannot be deleted due to existing references", e);
+        }
+
+        log.info("Role deleted: id={}", id);
+    }
+
+    @Override
     public void addPermission(Long roleId, Long permissionId) {
         log.info("Add permission to role: roleId={}, permissionId={}", roleId, permissionId);
 

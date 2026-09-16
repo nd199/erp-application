@@ -25,6 +25,22 @@ const createRole = createAsyncThunk(
     }
 )
 
+const updateRole = createAsyncThunk(
+    'roles/update',
+    async ({id, ...payload}) => {
+        const {data} = await rolesAPI.update(id, payload)
+        return data
+    }
+)
+
+const deleteRole = createAsyncThunk(
+    'roles/delete',
+    async (id) => {
+        await rolesAPI.delete(id)
+        return id
+    }
+)
+
 const searchRole = createAsyncThunk(
     'roles/search',
     async ({keyword, params}) => {
@@ -69,6 +85,8 @@ export {
     fetchRoles,
     fetchRoleById,
     createRole,
+    updateRole,
+    deleteRole,
     searchRole,
     getRolePermissions,
     assignPermission,

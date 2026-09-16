@@ -1,7 +1,7 @@
 import api from './axios'
 import { isDevMode } from '../lib/devMode'
 import { fakeRoles } from '../lib/fakeData'
-import { mockList, mockCreate } from '../lib/mockApi'
+import { mockList, mockCreate, mockUpdate, mockDelete } from '../lib/mockApi'
 
 const store = [...fakeRoles]
 
@@ -11,6 +11,8 @@ export const rolesAPI = {
     ? Promise.resolve({ data: store.find((r) => r.id === id) })
     : api.get(`/roles/${id}`),
   create: (data) => isDevMode() ? mockCreate(store, data) : api.post('/roles', data),
+  update: (id, data) => isDevMode() ? mockUpdate(store, id, data) : api.patch(`/roles/${id}`, data),
+  delete: (id) => isDevMode() ? mockDelete(store, id) : api.delete(`/roles/${id}`),
   search: (keyword, params) => isDevMode()
     ? mockList(store.filter((r) =>
         `${r.name} ${r.description}`.toLowerCase().includes(keyword.toLowerCase())

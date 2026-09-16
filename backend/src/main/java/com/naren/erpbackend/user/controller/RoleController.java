@@ -48,6 +48,26 @@ public class RoleController {
         return ResponseEntity.ok(response);
     }
 
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public ResponseEntity<RoleResponse> updateRole(
+            @PathVariable Long id,
+            @Valid @RequestBody RoleRequest request) {
+        log.info("Update role requested: id={}", id);
+        RoleResponse response = roleService.updateRole(id, request.name(), request.description());
+        log.info("Role updated: id={}, name={}", response.id(), response.name());
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public ResponseEntity<Void> deleteRole(@PathVariable Long id) {
+        log.info("Delete role requested: id={}", id);
+        roleService.deleteRole(id);
+        log.info("Role deleted: id={}", id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_READ')")
     public ResponseEntity<Page<RoleResponse>> getAllRoles(Pageable pageable) {
