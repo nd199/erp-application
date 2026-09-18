@@ -101,10 +101,11 @@ class SystemAuthorizationSeederTest {
                 "ROLE_READ", "ROLE_ASSIGN", "ROLE_REMOVE",
                 "PERMISSION_READ", "PERMISSION_ASSIGN", "PERMISSION_REMOVE",
                 "EMPLOYEE_CREATE", "EMPLOYEE_READ", "EMPLOYEE_UPDATE", "EMPLOYEE_DELETE",
-                "PRODUCT_CREATE", "PRODUCT_READ", "PRODUCT_UPDATE", "PRODUCT_DELETE"
+                "PRODUCT_CREATE", "PRODUCT_READ", "PRODUCT_UPDATE", "PRODUCT_DELETE",
+                "SALES_ORDER_CREATE", "SALES_ORDER_READ", "SALES_ORDER_UPDATE", "SALES_ORDER_DELETE"
         );
 
-        verify(permissionRepository, times(23)).save(any(Permission.class));
+        verify(permissionRepository, times(27)).save(any(Permission.class));
     }
 
     @Test
@@ -144,21 +145,23 @@ class SystemAuthorizationSeederTest {
         Role manager = roleStore.get("MANAGER");
         Role employee = roleStore.get("EMPLOYEE");
 
-        assertThat(superAdmin.getPermissions()).hasSize(23);
-        assertThat(admin.getPermissions()).hasSize(23);
-        assertThat(manager.getPermissions()).hasSize(9);
-        assertThat(employee.getPermissions()).hasSize(3);
+        assertThat(superAdmin.getPermissions()).hasSize(27);
+        assertThat(admin.getPermissions()).hasSize(27);
+        assertThat(manager.getPermissions()).hasSize(12);
+        assertThat(employee.getPermissions()).hasSize(4);
 
         Set<String> managerPerms = manager.getPermissions().stream()
                 .map(Permission::getName)
                 .collect(Collectors.toSet());
         assertThat(managerPerms).contains("USER_READ", "ROLE_READ", "PERMISSION_READ",
                 "EMPLOYEE_CREATE", "EMPLOYEE_READ", "EMPLOYEE_UPDATE",
-                "PRODUCT_READ", "PRODUCT_CREATE", "PRODUCT_UPDATE");
+                "PRODUCT_READ", "PRODUCT_CREATE", "PRODUCT_UPDATE",
+                "SALES_ORDER_READ", "SALES_ORDER_CREATE", "SALES_ORDER_UPDATE");
 
         Set<String> employeePerms = employee.getPermissions().stream()
                 .map(Permission::getName)
                 .collect(Collectors.toSet());
-        assertThat(employeePerms).containsExactlyInAnyOrder("USER_READ", "EMPLOYEE_READ", "PRODUCT_READ");
+        assertThat(employeePerms).containsExactlyInAnyOrder(
+                "USER_READ", "EMPLOYEE_READ", "PRODUCT_READ", "SALES_ORDER_READ");
     }
 }
