@@ -1,7 +1,8 @@
 import { NavLink } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { FiGrid, FiUsers, FiHome, FiBox, FiUser, FiKey, FiShield, FiChevronRight, FiZap, FiBarChart2, FiShoppingCart, FiTruck, FiPackage, FiTag } from 'react-icons/fi'
+import { FiGrid, FiUsers, FiHome, FiBox, FiUser, FiKey, FiShield, FiChevronRight, FiZap, FiBarChart2, FiShoppingCart, FiTruck, FiPackage, FiTag, FiSun, FiMoon } from 'react-icons/fi'
 import { isDevMode } from '../lib/devMode'
+import { useTheme } from '../lib/ThemeContext'
 
 const allNavItems = [
     { to: '/', label: 'Dashboard', icon: FiGrid, permission: null },
@@ -22,9 +23,10 @@ const allNavItems = [
 function Sidebar() {
     const userPermissions = useSelector((state) => state.auth.user?.permissions || [])
     const navItems = allNavItems.filter((item) => isDevMode() || !item.permission || userPermissions.includes(item.permission))
+    const { theme, toggleTheme } = useTheme()
 
     return (
-        <aside className="w-[220px] flex flex-col relative shrink-0">
+        <aside className={`w-[220px] flex flex-col relative shrink-0 ${theme === 'light' ? 'bg-white border-r border-gray-200' : ''}`}>
             <div className="absolute right-0 top-0 bottom-0 w-px bg-gradient-to-b from-blue-500/20 via-white/[0.06] to-violet-500/20" />
 
             {/* Logo */}
@@ -38,7 +40,7 @@ function Sidebar() {
                     </div>
                     <div>
                         <h1 className="text-base font-bold text-gradient tracking-tight leading-none">DevNext</h1>
-                        <p className="text-[10px] text-gray-600 uppercase tracking-[0.2em] font-medium mt-0.5">Enterprise</p>
+                        <p className={`text-[10px] uppercase tracking-[0.2em] font-medium mt-0.5 ${theme === 'light' ? 'text-gray-500' : 'text-gray-600'}`}>Enterprise</p>
                     </div>
                 </div>
             </div>
@@ -54,7 +56,7 @@ function Sidebar() {
                             `group relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 animate-slide-in-right ${
                                 isActive
                                     ? 'bg-gradient-to-r from-blue-500/10 to-blue-500/5 text-blue-400 border border-blue-500/20'
-                                    : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.03] border border-transparent'
+                                    : 'text-gray-500 hover:text-gray-700 hover:bg-white/[0.03] border border-transparent'
                             }`
                         }
                         style={{ animationDelay: `${i * 50}ms` }}
@@ -82,6 +84,17 @@ function Sidebar() {
                     </div>
                 </div>
             )}
+
+            <button
+                onClick={toggleTheme}
+                className="mx-3 mb-3 px-3 py-2.5 w-full flex items-center gap-3 rounded-xl border border-white/[0.06] hover:bg-white/[0.03] transition-all cursor-pointer text-sm text-gray-500 hover:text-white"
+            >
+                {theme === 'dark' ? <FiSun className="w-4 h-4" /> : <FiMoon className="w-4 h-4" />}
+                <span className="flex-1">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                <span className="text-[10px] text-gray-700 bg-white/[0.06] px-1.5 py-0.5 rounded-md font-mono">
+                    {theme === 'dark' ? 'D' : 'L'}
+                </span>
+            </button>
 
             <div className="h-4" />
         </aside>

@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout } from '../store/authSlice'
 import { FiSearch, FiBell, FiChevronDown, FiLogOut, FiUser, FiSettings, FiHelpCircle, FiArrowRight } from 'react-icons/fi'
+import { FiSun, FiMoon } from 'react-icons/fi'
 import { navItems } from './Sidebar'
 import { fakeEmployees, fakeDepartments, fakeUsers } from '../lib/fakeData'
+import { useTheme } from '../lib/ThemeContext'
 
 function ProfileDropdown({ user, onLogout }) {
     const [open, setOpen] = useState(false)
@@ -124,21 +126,26 @@ function Topbar() {
     ] : []
 
     const handleLogout = () => { dispatch(logout()); navigate('/login') }
+    const { theme, toggleTheme } = useTheme()
 
     return (
-        <header className="h-20 px-6 flex items-center justify-between relative shrink-0 bg-white/[0.01]">
-            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-white/[0.06] via-white/[0.08] to-white/[0.06]" />
+        <header className={`h-20 px-6 flex items-center justify-between relative shrink-0 ${theme === 'light' ? 'bg-white border-b border-gray-200' : 'bg-white/[0.01]'}`}>
+            <div className={`absolute bottom-0 left-0 right-0 h-px ${theme === 'light' ? 'bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200' : 'bg-gradient-to-r from-white/[0.06] via-white/[0.08] to-white/[0.06]'}`} />
 
             {/* Left: Inline Search */}
             <div className="relative flex-1 max-w-md" ref={searchRef}>
-                <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600" />
+                <FiSearch className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 ${theme === 'light' ? 'text-gray-500' : 'text-gray-600'}`} />
                 <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => { setSearchQuery(e.target.value); setSearchFocused(true) }}
                     onFocus={() => setSearchFocused(true)}
                     placeholder="Search anything..."
-                    className="w-full pl-10 pr-20 py-2.5 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white placeholder-gray-600 outline-none focus:border-blue-500/40 focus:bg-white/[0.05] focus:shadow-[0_0_20px_-5px_rgba(59,130,246,0.15)] transition-all duration-300"
+                    className={`w-full pl-10 pr-20 py-2.5 rounded-xl text-sm outline-none focus:border-blue-500/40 focus:shadow-[0_0_20px_-5px_rgba(59,130,246,0.15)] transition-all duration-300 ${
+                        theme === 'light'
+                            ? 'bg-white border border-gray-200 text-gray-900 placeholder-gray-400 focus:bg-white focus:border-blue-500/40'
+                            : 'bg-white/[0.03] border border-white/[0.06] text-white placeholder-gray-600 focus:bg-white/[0.05]'
+                    }`}
                 />
                 <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-[9px] text-gray-700 bg-white/[0.04] border border-white/[0.06] rounded font-mono">⌘K</kbd>
 
@@ -194,6 +201,14 @@ function Topbar() {
                 </button>
 
                 <div className="w-px h-6 bg-white/[0.06] mx-1" />
+
+                <button
+                    onClick={toggleTheme}
+                    className="relative p-2.5 rounded-xl text-gray-500 hover:text-white hover:bg-white/[0.04] transition-all duration-200 cursor-pointer"
+                    title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                    {theme === 'dark' ? <FiSun className="w-4 h-4" /> : <FiMoon className="w-4 h-4" />}
+                </button>
 
                 <ProfileDropdown user={user} onLogout={handleLogout} />
             </div>
