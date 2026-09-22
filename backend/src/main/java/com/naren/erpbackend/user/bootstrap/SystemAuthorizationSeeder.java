@@ -125,6 +125,11 @@ public class SystemAuthorizationSeeder implements CommandLineRunner {
         permissions.put("SALES_ORDER_UPDATE", "Update sales order details");
         permissions.put("SALES_ORDER_DELETE", "Delete a sales order");
 
+        permissions.put("PURCHASE_CREATE", "Create a purchase order or supplier");
+        permissions.put("PURCHASE_READ", "Read purchase order and supplier details");
+        permissions.put("PURCHASE_UPDATE", "Update purchase order details");
+        permissions.put("PURCHASE_DELETE", "Delete a purchase order or supplier");
+
         return permissions;
     }
 
@@ -146,7 +151,8 @@ public class SystemAuthorizationSeeder implements CommandLineRunner {
                 "PERMISSION_READ", "PERMISSION_ASSIGN", "PERMISSION_REMOVE",
                 "EMPLOYEE_CREATE", "EMPLOYEE_READ", "EMPLOYEE_UPDATE", "EMPLOYEE_DELETE",
                 "PRODUCT_CREATE", "PRODUCT_READ", "PRODUCT_UPDATE", "PRODUCT_DELETE",
-                "SALES_ORDER_CREATE", "SALES_ORDER_READ", "SALES_ORDER_UPDATE", "SALES_ORDER_DELETE"
+                "SALES_ORDER_CREATE", "SALES_ORDER_READ", "SALES_ORDER_UPDATE", "SALES_ORDER_DELETE",
+                "PURCHASE_CREATE", "PURCHASE_READ", "PURCHASE_UPDATE", "PURCHASE_DELETE"
         );
 
         Set<String> managerPermissions = Set.of(
@@ -155,14 +161,16 @@ public class SystemAuthorizationSeeder implements CommandLineRunner {
                 "PERMISSION_READ",
                 "EMPLOYEE_CREATE", "EMPLOYEE_READ", "EMPLOYEE_UPDATE",
                 "PRODUCT_READ", "PRODUCT_CREATE", "PRODUCT_UPDATE",
-                "SALES_ORDER_READ", "SALES_ORDER_CREATE", "SALES_ORDER_UPDATE"
+                "SALES_ORDER_READ", "SALES_ORDER_CREATE", "SALES_ORDER_UPDATE",
+                "PURCHASE_READ", "PURCHASE_CREATE", "PURCHASE_UPDATE"
         );
 
         Set<String> employeePermissions = Set.of(
                 "USER_READ",
                 "EMPLOYEE_READ",
                 "PRODUCT_READ",
-                "SALES_ORDER_READ"
+                "SALES_ORDER_READ",
+                "PURCHASE_READ"
         );
 
         Map<String, Set<String>> mapping = new LinkedHashMap<>();

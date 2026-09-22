@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { FiBarChart2, FiTrendingUp, FiPieChart, FiActivity } from 'react-icons/fi'
 import LineChart from '../components/charts/LineChart'
 import DonutChart from '../components/charts/DonutChart'
@@ -5,7 +7,13 @@ import BarChart from '../components/charts/BarChart'
 import AreaChart from '../components/charts/AreaChart'
 import RadialProgress from '../components/charts/RadialProgress'
 import Legend from '../components/charts/Legend'
-import { employeeGrowth, monthlyHiring, departmentDistribution, weeklyActivity, performanceMetrics, revenueData, statusBreakdown, topPerformers } from '../lib/chartData'
+import { employeeGrowth, monthlyHiring, weeklyActivity, performanceMetrics, revenueData, topPerformers } from '../lib/chartData'
+import { fetchEmployees } from '../store/employeeThunks'
+import { fetchDepartments } from '../store/departmentThunks'
+import { fetchUsers } from '../store/userThunks'
+import { fetchSalesOrders } from '../store/salesOrderThunks'
+import { isDevMode } from '../lib/devMode'
+import { fakeEmployees, fakeDepartments, fakeUsers } from '../lib/fakeData'
 
 function ChartCard({ title, subtitle, icon: Icon, children, className = '', delay = 0 }) {
   return (
@@ -25,6 +33,39 @@ function ChartCard({ title, subtitle, icon: Icon, children, className = '', dela
 }
 
 function Analytics() {
+  const dispatch = useDispatch()
+  const employees = useSelector((s) => s.employees.employees)
+  const departments = useSelector((s) => s.departments.departments)
+  const users = useSelector((s) => s.users?.users || [])
+  const orders = useSelector((s) => s.salesOrders?.orders || [])
+
+  useEffect(() => {
+    dispatch(fetchEmployees({ page: 0, size: 100 }))
+    dispatch(fetchDepartments())
+    dispatch(fetchUsers())
+    dispatch(fetchSalesOrders({ page: 0, size: 100 }))
+  }, [dispatch])
+
+  const empList = isDevMode() ? fakeEmployees : employees
+  const deptList = isDevMode() ? fakeDepartments : departments
+  const userList = isDevMode() ? fakeUsers : users
+
+  const deptColors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#06b6d4', '#ef4444', '#6366f1']
+  const departmentDistribution = deptList.map((d, i) => {
+    const count = empList.filter((e) => e.department?.id === d.id).length
+    const total = empList.length || 1
+    return { name: d.name, value: Math.round((count / total) * 100), color: deptColors[i % deptColors.length] }
+  }).filter((d) => d.value > 0)
+
+  const statusCounts = userList.reduce((acc, u) => { acc[u.status] = (acc[u.status] || 0) + 1; return acc }, {})
+  const statusBreakdown = [
+    { status: 'Active', count: statusCounts.ACTIVE || 0, color: '#10b981' },
+    { status: 'Inactive', count: statusCounts.INACTIVE || 0, color: '#6b7280' },
+    { status: 'Locked', count: statusCounts.LOCKED || 0, color: '#ef4444' },
+  ]
+
+  const ordersByStatus = orders.reduce((acc, o) => { acc[o.status] = (acc[o.status] || 0) + 1; return acc }, {})
+
   return (
     <div className="space-y-6">
       {/* Header */}

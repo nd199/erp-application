@@ -30,6 +30,10 @@ public record ProductRequest(
         Integer quantity,
 
         @NotNull(message = "Active flag is required")
-        Boolean active
+        Boolean active,
+
+        Long categoryId,
+
+        Long typeId
 ) {
 }

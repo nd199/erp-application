@@ -15,6 +15,8 @@ import EmptyState from '../components/EmptyState'
 import StatusBadge from '../components/StatusBadge'
 import { formatCurrency } from '../utils/format'
 import { fetchProducts, createProduct, updateProduct, deleteProduct } from '../store/productThunks'
+import { fetchCategories } from '../store/categoryThunks'
+import { fetchTypes } from '../store/typeThunks'
 
 const schema = Yup.object({
   name: Yup.string().trim().min(2, 'Min 2 characters').required('Required'),
@@ -28,19 +30,21 @@ const schema = Yup.object({
 function Products() {
   const dispatch = useDispatch()
   const { products, loading } = useSelector((s) => s.products)
+  const categories = useSelector((s) => s.categories.categories)
+  const types = useSelector((s) => s.types.types)
   const [search, setSearch] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState('create')
   const [selected, setSelected] = useState(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
 
-  useEffect(() => { dispatch(fetchProducts()) }, [dispatch])
+  useEffect(() => { dispatch(fetchProducts()); dispatch(fetchCategories({ size: 100 })); dispatch(fetchTypes({ size: 100 })) }, [dispatch])
 
-  const filtered = products.filter((p) => `${p.name} ${p.sku} ${p.description}`.toLowerCase().includes(search.toLowerCase()))
+  const filtered = products.filter((p) => `${p.name} ${p.sku} ${p.description} ${p.categoryName || ''} ${p.typeName || ''}`.toLowerCase().includes(search.toLowerCase()))
   const openModal = (mode, row = null) => { setModalMode(mode); setSelected(row); setModalOpen(true) }
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    const payload = { ...values, active: values.active === 'true' || values.active === true }
+    const payload = { ...values, active: values.active === 'true' || values.active === true, categoryId: values.categoryId ? Number(values.categoryId) : null, typeId: values.typeId ? Number(values.typeId) : null }
     try {
       if (modalMode === 'create') { await dispatch(createProduct(payload)).unwrap(); toast.success('Product created') }
       else { await dispatch(updateProduct({ id: selected.id, ...payload })).unwrap(); toast.success('Product updated') }
@@ -66,12 +70,13 @@ function Products() {
         </div>
       </div>
     )},
+    { key: 'categoryName', label: 'Category', render: (val) => <span className="text-gray-300 text-sm">{val || '-'}</span> },
+    { key: 'typeName', label: 'Type', render: (val) => <span className="text-gray-300 text-sm">{val || '-'}</span> },
     { key: 'price', label: 'Price', align: 'right', render: (val) => <span className="text-gray-300 text-sm tabular-nums">{formatCurrency(val)}</span> },
     { key: 'quantity', label: 'Stock', align: 'right', render: (val) => (
       <span className={`text-sm tabular-nums font-medium ${val === 0 ? 'text-red-400' : val < 10 ? 'text-amber-400' : 'text-gray-300'}`}>{val}</span>
     )},
     { key: 'active', label: 'Status', render: (val) => <StatusBadge status={val ? 'ACTIVE' : 'INACTIVE'} /> },
-    { key: 'description', label: 'Description', render: (val) => <span className="text-gray-400 text-sm max-w-[280px] truncate block">{val}</span> },
     { key: 'id', label: '', render: (_, row) => (
       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <button onClick={(e) => { e.stopPropagation(); openModal('edit', row) }} className="p-1.5 rounded-lg text-gray-500 hover:text-blue-400 hover:bg-blue-500/10 transition-all cursor-pointer"><FiEdit2 className="w-3.5 h-3.5" /></button>
@@ -97,11 +102,14 @@ function Products() {
           resetKey={search}
           exportable
           exportFilename="products"
-          filters={[{ key: 'active', label: 'Status', getValue: (row) => row.active, valueLabel: (v) => (v ? 'Active' : 'Inactive') }]}
+          filters={[
+            { key: 'active', label: 'Status', getValue: (row) => row.active, valueLabel: (v) => (v ? 'Active' : 'Inactive') },
+            { key: 'categoryName', label: 'Category', getValue: (row) => row.categoryName, valueLabel: (v) => v },
+          ]}
         />
       )}
 
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={modalMode === 'create' ? 'Add Product' : 'Edit Product'} subtitle={modalMode === 'create' ? 'Create a new product.' : `Editing ${selected?.name}`}>
+      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={modalMode === 'create' ? 'Add Product' : 'Edit Product'} subtitle={modalMode === 'create' ? 'Create a new product.' : `Editing ${selected?.name}`} size="lg">
         <Formik
           initialValues={{
             name: selected?.name || '',
@@ -111,6 +119,8 @@ function Products() {
             price: selected?.price ?? '',
             quantity: selected?.quantity ?? '',
             active: selected ? String(selected.active) : 'true',
+            categoryId: selected?.categoryId ?? '',
+            typeId: selected?.typeId ?? '',
           }}
           validationSchema={schema}
           onSubmit={handleSubmit}
@@ -121,6 +131,16 @@ function Products() {
               <div className="grid grid-cols-2 gap-4">
                 <FormField name="name" label="Product Name" placeholder="e.g. Wireless Mouse" />
                 <FormField name="sku" label="SKU" placeholder="e.g. MS-1001" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1 block">Category</label>
+                  <FormField name="categoryId" as="select" options={[{ value: '', label: 'None' }, ...categories.map((c) => ({ value: String(c.id), label: c.name }))]} />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1 block">Type</label>
+                  <FormField name="typeId" as="select" options={[{ value: '', label: 'None' }, ...types.map((t) => ({ value: String(t.id), label: t.name }))]} />
+                </div>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <FormField name="price" label="Price" type="number" placeholder="0.00" />

@@ -1,19 +1,28 @@
 import { NavLink } from 'react-router-dom'
-import { FiGrid, FiUsers, FiHome, FiBox, FiUser, FiKey, FiShield, FiChevronRight, FiZap, FiBarChart2 } from 'react-icons/fi'
+import { useSelector } from 'react-redux'
+import { FiGrid, FiUsers, FiHome, FiBox, FiUser, FiKey, FiShield, FiChevronRight, FiZap, FiBarChart2, FiShoppingCart, FiTruck, FiPackage, FiTag } from 'react-icons/fi'
 import { isDevMode } from '../lib/devMode'
 
-const navItems = [
-    { to: '/', label: 'Dashboard', icon: FiGrid },
-    { to: '/analytics', label: 'Analytics', icon: FiBarChart2 },
-    { to: '/employees', label: 'Employees', icon: FiUsers },
-    { to: '/departments', label: 'Departments', icon: FiHome },
-    { to: '/products', label: 'Products', icon: FiBox },
-    { to: '/users', label: 'Users', icon: FiUser },
-    { to: '/roles', label: 'Roles', icon: FiKey },
-    { to: '/permissions', label: 'Permissions', icon: FiShield },
+const allNavItems = [
+    { to: '/', label: 'Dashboard', icon: FiGrid, permission: null },
+    { to: '/analytics', label: 'Analytics', icon: FiBarChart2, permission: 'REPORT_VIEW' },
+    { to: '/employees', label: 'Employees', icon: FiUsers, permission: 'EMPLOYEE_READ' },
+    { to: '/departments', label: 'Departments', icon: FiHome, permission: 'EMPLOYEE_READ' },
+    { to: '/products', label: 'Products', icon: FiBox, permission: 'PRODUCT_READ' },
+    { to: '/categories', label: 'Categories', icon: FiGrid, permission: 'PRODUCT_READ' },
+    { to: '/product-types', label: 'Product Types', icon: FiTag, permission: 'PRODUCT_READ' },
+    { to: '/orders', label: 'Sales Orders', icon: FiShoppingCart, permission: 'SALES_ORDER_READ' },
+    { to: '/suppliers', label: 'Suppliers', icon: FiTruck, permission: 'PURCHASE_READ' },
+    { to: '/purchase-orders', label: 'Purchase Orders', icon: FiPackage, permission: 'PURCHASE_READ' },
+    { to: '/users', label: 'Users', icon: FiUser, permission: 'USER_READ' },
+    { to: '/roles', label: 'Roles', icon: FiKey, permission: 'ROLE_READ' },
+    { to: '/permissions', label: 'Permissions', icon: FiShield, permission: 'PERMISSION_READ' },
 ]
 
 function Sidebar() {
+    const userPermissions = useSelector((state) => state.auth.user?.permissions || [])
+    const navItems = allNavItems.filter((item) => isDevMode() || !item.permission || userPermissions.includes(item.permission))
+
     return (
         <aside className="w-[220px] flex flex-col relative shrink-0">
             <div className="absolute right-0 top-0 bottom-0 w-px bg-gradient-to-b from-blue-500/20 via-white/[0.06] to-violet-500/20" />
@@ -80,4 +89,4 @@ function Sidebar() {
 }
 
 export default Sidebar
-export { navItems }
+export { allNavItems as navItems }

@@ -6,6 +6,11 @@ import productReducer from './productSlice';
 import userReducer from './userSlice';
 import roleReducer from './roleSlice';
 import permissionReducer from './permissionSlice';
+import salesOrderReducer from './salesOrderSlice';
+import supplierReducer from './supplierSlice';
+import purchaseOrderReducer from './purchaseOrderSlice';
+import categoryReducer from './categorySlice';
+import typeReducer from './typeSlice';
 
 export const store = configureStore({
     reducer: {
@@ -13,8 +18,13 @@ export const store = configureStore({
         employees: employeeReducer,
         departments: departmentReducer,
         products: productReducer,
+        categories: categoryReducer,
+        types: typeReducer,
         users: userReducer,
         roles: roleReducer,
         permissions: permissionReducer,
+        salesOrders: salesOrderReducer,
+        suppliers: supplierReducer,
+        purchaseOrders: purchaseOrderReducer,
     },
 })

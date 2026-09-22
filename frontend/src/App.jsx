@@ -5,12 +5,18 @@ import Dashboard from './pages/Dashboard'
 import Employees from './pages/Employees'
 import Departments from './pages/Departments'
 import Products from './pages/Products'
+import Categories from './pages/Categories'
+import ProductTypes from './pages/ProductTypes'
+import SalesOrders from './pages/SalesOrders'
+import Suppliers from './pages/Suppliers'
+import PurchaseOrders from './pages/PurchaseOrders'
 import Users from './pages/Users'
 import Roles from './pages/Roles'
 import Permissions from './pages/Permissions'
 import Analytics from './pages/Analytics'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
+import RequirePermission from './components/RequirePermission'
 
 function App() {
     return (
@@ -32,13 +38,18 @@ function App() {
                 <Route element={<ProtectedRoute />}>
                     <Route element={<Layout />}>
                         <Route path="/" element={<Dashboard />} />
-                        <Route path="/employees" element={<Employees />} />
-                        <Route path="/departments" element={<Departments />} />
-                        <Route path="/products" element={<Products />} />
-                        <Route path="/users" element={<Users />} />
-                        <Route path="/roles" element={<Roles />} />
-                        <Route path="/permissions" element={<Permissions />} />
-                        <Route path="/analytics" element={<Analytics />} />
+                        <Route path="/employees" element={<RequirePermission permission="EMPLOYEE_READ"><Employees /></RequirePermission>} />
+                        <Route path="/departments" element={<RequirePermission permission="EMPLOYEE_READ"><Departments /></RequirePermission>} />
+                        <Route path="/products" element={<RequirePermission permission="PRODUCT_READ"><Products /></RequirePermission>} />
+                        <Route path="/categories" element={<RequirePermission permission="PRODUCT_READ"><Categories /></RequirePermission>} />
+                        <Route path="/product-types" element={<RequirePermission permission="PRODUCT_READ"><ProductTypes /></RequirePermission>} />
+                        <Route path="/orders" element={<RequirePermission permission="SALES_ORDER_READ"><SalesOrders /></RequirePermission>} />
+                        <Route path="/suppliers" element={<RequirePermission permission="PURCHASE_READ"><Suppliers /></RequirePermission>} />
+                        <Route path="/purchase-orders" element={<RequirePermission permission="PURCHASE_READ"><PurchaseOrders /></RequirePermission>} />
+                        <Route path="/users" element={<RequirePermission permission="USER_READ"><Users /></RequirePermission>} />
+                        <Route path="/roles" element={<RequirePermission permission="ROLE_READ"><Roles /></RequirePermission>} />
+                        <Route path="/permissions" element={<RequirePermission permission="PERMISSION_READ"><Permissions /></RequirePermission>} />
+                        <Route path="/analytics" element={<RequirePermission permission="REPORT_VIEW"><Analytics /></RequirePermission>} />
                     </Route>
                 </Route>
 

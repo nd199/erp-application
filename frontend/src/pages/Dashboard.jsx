@@ -1,10 +1,18 @@
 import { useState, useEffect, useRef } from 'react'
-import { FiUsers, FiHome, FiUser, FiKey, FiShield, FiTrendingUp, FiArrowUpRight, FiActivity, FiBarChart2 } from 'react-icons/fi'
-import { fakeEmployees, fakeDepartments, fakeUsers, fakeRoles, fakePermissions } from '../lib/fakeData'
+import { useDispatch, useSelector } from 'react-redux'
+import { FiUsers, FiHome, FiUser, FiKey, FiShield, FiTrendingUp, FiArrowUpRight, FiActivity, FiBarChart2, FiShoppingCart } from 'react-icons/fi'
 import LineChart from '../components/charts/LineChart'
 import BarChart from '../components/charts/BarChart'
 import Legend from '../components/charts/Legend'
 import { employeeGrowth, monthlyHiring } from '../lib/chartData'
+import { fetchEmployees } from '../store/employeeThunks'
+import { fetchDepartments } from '../store/departmentThunks'
+import { fetchProducts } from '../store/productThunks'
+import { fetchUsers } from '../store/userThunks'
+import { fetchRoles } from '../store/roleThunks'
+import { fetchSalesOrders } from '../store/salesOrderThunks'
+import { isDevMode } from '../lib/devMode'
+import { fakeEmployees, fakeDepartments, fakeUsers, fakeRoles, fakePermissions } from '../lib/fakeData'
 
 function AnimatedCounter({ end, duration = 1200 }) {
   const [count, setCount] = useState(0)
@@ -73,6 +81,36 @@ const typeColors = {
 }
 
 function Dashboard() {
+  const dispatch = useDispatch()
+  const employees = useSelector((s) => s.employees.employees)
+  const departments = useSelector((s) => s.departments.departments)
+  const products = useSelector((s) => s.products.products)
+  const users = useSelector((s) => s.users?.users || [])
+  const roles = useSelector((s) => s.roles?.roles || [])
+  const orders = useSelector((s) => s.salesOrders?.orders || [])
+
+  useEffect(() => {
+    dispatch(fetchEmployees({ page: 0, size: 100 }))
+    dispatch(fetchDepartments())
+    dispatch(fetchProducts())
+    dispatch(fetchUsers())
+    dispatch(fetchRoles())
+    dispatch(fetchSalesOrders({ page: 0, size: 100 }))
+  }, [dispatch])
+
+  const empList = isDevMode() ? fakeEmployees : employees
+  const deptList = isDevMode() ? fakeDepartments : departments
+  const userList = isDevMode() ? fakeUsers : users
+  const roleList = isDevMode() ? fakeRoles : roles
+  const activeUsers = userList.filter((u) => u.status === 'ACTIVE').length
+  const totalRevenue = orders.reduce((sum, o) => sum + (o.totalAmount || 0), 0)
+
+  const stats = [
+    { label: 'Total Employees', value: empList.length, icon: FiUsers, gradient: 'from-blue-600/20 to-blue-400/5', border: 'border-blue-500/20', text: 'text-blue-400', sparkData: [42, 49, 54, 66, 75, 90, 101, 109, 123, 129, 139, 152], sparkColor: '#3b82f6', change: '+12%' },
+    { label: 'Departments', value: deptList.length, icon: FiHome, gradient: 'from-violet-600/20 to-violet-400/5', border: 'border-violet-500/20', text: 'text-violet-400', sparkData: [3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8], sparkColor: '#8b5cf6', change: '+2' },
+    { label: 'Active Users', value: activeUsers, icon: FiUser, gradient: 'from-emerald-600/20 to-emerald-400/5', border: 'border-emerald-500/20', text: 'text-emerald-400', sparkData: [2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4], sparkColor: '#10b981', change: '+5' },
+    { label: 'Total Orders', value: orders.length, icon: FiShoppingCart, gradient: 'from-amber-600/20 to-amber-400/5', border: 'border-amber-500/20', text: 'text-amber-400', sparkData: [1, 2, 3, 3, 4, 5, 5, 5, 5, 5, 5, 5], sparkColor: '#f59e0b', change: `${orders.length} total` },
+  ]
   return (
     <div className="space-y-8">
       <div className="animate-fade-in">
@@ -159,7 +197,7 @@ function Dashboard() {
             <button className="text-[10px] text-gray-600 hover:text-blue-400 transition-colors cursor-pointer">View all</button>
           </div>
           <div className="divide-y divide-white/[0.04]">
-            {fakeEmployees.slice(0, 3).map((emp, i) => (
+            {empList.slice(0, 3).map((emp, i) => (
               <div key={emp.id} className="group flex items-center gap-3 px-5 py-3 hover:bg-white/[0.02] transition-all duration-200 animate-slide-in-right" style={{ animationDelay: `${400 + i * 50}ms` }}>
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/15 to-violet-500/10 border border-white/[0.06] flex items-center justify-center shrink-0">
                   <span className="text-[9px] font-bold text-blue-400">{emp.firstName[0]}{emp.lastName[0]}</span>
@@ -181,10 +219,10 @@ function Dashboard() {
               <FiUsers className="w-4 h-4 text-gray-500" />
               <h2 className="text-sm font-semibold text-white">Team Directory</h2>
             </div>
-            <span className="text-[10px] text-gray-600">{fakeEmployees.length} members</span>
+            <span className="text-[10px] text-gray-600">{empList.length} members</span>
           </div>
           <div className="p-4 grid grid-cols-2 sm:grid-cols-5 gap-3">
-            {fakeEmployees.slice(0, 10).map((emp, i) => (
+            {empList.slice(0, 10).map((emp, i) => (
               <div key={emp.id} className="group flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/[0.03] transition-all duration-200 cursor-default animate-scale-in" style={{ animationDelay: `${450 + i * 40}ms` }}>
                 <div className="relative">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500/15 to-violet-500/10 border border-white/[0.06] flex items-center justify-center group-hover:scale-110 group-hover:border-blue-500/20 transition-all duration-300">
@@ -211,9 +249,9 @@ function Dashboard() {
             <h2 className="text-sm font-semibold text-white">Departments</h2>
           </div>
           <div className="space-y-3">
-            {fakeDepartments.slice(0, 5).map((dept, i) => {
-              const count = fakeEmployees.filter((e) => e.department?.id === dept.id).length
-              const maxCount = Math.max(...fakeDepartments.map((d) => fakeEmployees.filter((e) => e.department?.id === d.id).length))
+            {deptList.slice(0, 5).map((dept, i) => {
+              const count = empList.filter((e) => e.department?.id === dept.id).length
+              const maxCount = Math.max(...deptList.map((d) => empList.filter((e) => e.department?.id === d.id).length))
               const pct = maxCount > 0 ? (count / maxCount) * 100 : 0
               return (
                 <div key={dept.id} className="animate-slide-in-right" style={{ animationDelay: `${550 + i * 40}ms` }}>

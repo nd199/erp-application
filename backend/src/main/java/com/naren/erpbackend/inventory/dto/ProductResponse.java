@@ -12,6 +12,10 @@ public record ProductResponse(
         BigDecimal price,
         Integer quantity,
         Boolean active,
+        Long categoryId,
+        String categoryName,
+        Long typeId,
+        String typeName,
         Long version,
         Instant createdAt,
         Instant lastUpdated

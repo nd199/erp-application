@@ -17,7 +17,7 @@ DVN/
 | Layer    | Technology                                            |
 |----------|-------------------------------------------------------|
 | Backend  | Java 21, Spring Boot 4.1, PostgreSQL 17, Flyway      |
-| Frontend | React 19, Vite, TypeScript, Tailwind CSS             |
+| Frontend | React 19, Vite, JavaScript, Tailwind CSS            |
 | Security | Spring Security + JWT                                 |
 | Build    | Maven (backend), npm (frontend)                       |
 | Infra    | Docker Compose                                        |

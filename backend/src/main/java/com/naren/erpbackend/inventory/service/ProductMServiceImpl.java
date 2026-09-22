@@ -6,7 +6,11 @@ import com.naren.erpbackend.inventory.dto.ProductRequest;
 import com.naren.erpbackend.inventory.dto.ProductResponse;
 import com.naren.erpbackend.inventory.dto.ProductResponseMapper;
 import com.naren.erpbackend.inventory.entity.Product;
+import com.naren.erpbackend.inventory.entity.ProductCategory;
+import com.naren.erpbackend.inventory.entity.ProductType;
+import com.naren.erpbackend.inventory.repository.ProductCategoryRepository;
 import com.naren.erpbackend.inventory.repository.ProductRepository;
+import com.naren.erpbackend.inventory.repository.ProductTypeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,6 +22,8 @@ import org.springframework.stereotype.Service;
 public class ProductMServiceImpl extends ProductUtil implements ProductMService {
 
     private final ProductRepository productRepository;
+    private final ProductCategoryRepository categoryRepository;
+    private final ProductTypeRepository typeRepository;
     private final ProductResponseMapper responseMapper;
 
     @Override
@@ -30,6 +36,15 @@ public class ProductMServiceImpl extends ProductUtil implements ProductMService 
         }
 
         try {
+            ProductCategory category = request.categoryId() != null
+                    ? categoryRepository.findById(request.categoryId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Category not found: " + request.categoryId()))
+                    : null;
+            ProductType type = request.typeId() != null
+                    ? typeRepository.findById(request.typeId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Type not found: " + request.typeId()))
+                    : null;
+
             Product product = Product.builder()
                     .name(normalizeName(request.name()))
                     .sku(sku)
@@ -38,6 +53,8 @@ public class ProductMServiceImpl extends ProductUtil implements ProductMService 
                     .price(request.price())
                     .quantity(request.quantity())
                     .active(request.active())
+                    .productCategory(category)
+                    .productType(type)
                     .build();
             Product saved = productRepository.save(product);
             log.info("Product created: id={}, name={}, sku={}", saved.getId(), saved.getName(), saved.getSku());
@@ -67,6 +84,22 @@ public class ProductMServiceImpl extends ProductUtil implements ProductMService 
         product.setPrice(request.price());
         product.setQuantity(request.quantity());
         product.setActive(request.active());
+
+        if (request.categoryId() != null) {
+            ProductCategory category = categoryRepository.findById(request.categoryId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found: " + request.categoryId()));
+            product.setProductCategory(category);
+        } else {
+            product.setProductCategory(null);
+        }
+
+        if (request.typeId() != null) {
+            ProductType type = typeRepository.findById(request.typeId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Type not found: " + request.typeId()));
+            product.setProductType(type);
+        } else {
+            product.setProductType(null);
+        }
 
         try {
             Product saved = productRepository.save(product);

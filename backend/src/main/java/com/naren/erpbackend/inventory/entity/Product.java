@@ -52,6 +52,20 @@ public class Product {
     @Version
     private Long version;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "products_category_id",
+            foreignKey = @ForeignKey(
+                    name = "fk_products_category")
+    )
+    private ProductCategory productCategory;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "products_type_id",
+            foreignKey = @ForeignKey(
+                    name = "fk_products_type")
+    )
+    private ProductType productType;
+
     @Column(name = "created_at", updatable = false)
     @CreatedDate
     private Instant createdAt;
