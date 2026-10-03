@@ -77,7 +77,7 @@ function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#06060b] relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--bg-primary)] relative overflow-hidden">
       {/* Mesh gradient background */}
       <div className="absolute inset-0">
         <FloatingOrb className="w-[500px] h-[500px] bg-blue-600/[0.07] top-[-10%] left-[-5%]" delay={0} />

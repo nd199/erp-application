@@ -35,6 +35,8 @@ public record EmployeeRequest(
         @NotNull(message = "Department ID is required")
         Long departmentId,
 
+        Long managerId,
+
         Long userProfileId,
 
         @Size(max = 1000000, message = "Image must not exceed 1MB")

@@ -54,6 +54,7 @@ public class EmployeeMServiceImpl extends EmployeeUtil implements EmployeeMServi
                     .hireDate(request.hireDate())
                     .jobTitle(normalizeName(request.jobTitle()))
                     .department(department)
+                    .manager(resolveManager(request.managerId(), null))
                     .userProfile(userProfile)
                     .build();
 
@@ -83,6 +84,7 @@ public class EmployeeMServiceImpl extends EmployeeUtil implements EmployeeMServi
         employee.setHireDate(request.hireDate());
         employee.setJobTitle(normalizeName(request.jobTitle()));
         employee.setDepartment(department);
+        employee.setManager(resolveManager(request.managerId(), employee.getId()));
 
         if (request.userProfileId() != null) {
             UserProfile userProfile = userProfileRepository.findById(request.userProfileId())
@@ -93,6 +95,18 @@ public class EmployeeMServiceImpl extends EmployeeUtil implements EmployeeMServi
         Employee saved = employeeRepository.save(employee);
         log.info("Employee updated: id={}, name={} {}", saved.getId(), saved.getFirstName(), saved.getLastName());
         return employeeResponseMapper.apply(saved);
+    }
+
+    private Employee resolveManager(Long managerId, Long selfId) {
+        if (managerId == null) {
+            return null;
+        }
+        if (selfId != null && managerId.equals(selfId)) {
+            throw new ResourceExistsException("Employee cannot be their own manager");
+        }
+        return employeeRepository.findById(managerId)
+                .filter(m -> !m.isDeleted())
+                .orElseThrow(() -> new ResourceNotFoundException("Manager not found with id: " + managerId));
     }
 
     @Override

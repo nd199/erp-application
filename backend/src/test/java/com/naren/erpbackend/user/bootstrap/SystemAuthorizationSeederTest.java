@@ -101,11 +101,16 @@ class SystemAuthorizationSeederTest {
                 "ROLE_READ", "ROLE_ASSIGN", "ROLE_REMOVE",
                 "PERMISSION_READ", "PERMISSION_ASSIGN", "PERMISSION_REMOVE",
                 "EMPLOYEE_CREATE", "EMPLOYEE_READ", "EMPLOYEE_UPDATE", "EMPLOYEE_DELETE",
+                "LEAVE_CREATE", "LEAVE_READ", "LEAVE_UPDATE", "LEAVE_DELETE", "LEAVE_APPROVE",
+                "LEAVE_BALANCE_READ", "LEAVE_BALANCE_CREATE", "LEAVE_BALANCE_UPDATE", "LEAVE_BALANCE_DELETE",
+                "ATTENDANCE_CREATE", "ATTENDANCE_READ", "ATTENDANCE_UPDATE", "ATTENDANCE_DELETE",
+                "PAYROLL_CREATE", "PAYROLL_READ", "PAYROLL_UPDATE", "PAYROLL_DELETE", "PAYROLL_PROCESS",
                 "PRODUCT_CREATE", "PRODUCT_READ", "PRODUCT_UPDATE", "PRODUCT_DELETE",
-                "SALES_ORDER_CREATE", "SALES_ORDER_READ", "SALES_ORDER_UPDATE", "SALES_ORDER_DELETE"
+                "SALES_ORDER_CREATE", "SALES_ORDER_READ", "SALES_ORDER_UPDATE", "SALES_ORDER_DELETE",
+                "PURCHASE_CREATE", "PURCHASE_READ", "PURCHASE_UPDATE", "PURCHASE_DELETE"
         );
 
-        verify(permissionRepository, times(27)).save(any(Permission.class));
+        verify(permissionRepository, times(49)).save(any(Permission.class));
     }
 
     @Test
@@ -145,23 +150,31 @@ class SystemAuthorizationSeederTest {
         Role manager = roleStore.get("MANAGER");
         Role employee = roleStore.get("EMPLOYEE");
 
-        assertThat(superAdmin.getPermissions()).hasSize(27);
-        assertThat(admin.getPermissions()).hasSize(27);
-        assertThat(manager.getPermissions()).hasSize(12);
-        assertThat(employee.getPermissions()).hasSize(4);
+        assertThat(superAdmin.getPermissions()).hasSize(49);
+        assertThat(admin.getPermissions()).hasSize(49);
+        assertThat(manager.getPermissions()).hasSize(29);
+        assertThat(employee.getPermissions()).hasSize(10);
 
         Set<String> managerPerms = manager.getPermissions().stream()
                 .map(Permission::getName)
                 .collect(Collectors.toSet());
         assertThat(managerPerms).contains("USER_READ", "ROLE_READ", "PERMISSION_READ",
                 "EMPLOYEE_CREATE", "EMPLOYEE_READ", "EMPLOYEE_UPDATE",
+                "LEAVE_CREATE", "LEAVE_READ", "LEAVE_UPDATE", "LEAVE_APPROVE",
+                "LEAVE_BALANCE_READ", "LEAVE_BALANCE_CREATE", "LEAVE_BALANCE_UPDATE",
+                "ATTENDANCE_CREATE", "ATTENDANCE_READ", "ATTENDANCE_UPDATE",
+                "PAYROLL_CREATE", "PAYROLL_READ", "PAYROLL_UPDATE", "PAYROLL_PROCESS",
                 "PRODUCT_READ", "PRODUCT_CREATE", "PRODUCT_UPDATE",
-                "SALES_ORDER_READ", "SALES_ORDER_CREATE", "SALES_ORDER_UPDATE");
+                "SALES_ORDER_READ", "SALES_ORDER_CREATE", "SALES_ORDER_UPDATE",
+                "PURCHASE_READ", "PURCHASE_CREATE", "PURCHASE_UPDATE");
 
         Set<String> employeePerms = employee.getPermissions().stream()
                 .map(Permission::getName)
                 .collect(Collectors.toSet());
         assertThat(employeePerms).containsExactlyInAnyOrder(
-                "USER_READ", "EMPLOYEE_READ", "PRODUCT_READ", "SALES_ORDER_READ");
+                "USER_READ", "EMPLOYEE_READ",
+                "LEAVE_CREATE", "LEAVE_READ", "LEAVE_BALANCE_READ",
+                "ATTENDANCE_READ", "PAYROLL_READ",
+                "PRODUCT_READ", "SALES_ORDER_READ", "PURCHASE_READ");
     }
 }

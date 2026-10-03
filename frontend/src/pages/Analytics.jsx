@@ -38,6 +38,7 @@ function Analytics() {
   const departments = useSelector((s) => s.departments.departments)
   const users = useSelector((s) => s.users?.users || [])
   const orders = useSelector((s) => s.salesOrders?.orders || [])
+  const isDark = useSelector((s) => s.theme.theme) === 'dark'
 
   useEffect(() => {
     dispatch(fetchEmployees({ page: 0, size: 100 }))
@@ -78,7 +79,7 @@ function Analytics() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <ChartCard title="Employee Growth" subtitle="Cumulative headcount over 12 months" icon={FiTrendingUp} className="lg:col-span-2" delay={100}>
           <div className="h-[260px]">
-            <LineChart data={employeeGrowth} label="value" color="#3b82f6" />
+            <LineChart data={employeeGrowth} label="value" color="#3b82f6" dark={isDark} />
           </div>
         </ChartCard>
 
@@ -94,7 +95,7 @@ function Analytics() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <ChartCard title="Monthly Hiring" subtitle="New employees onboarded per month" icon={FiBarChart2} delay={300}>
           <div className="h-[240px]">
-            <BarChart data={monthlyHiring} color="#8b5cf6" />
+            <BarChart data={monthlyHiring} color="#8b5cf6" dark={isDark} />
           </div>
         </ChartCard>
 
@@ -102,6 +103,7 @@ function Analytics() {
           <div className="h-[240px]">
             <AreaChart
               data={revenueData}
+              dark={isDark}
               lines={[
                 { key: 'revenue', color: '#10b981' },
                 { key: 'expenses', color: '#ef4444' },
@@ -125,6 +127,7 @@ function Analytics() {
               data={weeklyActivity}
               barKey="tasks"
               color="#06b6d4"
+              dark={isDark}
             />
           </div>
           <div className="mt-4">

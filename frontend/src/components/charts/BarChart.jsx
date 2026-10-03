@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-function BarChart({ data, width = 600, height = 250, color = '#3b82f6', barKey = 'count', labelKey = 'month', showGrid = true, animate = true }) {
+function BarChart({ data, width = 600, height = 250, color = '#3b82f6', barKey = 'count', labelKey = 'month', showGrid = true, animate = true, dark = true }) {
   const [progress, setProgress] = useState(animate ? 0 : 1)
   const ref = useRef(null)
 
@@ -46,8 +46,8 @@ function BarChart({ data, width = 600, height = 250, color = '#3b82f6', barKey =
         const y = padding.top + chartH - (v / maxVal) * chartH
         return (
           <g key={i}>
-            <line x1={padding.left} y1={y} x2={padding.left + chartW} y2={y} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
-            <text x={padding.left - 8} y={y + 4} textAnchor="end" fill="rgba(255,255,255,0.25)" fontSize="10" fontFamily="system-ui">
+            <line x1={padding.left} y1={y} x2={padding.left + chartW} y2={y} stroke={dark ? 'rgba(128,128,128,0.08)' : 'rgba(0,0,0,0.08)'} strokeWidth="1" />
+            <text x={padding.left - 8} y={y + 4} textAnchor="end" fill={dark ? 'rgba(128,128,128,0.4)' : 'rgba(0,0,0,0.45)'} fontSize="10" fontFamily="system-ui">
               {Math.round(v)}
             </text>
           </g>
@@ -68,12 +68,12 @@ function BarChart({ data, width = 600, height = 250, color = '#3b82f6', barKey =
             <rect x={x} y={y} width={barW} height={barH} rx="4" fill={`url(#bar-grad-${color})`} />
             {/* Value label */}
             {eased > 0.8 && (
-              <text x={x + barW / 2} y={y - 8} textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="10" fontFamily="system-ui" opacity={(eased - 0.8) * 5}>
+              <text x={x + barW / 2} y={y - 8} textAnchor="middle" fill={dark ? 'rgba(128,128,128,0.6)' : 'rgba(0,0,0,0.6)'} fontSize="10" fontFamily="system-ui" opacity={(eased - 0.8) * 5}>
                 {d[barKey]}
               </text>
             )}
             {/* X label */}
-            <text x={x + barW / 2} y={padding.top + chartH + 20} textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="10" fontFamily="system-ui">
+            <text x={x + barW / 2} y={padding.top + chartH + 20} textAnchor="middle" fill={dark ? 'rgba(128,128,128,0.5)' : 'rgba(0,0,0,0.5)'} fontSize="10" fontFamily="system-ui">
               {d[labelKey]}
             </text>
           </g>

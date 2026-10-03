@@ -47,26 +47,26 @@ export const fakeProducts = [
 
 // ─── Employees ─────────────────────────────────────────────────
 export const fakeEmployees = [
-  { id: 1,  firstName: 'Rajesh',   lastName: 'Kumar',     email: 'rajesh.kumar@nexacorp.com',    phone: '+91-98765-43210', hireDate: '2021-03-15', jobTitle: 'Principal Software Engineer',   department: fakeDepartments[0], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=1' },
-  { id: 2,  firstName: 'Priya',    lastName: 'Sharma',    email: 'priya.sharma@nexacorp.com',     phone: '+91-98765-43211', hireDate: '2020-06-20', jobTitle: 'HR Manager',                     department: fakeDepartments[1], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=2' },
-  { id: 3,  firstName: 'Amit',     lastName: 'Patel',     email: 'amit.patel@nexacorp.com',       phone: '+91-98765-43212', hireDate: '2022-09-10', jobTitle: 'Marketing Lead',                 department: fakeDepartments[2], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=3' },
-  { id: 4,  firstName: 'Sneha',    lastName: 'Reddy',     email: 'sneha.reddy@nexacorp.com',      phone: '+91-98765-43213', hireDate: '2019-11-01', jobTitle: 'Senior Finance Analyst',         department: fakeDepartments[3], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=4' },
-  { id: 5,  firstName: 'Vikram',   lastName: 'Singh',     email: 'vikram.singh@nexacorp.com',     phone: '+91-98765-43214', hireDate: '2018-07-18', jobTitle: 'Enterprise Account Executive',  department: fakeDepartments[4], status: 'INACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=5' },
-  { id: 6,  firstName: 'Ananya',   lastName: 'Iyer',      email: 'ananya.iyer@nexacorp.com',      phone: '+91-98765-43215', hireDate: '2022-01-05', jobTitle: 'Senior DevOps Engineer',         department: fakeDepartments[0], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=6' },
-  { id: 7,  firstName: 'Mohit',    lastName: 'Gupta',     email: 'mohit.gupta@nexacorp.com',      phone: '+91-98765-43216', hireDate: '2020-11-22', jobTitle: 'Head of Operations',            department: fakeDepartments[5], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=7' },
-  { id: 8,  firstName: 'Kavitha',  lastName: 'Nair',      email: 'kavitha.nair@nexacorp.com',     phone: '+91-98765-43217', hireDate: '2021-04-12', jobTitle: 'Legal Counsel',                  department: fakeDepartments[6], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=8' },
-  { id: 9,  firstName: 'Arjun',    lastName: 'Mehta',     email: 'arjun.mehta@nexacorp.com',      phone: '+91-98765-43218', hireDate: '2023-02-01', jobTitle: 'Support Engineer L2',            department: fakeDepartments[7], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=9' },
-  { id: 10, firstName: 'Deepa',    lastName: 'Menon',     email: 'deepa.menon@nexacorp.com',      phone: '+91-98765-43219', hireDate: '2017-08-14', jobTitle: 'Engineering Manager',           department: fakeDepartments[0], status: 'LOCKED',   imageUrl: 'https://i.pravatar.cc/150?img=10' },
-  { id: 11, firstName: 'Rohan',    lastName: 'Desai',     email: 'rohan.desai@nexacorp.com',      phone: '+91-98765-43220', hireDate: '2024-01-19', jobTitle: 'Software Engineer',             department: fakeDepartments[0], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=11' },
-  { id: 12, firstName: 'Fatima',   lastName: 'Khan',      email: 'fatima.khan@nexacorp.com',      phone: '+91-98765-43221', hireDate: '2022-10-30', jobTitle: 'UI/UX Designer',                department: fakeDepartments[2], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=12' },
-  { id: 13, firstName: 'Sanjay',   lastName: 'Rao',       email: 'sanjay.rao@nexacorp.com',       phone: '+91-98765-43222', hireDate: '2016-05-08', jobTitle: 'Assistant Manager - Accounts',  department: fakeDepartments[3], status: 'INACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=13' },
-  { id: 14, firstName: 'Neha',     lastName: 'Joshi',     email: 'neha.joshi@nexacorp.com',       phone: '+91-98765-43223', hireDate: '2021-08-25', jobTitle: 'Regional Sales Manager',        department: fakeDepartments[4], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=14' },
-  { id: 15, firstName: 'Kiran',    lastName: 'Bedi',      email: 'kiran.bedi@nexacorp.com',       phone: '+91-98765-43224', hireDate: '2020-02-11', jobTitle: 'Customer Success Lead',         department: fakeDepartments[7], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=15' },
-  { id: 16, firstName: 'Manish',   lastName: 'Agarwal',   email: 'manish.agarwal@nexacorp.com',   phone: '+91-98765-43225', hireDate: '2022-06-14', jobTitle: 'QA Engineer',                    department: fakeDepartments[0], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=16' },
-  { id: 17, firstName: 'Divya',    lastName: 'Pillai',    email: 'divya.pillai@nexacorp.com',     phone: '+91-98765-43226', hireDate: '2022-12-02', jobTitle: 'Business Intelligence Analyst', department: fakeDepartments[3], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=17' },
-  { id: 18, firstName: 'Rahul',    lastName: 'Verma',     email: 'rahul.verma@nexacorp.com',      phone: '+91-98765-43227', hireDate: '2019-09-16', jobTitle: 'Network Engineer',               department: fakeDepartments[5], status: 'LOCKED',   imageUrl: 'https://i.pravatar.cc/150?img=18' },
-  { id: 19, firstName: 'Pooja',    lastName: 'Bhat',      email: 'pooja.bhat@nexacorp.com',       phone: '+91-98765-43228', hireDate: '2024-03-22', jobTitle: 'Talent Acquisition Specialist', department: fakeDepartments[1], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=19' },
-  { id: 20, firstName: 'Ashwin',   lastName: 'Nambiar',   email: 'ashwin.nambiar@nexacorp.com',   phone: '+91-98765-43229', hireDate: '2020-11-09', jobTitle: 'Information Security Analyst',  department: fakeDepartments[5], status: 'INACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=20' },
+  { id: 1,  firstName: 'Rajesh',   lastName: 'Kumar',     email: 'rajesh.kumar@nexacorp.com',    phone: '+91-98765-43210', hireDate: '2021-03-15', jobTitle: 'Principal Software Engineer',   department: fakeDepartments[0], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=1', managerId: 10, managerName: 'Deepa Menon' },
+  { id: 2,  firstName: 'Priya',    lastName: 'Sharma',    email: 'priya.sharma@nexacorp.com',     phone: '+91-98765-43211', hireDate: '2020-06-20', jobTitle: 'HR Manager',                     department: fakeDepartments[1], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=2', managerId: null, managerName: null },
+  { id: 3,  firstName: 'Amit',     lastName: 'Patel',     email: 'amit.patel@nexacorp.com',       phone: '+91-98765-43212', hireDate: '2022-09-10', jobTitle: 'Marketing Lead',                 department: fakeDepartments[2], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=3', managerId: null, managerName: null },
+  { id: 4,  firstName: 'Sneha',    lastName: 'Reddy',     email: 'sneha.reddy@nexacorp.com',      phone: '+91-98765-43213', hireDate: '2019-11-01', jobTitle: 'Senior Finance Analyst',         department: fakeDepartments[3], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=4', managerId: null, managerName: null },
+  { id: 5,  firstName: 'Vikram',   lastName: 'Singh',     email: 'vikram.singh@nexacorp.com',     phone: '+91-98765-43214', hireDate: '2018-07-18', jobTitle: 'Enterprise Account Executive',  department: fakeDepartments[4], status: 'INACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=5', managerId: null, managerName: null },
+  { id: 6,  firstName: 'Ananya',   lastName: 'Iyer',      email: 'ananya.iyer@nexacorp.com',      phone: '+91-98765-43215', hireDate: '2022-01-05', jobTitle: 'Senior DevOps Engineer',         department: fakeDepartments[0], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=6', managerId: 10, managerName: 'Deepa Menon' },
+  { id: 7,  firstName: 'Mohit',    lastName: 'Gupta',     email: 'mohit.gupta@nexacorp.com',      phone: '+91-98765-43216', hireDate: '2020-11-22', jobTitle: 'Head of Operations',            department: fakeDepartments[5], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=7', managerId: null, managerName: null },
+  { id: 8,  firstName: 'Kavitha',  lastName: 'Nair',      email: 'kavitha.nair@nexacorp.com',     phone: '+91-98765-43217', hireDate: '2021-04-12', jobTitle: 'Legal Counsel',                  department: fakeDepartments[6], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=8', managerId: null, managerName: null },
+  { id: 9,  firstName: 'Arjun',    lastName: 'Mehta',     email: 'arjun.mehta@nexacorp.com',      phone: '+91-98765-43218', hireDate: '2023-02-01', jobTitle: 'Support Engineer L2',            department: fakeDepartments[7], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=9', managerId: 15, managerName: 'Kiran Bedi' },
+  { id: 10, firstName: 'Deepa',    lastName: 'Menon',     email: 'deepa.menon@nexacorp.com',      phone: '+91-98765-43219', hireDate: '2017-08-14', jobTitle: 'Engineering Manager',           department: fakeDepartments[0], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=10', managerId: null, managerName: null },
+  { id: 11, firstName: 'Rohan',    lastName: 'Desai',     email: 'rohan.desai@nexacorp.com',      phone: '+91-98765-43220', hireDate: '2024-01-19', jobTitle: 'Software Engineer',             department: fakeDepartments[0], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=11', managerId: 10, managerName: 'Deepa Menon' },
+  { id: 12, firstName: 'Fatima',   lastName: 'Khan',      email: 'fatima.khan@nexacorp.com',      phone: '+91-98765-43221', hireDate: '2022-10-30', jobTitle: 'UI/UX Designer',                department: fakeDepartments[2], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=12', managerId: 3, managerName: 'Amit Patel' },
+  { id: 13, firstName: 'Sanjay',   lastName: 'Rao',       email: 'sanjay.rao@nexacorp.com',       phone: '+91-98765-43222', hireDate: '2016-05-08', jobTitle: 'Assistant Manager - Accounts',  department: fakeDepartments[3], status: 'INACTIVE', imageUrl: 'https://i.pravatar.cc/150?img=13', managerId: 4, managerName: 'Sneha Reddy' },
+  { id: 14, firstName: 'Neha',     lastName: 'Joshi',     email: 'neha.joshi@nexacorp.com',       phone: '+91-98765-43223', hireDate: '2021-08-25', jobTitle: 'Regional Sales Manager',        department: fakeDepartments[4], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=14', managerId: null, managerName: null },
+  { id: 15, firstName: 'Kiran',    lastName: 'Bedi',      email: 'kiran.bedi@nexacorp.com',       phone: '+91-98765-43224', hireDate: '2020-02-11', jobTitle: 'Customer Success Lead',         department: fakeDepartments[7], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=15', managerId: null, managerName: null },
+  { id: 16, firstName: 'Manish',   lastName: 'Agarwal',   email: 'manish.agarwal@nexacorp.com',   phone: '+91-98765-43225', hireDate: '2022-06-14', jobTitle: 'QA Engineer',                    department: fakeDepartments[0], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=16', managerId: 10, managerName: 'Deepa Menon' },
+  { id: 17, firstName: 'Divya',    lastName: 'Pillai',    email: 'divya.pillai@nexacorp.com',     phone: '+91-98765-43226', hireDate: '2022-12-02', jobTitle: 'Business Intelligence Analyst', department: fakeDepartments[3], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=17', managerId: 4, managerName: 'Sneha Reddy' },
+  { id: 18, firstName: 'Rahul',    lastName: 'Verma',     email: 'rahul.verma@nexacorp.com',      phone: '+91-98765-43227', hireDate: '2019-09-16', jobTitle: 'Network Engineer',               department: fakeDepartments[5], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=18', managerId: 7, managerName: 'Mohit Gupta' },
+  { id: 19, firstName: 'Pooja',    lastName: 'Bhat',      email: 'pooja.bhat@nexacorp.com',       phone: '+91-98765-43228', hireDate: '2024-03-22', jobTitle: 'Talent Acquisition Specialist', department: fakeDepartments[1], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=19', managerId: 2, managerName: 'Priya Sharma' },
+  { id: 20, firstName: 'Ashwin',   lastName: 'Nambiar',   email: 'ashwin.nambiar@nexacorp.com',   phone: '+91-98765-43229', hireDate: '2020-11-09', jobTitle: 'Information Security Analyst',  department: fakeDepartments[5], status: 'ACTIVE',   imageUrl: 'https://i.pravatar.cc/150?img=20', managerId: 7, managerName: 'Mohit Gupta' },
 ];
 
 // ─── Roles ─────────────────────────────────────────────────────
@@ -204,3 +204,76 @@ export const fakeDevUser = {
   roles: ['SUPER_ADMIN'],
   permissions: fakePermissions.map((p) => p.name),
 };
+
+// ─── HCM: Leave Requests ──────────────────────────────────────
+export const fakeLeaveRequests = [
+  { id: 1, employeeId: 11, employeeName: 'Rohan Desai', employeeEmail: 'rohan.desai@nexacorp.com', leaveType: 'ANNUAL', fromDate: '2025-09-01', toDate: '2025-09-05', days: 5, reason: 'Family vacation', status: 'APPROVED', approvedById: 10, approvedByName: 'Deepa Menon', approvalNotes: 'Approved - team coverage arranged', createdAt: '2025-08-20T10:00:00Z', lastUpdated: '2025-08-21T09:00:00Z' },
+  { id: 2, employeeId: 12, employeeName: 'Fatima Khan', employeeEmail: 'fatima.khan@nexacorp.com', leaveType: 'SICK', fromDate: '2025-09-10', toDate: '2025-09-12', days: 3, reason: 'Viral fever', status: 'PENDING', approvedById: null, approvedByName: null, approvalNotes: null, createdAt: '2025-09-09T08:30:00Z', lastUpdated: '2025-09-09T08:30:00Z' },
+  { id: 3, employeeId: 16, employeeName: 'Manish Agarwal', employeeEmail: 'manish.agarwal@nexacorp.com', leaveType: 'CASUAL', fromDate: '2025-09-15', toDate: '2025-09-15', days: 1, reason: 'Personal work', status: 'APPROVED', approvedById: 10, approvedByName: 'Deepa Menon', approvalNotes: 'OK', createdAt: '2025-09-12T11:00:00Z', lastUpdated: '2025-09-12T15:00:00Z' },
+  { id: 4, employeeId: 19, employeeName: 'Pooja Bhat', employeeEmail: 'pooja.bhat@nexacorp.com', leaveType: 'ANNUAL', fromDate: '2025-10-01', toDate: '2025-10-10', days: 10, reason: 'Diwali break', status: 'PENDING', approvedById: null, approvedByName: null, approvalNotes: null, createdAt: '2025-09-18T12:00:00Z', lastUpdated: '2025-09-18T12:00:00Z' },
+  { id: 5, employeeId: 9, employeeName: 'Arjun Mehta', employeeEmail: 'arjun.mehta@nexacorp.com', leaveType: 'UNPAID', fromDate: '2025-08-18', toDate: '2025-08-19', days: 2, reason: 'Personal emergency', status: 'REJECTED', approvedById: 10, approvedByName: 'Deepa Menon', approvalNotes: 'Critical release week - please reschedule', createdAt: '2025-08-15T09:00:00Z', lastUpdated: '2025-08-16T10:00:00Z' },
+];
+
+// ─── HCM: Attendance ──────────────────────────────────────────
+export const fakeAttendance = [
+  { id: 1, employeeId: 1, employeeName: 'Rajesh Kumar', employeeEmail: 'rajesh.kumar@nexacorp.com', workDate: '2025-09-01', checkIn: '09:02:00', checkOut: '18:10:00', status: 'PRESENT', notes: null, createdAt: '2025-09-01T09:02:00Z', lastUpdated: '2025-09-01T18:10:00Z' },
+  { id: 2, employeeId: 6, employeeName: 'Ananya Iyer', employeeEmail: 'ananya.iyer@nexacorp.com', workDate: '2025-09-01', checkIn: '08:45:00', checkOut: '17:50:00', status: 'WORK_FROM_HOME', notes: 'WFH - infra maintenance', createdAt: '2025-09-01T08:45:00Z', lastUpdated: '2025-09-01T17:50:00Z' },
+  { id: 3, employeeId: 11, employeeName: 'Rohan Desai', employeeEmail: 'rohan.desai@nexacorp.com', workDate: '2025-09-01', checkIn: null, checkOut: null, status: 'ON_LEAVE', notes: 'Approved annual leave', createdAt: '2025-09-01T00:00:00Z', lastUpdated: '2025-09-01T00:00:00Z' },
+  { id: 4, employeeId: 12, employeeName: 'Fatima Khan', employeeEmail: 'fatima.khan@nexacorp.com', workDate: '2025-09-02', checkIn: '09:15:00', checkOut: '13:00:00', status: 'HALF_DAY', notes: 'Left early - medical appointment', createdAt: '2025-09-02T09:15:00Z', lastUpdated: '2025-09-02T13:00:00Z' },
+  { id: 5, employeeId: 16, employeeName: 'Manish Agarwal', employeeEmail: 'manish.agarwal@nexacorp.com', workDate: '2025-09-02', checkIn: null, checkOut: null, status: 'ABSENT', notes: 'No check-in recorded', createdAt: '2025-09-02T18:00:00Z', lastUpdated: '2025-09-02T18:00:00Z' },
+  { id: 6, employeeId: 1, employeeName: 'Rajesh Kumar', employeeEmail: 'rajesh.kumar@nexacorp.com', workDate: '2025-09-02', checkIn: '09:00:00', checkOut: '18:05:00', status: 'PRESENT', notes: null, createdAt: '2025-09-02T09:00:00Z', lastUpdated: '2025-09-02T18:05:00Z' },
+];
+
+// ─── HCM: Payroll Runs ────────────────────────────────────────
+export const fakePayrollRuns = [
+  {
+    id: 1, periodMonth: 8, periodYear: 2025, periodLabel: 'August 2025', status: 'PAID',
+    totalGross: 4850000, totalDeductions: 727500, totalNet: 4122500,
+    processedById: 2, processedByName: 'Priya Sharma', notes: 'August 2025 payroll',
+    createdAt: '2025-08-28T10:00:00Z', lastUpdated: '2025-09-01T12:00:00Z',
+    items: [
+      { id: 1, employeeId: 1, employeeName: 'Rajesh Kumar', employeeEmail: 'rajesh.kumar@nexacorp.com', basicSalary: 180000, allowances: 25000, deductions: 18000, tax: 32000, netPay: 155000, notes: null },
+      { id: 2, employeeId: 2, employeeName: 'Priya Sharma', employeeEmail: 'priya.sharma@nexacorp.com', basicSalary: 150000, allowances: 20000, deductions: 15000, tax: 27000, netPay: 128000, notes: null },
+      { id: 3, employeeId: 6, employeeName: 'Ananya Iyer', employeeEmail: 'ananya.iyer@nexacorp.com', basicSalary: 140000, allowances: 18000, deductions: 14000, tax: 25000, netPay: 119000, notes: null },
+    ],
+  },
+  {
+    id: 2, periodMonth: 9, periodYear: 2025, periodLabel: 'September 2025', status: 'DRAFT',
+    totalGross: 4900000, totalDeductions: 735000, totalNet: 4165000,
+    processedById: null, processedByName: null, notes: 'September 2025 - pending final attendance',
+    createdAt: '2025-09-25T10:00:00Z', lastUpdated: '2025-09-25T10:00:00Z',
+    items: [
+      { id: 4, employeeId: 1, employeeName: 'Rajesh Kumar', employeeEmail: 'rajesh.kumar@nexacorp.com', basicSalary: 180000, allowances: 25000, deductions: 18000, tax: 32000, netPay: 155000, notes: null },
+      { id: 5, employeeId: 2, employeeName: 'Priya Sharma', employeeEmail: 'priya.sharma@nexacorp.com', basicSalary: 150000, allowances: 20000, deductions: 15000, tax: 27000, netPay: 128000, notes: null },
+    ],
+  },
+];
+
+// ─── HCM: Leave Balances ──────────────────────────────────────
+export const fakeLeaveBalances = [
+  { id: 1, employeeId: 1, employeeName: 'Rajesh Kumar', employeeEmail: 'rajesh.kumar@nexacorp.com', year: 2025, leaveType: 'ANNUAL', totalEntitled: 12, used: 3, remaining: 9, createdAt: '2025-01-01T00:00:00Z', lastUpdated: '2025-01-01T00:00:00Z' },
+  { id: 2, employeeId: 1, employeeName: 'Rajesh Kumar', employeeEmail: 'rajesh.kumar@nexacorp.com', year: 2025, leaveType: 'SICK', totalEntitled: 8, used: 1, remaining: 7, createdAt: '2025-01-01T00:00:00Z', lastUpdated: '2025-01-01T00:00:00Z' },
+  { id: 3, employeeId: 11, employeeName: 'Rohan Desai', employeeEmail: 'rohan.desai@nexacorp.com', year: 2025, leaveType: 'ANNUAL', totalEntitled: 12, used: 5, remaining: 7, createdAt: '2025-01-01T00:00:00Z', lastUpdated: '2025-01-01T00:00:00Z' },
+];
+
+// ─── HCM: Org Chart ───────────────────────────────────────────
+export const fakeOrgChart = [
+  { id: 10, firstName: 'Deepa', lastName: 'Menon', jobTitle: 'Engineering Manager', departmentName: 'Engineering', managerId: null, managerName: null, children: [
+    { id: 1, firstName: 'Rajesh', lastName: 'Kumar', jobTitle: 'Principal Software Engineer', departmentName: 'Engineering', managerId: 10, managerName: 'Deepa Menon', children: [] },
+    { id: 6, firstName: 'Ananya', lastName: 'Iyer', jobTitle: 'Senior DevOps Engineer', departmentName: 'Engineering', managerId: 10, managerName: 'Deepa Menon', children: [] },
+    { id: 11, firstName: 'Rohan', lastName: 'Desai', jobTitle: 'Software Engineer', departmentName: 'Engineering', managerId: 10, managerName: 'Deepa Menon', children: [] },
+    { id: 16, firstName: 'Manish', lastName: 'Agarwal', jobTitle: 'QA Engineer', departmentName: 'Engineering', managerId: 10, managerName: 'Deepa Menon', children: [] },
+  ]},
+  { id: 2, firstName: 'Priya', lastName: 'Sharma', jobTitle: 'HR Manager', departmentName: 'Human Resources', managerId: null, managerName: null, children: [
+    { id: 19, firstName: 'Pooja', lastName: 'Bhat', jobTitle: 'Talent Acquisition Specialist', departmentName: 'Human Resources', managerId: 2, managerName: 'Priya Sharma', children: [] },
+  ]},
+];
+
+// ─── HCM: Payslips ────────────────────────────────────────────
+export const fakePayslips = [
+  { payrollRunId: 1, periodMonth: 8, periodYear: 2025, periodLabel: 'August 2025', runStatus: 'PAID', employeeId: 1, employeeName: 'Rajesh Kumar', employeeEmail: 'rajesh.kumar@nexacorp.com', jobTitle: 'Principal Software Engineer', departmentName: 'Engineering', basicSalary: 180000, allowances: 25000, deductions: 18000, tax: 32000, netPay: 155000, grossEarnings: 205000, totalDeductions: 50000, notes: null, processedByName: 'Priya Sharma', generatedAt: '2025-09-01T12:00:00Z' },
+];
+
+// ─── HCM: Attendance Summary ──────────────────────────────────
+export const fakeAttendanceSummary = { employeeId: 1, employeeName: 'Rajesh Kumar', employeeEmail: 'rajesh.kumar@nexacorp.com', year: 2025, month: 9, present: 18, absent: 1, halfDay: 1, onLeave: 2, workFromHome: 3, holiday: 0, totalMarked: 25, breakdown: [ { status: 'PRESENT', count: 18 }, { status: 'ABSENT', count: 1 }, { status: 'HALF_DAY', count: 1 }, { status: 'ON_LEAVE', count: 2 }, { status: 'WORK_FROM_HOME', count: 3 } ] };
+

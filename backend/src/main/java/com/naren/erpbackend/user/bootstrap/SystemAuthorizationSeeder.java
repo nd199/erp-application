@@ -115,6 +115,27 @@ public class SystemAuthorizationSeeder implements CommandLineRunner {
         permissions.put("EMPLOYEE_UPDATE", "Update employee records");
         permissions.put("EMPLOYEE_DELETE", "Delete an employee record");
 
+        permissions.put("LEAVE_CREATE", "Submit a leave request");
+        permissions.put("LEAVE_READ", "Read leave requests");
+        permissions.put("LEAVE_UPDATE", "Update a pending leave request");
+        permissions.put("LEAVE_DELETE", "Delete a leave request");
+        permissions.put("LEAVE_APPROVE", "Approve or reject leave requests");
+        permissions.put("LEAVE_BALANCE_READ", "Read leave balances");
+        permissions.put("LEAVE_BALANCE_CREATE", "Create leave balances");
+        permissions.put("LEAVE_BALANCE_UPDATE", "Update leave balances");
+        permissions.put("LEAVE_BALANCE_DELETE", "Delete leave balances");
+
+        permissions.put("ATTENDANCE_CREATE", "Mark attendance");
+        permissions.put("ATTENDANCE_READ", "Read attendance records");
+        permissions.put("ATTENDANCE_UPDATE", "Update attendance records");
+        permissions.put("ATTENDANCE_DELETE", "Delete attendance records");
+
+        permissions.put("PAYROLL_CREATE", "Create a payroll run");
+        permissions.put("PAYROLL_READ", "Read payroll runs");
+        permissions.put("PAYROLL_UPDATE", "Update a draft payroll run");
+        permissions.put("PAYROLL_DELETE", "Delete a payroll run");
+        permissions.put("PAYROLL_PROCESS", "Process or mark payroll runs as paid");
+
         permissions.put("PRODUCT_CREATE", "Create a product");
         permissions.put("PRODUCT_READ", "Read product details");
         permissions.put("PRODUCT_UPDATE", "Update product details");
@@ -150,6 +171,10 @@ public class SystemAuthorizationSeeder implements CommandLineRunner {
                 "ROLE_READ", "ROLE_ASSIGN", "ROLE_REMOVE",
                 "PERMISSION_READ", "PERMISSION_ASSIGN", "PERMISSION_REMOVE",
                 "EMPLOYEE_CREATE", "EMPLOYEE_READ", "EMPLOYEE_UPDATE", "EMPLOYEE_DELETE",
+                "LEAVE_CREATE", "LEAVE_READ", "LEAVE_UPDATE", "LEAVE_DELETE", "LEAVE_APPROVE",
+                "LEAVE_BALANCE_READ", "LEAVE_BALANCE_CREATE", "LEAVE_BALANCE_UPDATE", "LEAVE_BALANCE_DELETE",
+                "ATTENDANCE_CREATE", "ATTENDANCE_READ", "ATTENDANCE_UPDATE", "ATTENDANCE_DELETE",
+                "PAYROLL_CREATE", "PAYROLL_READ", "PAYROLL_UPDATE", "PAYROLL_DELETE", "PAYROLL_PROCESS",
                 "PRODUCT_CREATE", "PRODUCT_READ", "PRODUCT_UPDATE", "PRODUCT_DELETE",
                 "SALES_ORDER_CREATE", "SALES_ORDER_READ", "SALES_ORDER_UPDATE", "SALES_ORDER_DELETE",
                 "PURCHASE_CREATE", "PURCHASE_READ", "PURCHASE_UPDATE", "PURCHASE_DELETE"
@@ -160,6 +185,10 @@ public class SystemAuthorizationSeeder implements CommandLineRunner {
                 "ROLE_READ",
                 "PERMISSION_READ",
                 "EMPLOYEE_CREATE", "EMPLOYEE_READ", "EMPLOYEE_UPDATE",
+                "LEAVE_CREATE", "LEAVE_READ", "LEAVE_UPDATE", "LEAVE_APPROVE",
+                "LEAVE_BALANCE_READ", "LEAVE_BALANCE_CREATE", "LEAVE_BALANCE_UPDATE",
+                "ATTENDANCE_CREATE", "ATTENDANCE_READ", "ATTENDANCE_UPDATE",
+                "PAYROLL_CREATE", "PAYROLL_READ", "PAYROLL_UPDATE", "PAYROLL_PROCESS",
                 "PRODUCT_READ", "PRODUCT_CREATE", "PRODUCT_UPDATE",
                 "SALES_ORDER_READ", "SALES_ORDER_CREATE", "SALES_ORDER_UPDATE",
                 "PURCHASE_READ", "PURCHASE_CREATE", "PURCHASE_UPDATE"
@@ -168,6 +197,10 @@ public class SystemAuthorizationSeeder implements CommandLineRunner {
         Set<String> employeePermissions = Set.of(
                 "USER_READ",
                 "EMPLOYEE_READ",
+                "LEAVE_CREATE", "LEAVE_READ",
+                "LEAVE_BALANCE_READ",
+                "ATTENDANCE_READ",
+                "PAYROLL_READ",
                 "PRODUCT_READ",
                 "SALES_ORDER_READ",
                 "PURCHASE_READ"

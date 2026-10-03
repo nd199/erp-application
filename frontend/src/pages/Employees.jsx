@@ -27,6 +27,7 @@ const schema = Yup.object({
   hireDate: Yup.date().required('Required'),
   jobTitle: Yup.string().trim().required('Required'),
   departmentId: Yup.number().required('Required'),
+  managerId: Yup.number().nullable(),
 })
 
 const PAGE_SIZE = 8
@@ -69,11 +70,15 @@ function Employees() {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     const dept = departments.find((d) => d.id === Number(values.departmentId))
+    const mgr = employees.find((e) => e.id === Number(values.managerId))
     const payload = {
       ...values,
       departmentId: Number(values.departmentId),
       departmentName: dept?.name,
+      managerId: values.managerId ? Number(values.managerId) : null,
+      managerName: mgr ? `${mgr.firstName} ${mgr.lastName}` : null,
       department: undefined,
+      manager: undefined,
     }
     try {
       if (modalMode === 'create') {
@@ -109,6 +114,7 @@ function Employees() {
     )},
     { key: 'jobTitle', label: 'Position' },
     { key: 'departmentName', label: 'Department', render: (val, row) => val || row.department?.name || '-', exportValue: (row) => row.departmentName || row.department?.name || '' },
+    { key: 'managerName', label: 'Reports To', render: (val, row) => val || row.manager?.name || '-' },
     { key: 'phone', label: 'Phone' },
     { key: 'hireDate', label: 'Joined', render: formatDate },
     { key: 'status', label: 'Status', render: (val) => <StatusBadge status={val} /> },
@@ -163,7 +169,7 @@ function Employees() {
       )}
 
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={modalMode === 'create' ? 'Add Employee' : 'Edit Employee'} subtitle={modalMode === 'create' ? 'Add a new team member.' : `Editing ${selected?.firstName} ${selected?.lastName}`} size="lg">
-        <Formik initialValues={{ firstName: selected?.firstName || '', lastName: selected?.lastName || '', email: selected?.email || '', phone: selected?.phone || '', hireDate: selected?.hireDate || '', jobTitle: selected?.jobTitle || '', departmentId: selected?.departmentId || selected?.department?.id || '', imageUrl: selected?.imageUrl || '' }} validationSchema={schema} onSubmit={handleSubmit} enableReinitialize>
+        <Formik initialValues={{ firstName: selected?.firstName || '', lastName: selected?.lastName || '', email: selected?.email || '', phone: selected?.phone || '', hireDate: selected?.hireDate || '', jobTitle: selected?.jobTitle || '', departmentId: selected?.departmentId || selected?.department?.id || '', managerId: selected?.managerId || selected?.manager?.id || '', imageUrl: selected?.imageUrl || '' }} validationSchema={schema} onSubmit={handleSubmit} enableReinitialize>
           {({ isSubmitting, values, setFieldValue }) => (
             <Form className="grid grid-cols-2 gap-4">
               <div className="col-span-2">
@@ -176,6 +182,19 @@ function Employees() {
               <FormField name="hireDate" label="Hire Date" type="date" />
               <FormField name="jobTitle" label="Job Title" placeholder="Job title" />
               <div className="col-span-2"><FormField name="departmentId" label="Department" as="select" options={departments.map((d) => ({ value: d.id, label: d.name }))} /></div>
+              <div className="col-span-2">
+                <FormField
+                  name="managerId"
+                  label="Reports To (Manager)"
+                  as="select"
+                  options={[
+                    { value: '', label: 'No manager' },
+                    ...employees
+                      .filter((e) => e.id !== selected?.id)
+                      .map((e) => ({ value: e.id, label: `${e.firstName} ${e.lastName} — ${e.jobTitle}` })),
+                  ]}
+                />
+              </div>
               <div className="col-span-2 flex justify-end gap-3 mt-2">
                 <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2.5 text-sm font-medium text-gray-400 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] rounded-xl transition-all cursor-pointer">Cancel</button>
                 <button type="submit" disabled={isSubmitting} className="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 rounded-xl transition-all duration-300 shadow-lg shadow-blue-600/20 cursor-pointer disabled:opacity-50">{isSubmitting ? 'Saving...' : modalMode === 'create' ? 'Create' : 'Save Changes'}</button>

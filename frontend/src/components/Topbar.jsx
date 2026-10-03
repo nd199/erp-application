@@ -6,7 +6,7 @@ import { FiSearch, FiBell, FiChevronDown, FiLogOut, FiUser, FiSettings, FiHelpCi
 import { FiSun, FiMoon } from 'react-icons/fi'
 import { navItems } from './Sidebar'
 import { fakeEmployees, fakeDepartments, fakeUsers } from '../lib/fakeData'
-import { useTheme } from '../lib/ThemeContext'
+import { toggleTheme } from '../store/themeSlice'
 
 function ProfileDropdown({ user, onLogout }) {
     const [open, setOpen] = useState(false)
@@ -126,10 +126,10 @@ function Topbar() {
     ] : []
 
     const handleLogout = () => { dispatch(logout()); navigate('/login') }
-    const { theme, toggleTheme } = useTheme()
+    const theme = useSelector((state) => state.theme.theme)
 
     return (
-        <header className={`h-20 px-6 flex items-center justify-between relative shrink-0 ${theme === 'light' ? 'bg-white border-b border-gray-200' : 'bg-white/[0.01]'}`}>
+        <header className={`h-20 px-6 flex items-center justify-between relative shrink-0 topbar-shadow ${theme === 'light' ? 'bg-[var(--bg-body)] border-b border-gray-200' : 'bg-white/[0.01]'}`}>
             <div className={`absolute bottom-0 left-0 right-0 h-px ${theme === 'light' ? 'bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200' : 'bg-gradient-to-r from-white/[0.06] via-white/[0.08] to-white/[0.06]'}`} />
 
             {/* Left: Inline Search */}
@@ -203,7 +203,7 @@ function Topbar() {
                 <div className="w-px h-6 bg-white/[0.06] mx-1" />
 
                 <button
-                    onClick={toggleTheme}
+                    onClick={() => dispatch(toggleTheme())}
                     className="relative p-2.5 rounded-xl text-gray-500 hover:text-white hover:bg-white/[0.04] transition-all duration-200 cursor-pointer"
                     title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
                 >

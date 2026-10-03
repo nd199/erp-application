@@ -1,5 +1,6 @@
 import {configureStore} from '@reduxjs/toolkit';
 import authReducer from './authSlice';
+import themeReducer from './themeSlice';
 import employeeReducer from './employeeSlice';
 import departmentReducer from './departmentSlice';
 import productReducer from './productSlice';
@@ -11,10 +12,18 @@ import supplierReducer from './supplierSlice';
 import purchaseOrderReducer from './purchaseOrderSlice';
 import categoryReducer from './categorySlice';
 import typeReducer from './typeSlice';
+import leaveReducer from './leaveSlice';
+import attendanceReducer from './attendanceSlice';
+import payrollReducer from './payrollSlice';
+import leaveBalanceReducer from './leaveBalanceSlice';
+import orgChartReducer from './orgChartSlice';
+import payslipReducer from './payslipSlice';
+import attendanceSummaryReducer from './attendanceSummarySlice';
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
+        theme: themeReducer,
         employees: employeeReducer,
         departments: departmentReducer,
         products: productReducer,
@@ -26,5 +35,12 @@ export const store = configureStore({
         salesOrders: salesOrderReducer,
         suppliers: supplierReducer,
         purchaseOrders: purchaseOrderReducer,
+        leaves: leaveReducer,
+        attendance: attendanceReducer,
+        payroll: payrollReducer,
+        leaveBalances: leaveBalanceReducer,
+        orgChart: orgChartReducer,
+        payslips: payslipReducer,
+        attendanceSummary: attendanceSummaryReducer,
     },
 })

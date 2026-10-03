@@ -21,6 +21,10 @@ public class EmployeeResponseMapper implements Function<Employee, EmployeeRespon
                 employee.getJobTitle(),
                 employee.getDepartment().getId(),
                 employee.getDepartment().getName(),
+                employee.getManager() != null ? employee.getManager().getId() : null,
+                employee.getManager() != null
+                        ? employee.getManager().getFirstName() + " " + employee.getManager().getLastName()
+                        : null,
                 employee.getUserProfile() != null ? employee.getUserProfile().getId() : null,
                 employee.getStatus(),
                 employee.getCreatedAt(),

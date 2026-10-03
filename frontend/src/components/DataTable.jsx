@@ -257,14 +257,14 @@ function DataTable({
       <div className="overflow-x-auto" style={{ maxHeight }}>
         <table className="w-full text-sm">
           <thead>
-            <tr className="sticky top-0 z-10 bg-[#06060b]/95 backdrop-blur-xl border-b border-white/[0.06]">
+            <tr className="sticky top-0 z-10 table-header border-b border-[var(--border-primary)]">
               {visibleCols.map((col) => {
                 const sortable = col.sortable === true || (col.sortable !== false && !!col.key && col.label !== '')
                 const active = effSortKey === col.key
                 return (
                   <th
                     key={col.key}
-                    className={`${cellPad} ${col.align === 'right' ? 'text-right' : 'text-left'} text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em] whitespace-nowrap ${col.width ? `w-[${col.width}]` : ''}`}
+                    className={`${cellPad} ${col.align === 'right' ? 'text-right' : 'text-left'} text-[10px] font-bold uppercase tracking-[0.15em] whitespace-nowrap ${col.width ? `w-[${col.width}]` : ''}`}
                   >
                     {sortable ? (
                       <button
@@ -282,15 +282,15 @@ function DataTable({
               })}
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/[0.04]">
+          <tbody className="table-body">
             {paged.map((row, rowIdx) => (
               <tr
                 key={row.id ?? rowIdx}
                 onClick={() => onRowClick?.(row)}
-                className={`group transition-colors duration-150 odd:bg-white/[0.015] animate-slide-in-right ${
-                  onRowClick ? 'cursor-pointer hover:bg-white/[0.04]' : 'hover:bg-white/[0.03]'
+                className={`group transition-colors duration-150 ${
+                  onRowClick ? 'cursor-pointer' : ''
                 }`}
-                style={{ animationDelay: `${rowIdx * 30}ms` }}
+                style={{ animationDelay: `${rowIdx * 30}ms`, backgroundColor: rowIdx % 2 === 0 ? 'transparent' : 'var(--zebra-bg)' }}
               >
                 {visibleCols.map((col) => (
                   <td key={col.key} className={`${rowPad} ${cellPad} text-gray-300 ${col.align === 'right' ? 'text-right' : 'text-left'} whitespace-nowrap`}>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-function LineChart({ data, width = 600, height = 250, color = '#3b82f6', label = 'value', showDots = true, showGrid = true, animate = true }) {
+function LineChart({ data, width = 600, height = 250, color = '#3b82f6', label = 'value', showDots = true, showGrid = true, animate = true, dark = true }) {
   const [progress, setProgress] = useState(animate ? 0 : 1)
   const ref = useRef(null)
 
@@ -66,8 +66,8 @@ function LineChart({ data, width = 600, height = 250, color = '#3b82f6', label =
         const y = padding.top + chartH - ((v - minVal) / (maxVal - minVal)) * chartH
         return (
           <g key={i}>
-            <line x1={padding.left} y1={y} x2={padding.left + chartW} y2={y} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
-            <text x={padding.left - 8} y={y + 4} textAnchor="end" fill="rgba(255,255,255,0.25)" fontSize="10" fontFamily="system-ui">
+            <line x1={padding.left} y1={y} x2={padding.left + chartW} y2={y} stroke={dark ? 'rgba(128,128,128,0.08)' : 'rgba(0,0,0,0.08)'} strokeWidth="1" />
+            <text x={padding.left - 8} y={y + 4} textAnchor="end" fill={dark ? 'rgba(128,128,128,0.4)' : 'rgba(0,0,0,0.45)'} fontSize="10" fontFamily="system-ui">
               {v >= 1000 ? `${(v / 1000).toFixed(0)}k` : Math.round(v)}
             </text>
           </g>
@@ -76,7 +76,7 @@ function LineChart({ data, width = 600, height = 250, color = '#3b82f6', label =
 
       {/* X labels */}
       {points.map((p, i) => (
-        <text key={i} x={p.x} y={padding.top + chartH + 20} textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="10" fontFamily="system-ui">
+        <text key={i} x={p.x} y={padding.top + chartH + 20} textAnchor="middle" fill={dark ? 'rgba(128,128,128,0.5)' : 'rgba(0,0,0,0.5)'} fontSize="10" fontFamily="system-ui">
           {p.label}
         </text>
       ))}
@@ -94,7 +94,7 @@ function LineChart({ data, width = 600, height = 250, color = '#3b82f6', label =
       {/* Dots */}
       {showDots && visiblePoints.map((p, i) => (
         <g key={i}>
-          <circle cx={p.x} cy={p.y} r="4" fill="#0a0a0f" stroke={color} strokeWidth="2" opacity={eased} />
+          <circle cx={p.x} cy={p.y} r="4" fill={dark ? '#18181b' : '#ffffff'} stroke={color} strokeWidth="2" opacity={eased} />
           <circle cx={p.x} cy={p.y} r="1.5" fill={color} opacity={eased} />
         </g>
       ))}

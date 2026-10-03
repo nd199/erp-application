@@ -72,7 +72,7 @@ class EmployeeQServiceImplTest {
                 id, firstName, lastName,
                 firstName.toLowerCase() + "@example.com", "+1234567890",
                 null, null, "Engineer",
-                1L, "Engineering", null, UserStatus.ACTIVE,
+                1L, "Engineering", null, null, null, UserStatus.ACTIVE,
                 null, null
         );
     }

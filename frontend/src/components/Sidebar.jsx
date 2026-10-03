@@ -1,20 +1,28 @@
 import { NavLink } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { FiGrid, FiUsers, FiHome, FiBox, FiUser, FiKey, FiShield, FiChevronRight, FiZap, FiBarChart2, FiShoppingCart, FiTruck, FiPackage, FiTag, FiSun, FiMoon } from 'react-icons/fi'
+import { useSelector, useDispatch } from 'react-redux'
+import { FiGrid, FiUsers, FiHome, FiBox, FiUser, FiKey, FiShield, FiChevronRight, FiZap, FiBarChart2, FiShoppingCart, FiTruck, FiPackage, FiTag, FiSun, FiMoon, FiCalendar, FiClock, FiDollarSign, FiShare2 } from 'react-icons/fi'
 import { isDevMode } from '../lib/devMode'
-import { useTheme } from '../lib/ThemeContext'
+import { toggleTheme } from '../store/themeSlice'
 
 const allNavItems = [
     { to: '/', label: 'Dashboard', icon: FiGrid, permission: null },
     { to: '/analytics', label: 'Analytics', icon: FiBarChart2, permission: 'REPORT_VIEW' },
-    { to: '/employees', label: 'Employees', icon: FiUsers, permission: 'EMPLOYEE_READ' },
-    { to: '/departments', label: 'Departments', icon: FiHome, permission: 'EMPLOYEE_READ' },
     { to: '/products', label: 'Products', icon: FiBox, permission: 'PRODUCT_READ' },
-    { to: '/categories', label: 'Categories', icon: FiGrid, permission: 'PRODUCT_READ' },
+    { to: '/categories', label: 'Categories', icon: FiTag, permission: 'PRODUCT_READ' },
     { to: '/product-types', label: 'Product Types', icon: FiTag, permission: 'PRODUCT_READ' },
     { to: '/orders', label: 'Sales Orders', icon: FiShoppingCart, permission: 'SALES_ORDER_READ' },
     { to: '/suppliers', label: 'Suppliers', icon: FiTruck, permission: 'PURCHASE_READ' },
     { to: '/purchase-orders', label: 'Purchase Orders', icon: FiPackage, permission: 'PURCHASE_READ' },
+    { to: '/employees', label: 'Employees', icon: FiUsers, permission: 'EMPLOYEE_READ' },
+    { to: '/departments', label: 'Departments', icon: FiHome, permission: 'EMPLOYEE_READ' },
+    { to: '/leave-requests', label: 'Leave Requests', icon: FiCalendar, permission: 'LEAVE_READ' },
+    { to: '/attendance', label: 'Attendance', icon: FiClock, permission: 'ATTENDANCE_READ' },
+    { to: '/payroll', label: 'Payroll', icon: FiDollarSign, permission: 'PAYROLL_READ' },
+    { to: '/org-chart', label: 'Org Chart', icon: FiShare2, permission: 'EMPLOYEE_READ' },
+    { to: '/leave-balances', label: 'Leave Balances', icon: FiCalendar, permission: 'LEAVE_BALANCE_READ' },
+    { to: '/my-leave', label: 'My Leave', icon: FiCalendar, permission: 'LEAVE_READ' },
+    { to: '/my-attendance', label: 'My Attendance', icon: FiClock, permission: 'ATTENDANCE_READ' },
+    { to: '/my-payslips', label: 'My Payslips', icon: FiDollarSign, permission: 'PAYROLL_READ' },
     { to: '/users', label: 'Users', icon: FiUser, permission: 'USER_READ' },
     { to: '/roles', label: 'Roles', icon: FiKey, permission: 'ROLE_READ' },
     { to: '/permissions', label: 'Permissions', icon: FiShield, permission: 'PERMISSION_READ' },
@@ -23,10 +31,11 @@ const allNavItems = [
 function Sidebar() {
     const userPermissions = useSelector((state) => state.auth.user?.permissions || [])
     const navItems = allNavItems.filter((item) => isDevMode() || !item.permission || userPermissions.includes(item.permission))
-    const { theme, toggleTheme } = useTheme()
+    const theme = useSelector((state) => state.theme.theme)
+    const dispatch = useDispatch()
 
     return (
-        <aside className={`w-[220px] flex flex-col relative shrink-0 ${theme === 'light' ? 'bg-white border-r border-gray-200' : ''}`}>
+        <aside className={`w-[220px] flex flex-col relative shrink-0 sidebar-shadow ${theme === 'light' ? 'bg-[var(--bg-body)] border-r border-gray-200' : ''}`}>
             <div className="absolute right-0 top-0 bottom-0 w-px bg-gradient-to-b from-blue-500/20 via-white/[0.06] to-violet-500/20" />
 
             {/* Logo */}
@@ -39,7 +48,7 @@ function Sidebar() {
                         <div className="absolute inset-0 rounded-xl bg-blue-500/20 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     </div>
                     <div>
-                        <h1 className="text-base font-bold text-gradient tracking-tight leading-none">DevNext</h1>
+                        <h1 className="text-base font-bold text-gradient tracking-tight leading-none">DVN</h1>
                         <p className={`text-[10px] uppercase tracking-[0.2em] font-medium mt-0.5 ${theme === 'light' ? 'text-gray-500' : 'text-gray-600'}`}>Enterprise</p>
                     </div>
                 </div>
@@ -86,7 +95,7 @@ function Sidebar() {
             )}
 
             <button
-                onClick={toggleTheme}
+                onClick={() => dispatch(toggleTheme())}
                 className="mx-3 mb-3 px-3 py-2.5 w-full flex items-center gap-3 rounded-xl border border-white/[0.06] hover:bg-white/[0.03] transition-all cursor-pointer text-sm text-gray-500 hover:text-white"
             >
                 {theme === 'dark' ? <FiSun className="w-4 h-4" /> : <FiMoon className="w-4 h-4" />}

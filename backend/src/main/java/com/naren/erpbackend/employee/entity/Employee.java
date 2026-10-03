@@ -53,6 +53,10 @@ public class Employee {
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manager_id")
+    private Employee manager;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_profile_id", unique = true)
     private UserProfile userProfile;

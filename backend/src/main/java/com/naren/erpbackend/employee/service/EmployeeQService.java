@@ -1,10 +1,13 @@
 package com.naren.erpbackend.employee.service;
 
 import com.naren.erpbackend.employee.dto.EmployeeResponse;
+import com.naren.erpbackend.employee.dto.OrgChartNode;
 import com.naren.erpbackend.user.entity.UserStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Transactional(readOnly = true)
 public interface EmployeeQService {
@@ -20,4 +23,10 @@ public interface EmployeeQService {
     Page<EmployeeResponse> filterEmployees(String keyword, UserStatus status, Long departmentId, Pageable pageable);
 
     Page<EmployeeResponse> findEmployeesByDepartment(Long departmentId, Pageable pageable);
+
+    Page<EmployeeResponse> findEmployeesByManager(Long managerId, Pageable pageable);
+
+    List<EmployeeResponse> findDirectReports(Long managerId);
+
+    List<OrgChartNode> findOrgChart();
 }

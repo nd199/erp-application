@@ -2,6 +2,7 @@ package com.naren.erpbackend.employee.controller;
 
 import com.naren.erpbackend.employee.dto.EmployeeRequest;
 import com.naren.erpbackend.employee.dto.EmployeeResponse;
+import com.naren.erpbackend.employee.dto.OrgChartNode;
 import com.naren.erpbackend.employee.service.EmployeeMService;
 import com.naren.erpbackend.employee.service.EmployeeQService;
 import com.naren.erpbackend.user.entity.UserStatus;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -33,6 +36,13 @@ public class EmployeeController {
         EmployeeResponse response = employeeMService.createEmployee(request);
         log.info("Employee created: id={}, name={} {}", response.id(), response.firstName(), response.lastName());
         return ResponseEntity.status(CREATED).body(response);
+    }
+
+    @GetMapping("/org-chart")
+    @PreAuthorize("hasAuthority('EMPLOYEE_READ')")
+    public ResponseEntity<List<OrgChartNode>> getOrgChart() {
+        log.info("Fetch org chart");
+        return ResponseEntity.ok(employeeQService.findOrgChart());
     }
 
     @GetMapping("/{id}")
@@ -73,6 +83,22 @@ public class EmployeeController {
             @PathVariable Long departmentId, Pageable pageable) {
         log.info("Fetch employees by department: departmentId={}", departmentId);
         return ResponseEntity.ok(employeeQService.findEmployeesByDepartment(departmentId, pageable));
+    }
+
+    @GetMapping("/manager/{managerId}")
+    @PreAuthorize("hasAuthority('EMPLOYEE_READ')")
+    public ResponseEntity<Page<EmployeeResponse>> getEmployeesByManager(
+            @PathVariable Long managerId, Pageable pageable) {
+        log.info("Fetch employees by manager: managerId={}", managerId);
+        return ResponseEntity.ok(employeeQService.findEmployeesByManager(managerId, pageable));
+    }
+
+    @GetMapping("/manager/{managerId}/direct-reports")
+    @PreAuthorize("hasAuthority('EMPLOYEE_READ')")
+    public ResponseEntity<java.util.List<EmployeeResponse>> getDirectReports(
+            @PathVariable Long managerId) {
+        log.info("Fetch direct reports: managerId={}", managerId);
+        return ResponseEntity.ok(employeeQService.findDirectReports(managerId));
     }
 
     @PatchMapping("/{id}")

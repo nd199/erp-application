@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-function AreaChart({ data, width = 600, height = 250, lines = [{ key: 'revenue', color: '#3b82f6' }, { key: 'expenses', color: '#ef4444' }], labelKey = 'month', showGrid = true, animate = true }) {
+function AreaChart({ data, width = 600, height = 250, lines = [{ key: 'revenue', color: '#3b82f6' }, { key: 'expenses', color: '#ef4444' }], labelKey = 'month', showGrid = true, animate = true, dark = true }) {
   const [progress, setProgress] = useState(animate ? 0 : 1)
   const ref = useRef(null)
 
@@ -45,8 +45,8 @@ function AreaChart({ data, width = 600, height = 250, lines = [{ key: 'revenue',
         const y = padding.top + chartH - (v / maxVal) * chartH
         return (
           <g key={i}>
-            <line x1={padding.left} y1={y} x2={padding.left + chartW} y2={y} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
-            <text x={padding.left - 8} y={y + 4} textAnchor="end" fill="rgba(255,255,255,0.25)" fontSize="10" fontFamily="system-ui">
+            <line x1={padding.left} y1={y} x2={padding.left + chartW} y2={y} stroke={dark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.06)'} strokeWidth="1" />
+            <text x={padding.left - 8} y={y + 4} textAnchor="end" fill={dark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.4)'} fontSize="10" fontFamily="system-ui">
               {v >= 1000 ? `${(v / 1000).toFixed(0)}k` : Math.round(v)}
             </text>
           </g>
@@ -57,7 +57,7 @@ function AreaChart({ data, width = 600, height = 250, lines = [{ key: 'revenue',
       {data.map((d, i) => {
         const x = padding.left + (i / (data.length - 1)) * chartW
         return (
-          <text key={i} x={x} y={padding.top + chartH + 20} textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="10" fontFamily="system-ui">
+          <text key={i} x={x} y={padding.top + chartH + 20} textAnchor="middle" fill={dark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.4)'} fontSize="10" fontFamily="system-ui">
             {d[labelKey]}
           </text>
         )
@@ -86,7 +86,7 @@ function AreaChart({ data, width = 600, height = 250, lines = [{ key: 'revenue',
             {areaD && <path d={areaD} fill={`url(#area-${l.color})`} opacity={eased} />}
             {pathD && <path d={pathD} fill="none" stroke={l.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity={eased} />}
             {visible.map((p, i) => (
-              <circle key={i} cx={p.x} cy={p.y} r="3" fill="#0a0a0f" stroke={l.color} strokeWidth="1.5" opacity={eased} />
+              <circle key={i} cx={p.x} cy={p.y} r="3" fill={dark ? '#0a0a0f' : '#ffffff'} stroke={l.color} strokeWidth="1.5" opacity={eased} />
             ))}
           </g>
         )

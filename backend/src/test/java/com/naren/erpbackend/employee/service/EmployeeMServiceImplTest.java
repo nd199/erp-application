@@ -84,6 +84,7 @@ class EmployeeMServiceImplTest {
                 "Software Engineer",
                 1L,
                 null,
+                null,
                 "https://example.com/avatar.png"
         );
     }
@@ -110,7 +111,7 @@ class EmployeeMServiceImplTest {
                 1L, "John", "Doe", "john@example.com", "+1234567890",
                 "https://example.com/avatar.png",
                 LocalDate.of(2024, 1, 15), "Software Engineer",
-                1L, "Engineering", null, UserStatus.ACTIVE,
+                1L, "Engineering", null, null, null, UserStatus.ACTIVE,
                 null, null
         );
 
@@ -146,6 +147,7 @@ class EmployeeMServiceImplTest {
                 "  Software Engineer  ",
                 1L,
                 null,
+                null,
                 "  https://example.com/avatar.png  "
         );
 
@@ -168,7 +170,7 @@ class EmployeeMServiceImplTest {
                 1L, "John", "Doe", "john@example.com", "+1234567890",
                 "https://example.com/avatar.png",
                 LocalDate.of(2024, 1, 15), "Software Engineer",
-                1L, "Engineering", null, UserStatus.ACTIVE,
+                1L, "Engineering", null, null, null, UserStatus.ACTIVE,
                 null, null
         );
 
@@ -201,7 +203,7 @@ class EmployeeMServiceImplTest {
         EmployeeRequest request = new EmployeeRequest(
                 "John", "Doe", "john@example.com", "+1234567890",
                 LocalDate.of(2024, 1, 15), "Software Engineer",
-                1L, 10L, null
+                1L, null, 10L, null
         );
 
         Department department = createDepartment(1L, "Engineering");
@@ -224,7 +226,7 @@ class EmployeeMServiceImplTest {
                 1L, "John", "Doe", "john@example.com", "+1234567890",
                 null,
                 LocalDate.of(2024, 1, 15), "Software Engineer",
-                1L, "Engineering", 10L, UserStatus.ACTIVE,
+                1L, "Engineering", null, null, 10L, UserStatus.ACTIVE,
                 null, null
         );
 
@@ -288,7 +290,7 @@ class EmployeeMServiceImplTest {
         EmployeeRequest request = new EmployeeRequest(
                 "John", "Doe", "john@example.com", "+1234567890",
                 LocalDate.of(2024, 1, 15), "Software Engineer",
-                1L, 999L, null
+                1L, null, 999L, null
         );
 
         Department department = createDepartment(1L, "Engineering");
@@ -336,7 +338,7 @@ class EmployeeMServiceImplTest {
         EmployeeRequest request = new EmployeeRequest(
                 "Jane", "Smith", "jane@example.com", "+0987654321",
                 LocalDate.of(2023, 6, 1), "Senior Engineer",
-                2L, null, "https://example.com/new-avatar.png"
+                2L, null, null, "https://example.com/new-avatar.png"
         );
 
         Department department = createDepartment(2L, "Platform");
@@ -371,7 +373,7 @@ class EmployeeMServiceImplTest {
                 1L, "Jane", "Smith", "jane@example.com", "+0987654321",
                 "https://example.com/new-avatar.png",
                 LocalDate.of(2023, 6, 1), "Senior Engineer",
-                2L, "Platform", null, UserStatus.ACTIVE,
+                2L, "Platform", null, null, null, UserStatus.ACTIVE,
                 null, null
         );
 
@@ -448,7 +450,7 @@ class EmployeeMServiceImplTest {
         EmployeeRequest request = new EmployeeRequest(
                 "John", "Doe", "john@example.com", "+1234567890",
                 LocalDate.of(2024, 1, 15), "Software Engineer",
-                1L, 999L, null
+                1L, null, 999L, null
         );
 
         Department department = createDepartment(1L, "Engineering");

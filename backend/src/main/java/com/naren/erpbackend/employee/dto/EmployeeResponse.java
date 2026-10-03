@@ -17,6 +17,8 @@ public record EmployeeResponse(
         String jobTitle,
         Long departmentId,
         String departmentName,
+        Long managerId,
+        String managerName,
         Long userProfileId,
         UserStatus status,
         Instant createdAt,

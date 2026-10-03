@@ -1,0 +1,11 @@
+package com.naren.erpbackend.hcm.repository;
+
+import com.naren.erpbackend.hcm.entity.PayrollItem;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface PayrollItemRepository extends JpaRepository<PayrollItem, Long> {
+
+    List<PayrollItem> findByPayrollRunIdAndDeletedFalse(Long payrollRunId);
+}

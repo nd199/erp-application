@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSpecificationExecutor<Employee> {
@@ -27,6 +28,12 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
 
     @Query("SELECT e FROM Employee e WHERE e.department.id = :departmentId AND e.deleted = false")
     Page<Employee> findByDepartmentId(@Param("departmentId") Long departmentId, Pageable pageable);
+
+    @Query("SELECT e FROM Employee e WHERE e.manager.id = :managerId AND e.deleted = false")
+    Page<Employee> findByManagerId(@Param("managerId") Long managerId, Pageable pageable);
+
+    @Query("SELECT e FROM Employee e WHERE e.manager.id = :managerId AND e.deleted = false")
+    List<Employee> findDirectReports(@Param("managerId") Long managerId);
 
     @Query("SELECT e FROM Employee e WHERE e.deleted = false AND " +
             "(LOWER(e.firstName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +

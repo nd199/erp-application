@@ -88,6 +88,7 @@ function Dashboard() {
   const users = useSelector((s) => s.users?.users || [])
   const roles = useSelector((s) => s.roles?.roles || [])
   const orders = useSelector((s) => s.salesOrders?.orders || [])
+  const isDark = useSelector((s) => s.theme.theme) === 'dark'
 
   useEffect(() => {
     dispatch(fetchEmployees({ page: 0, size: 100 }))
@@ -163,7 +164,7 @@ function Dashboard() {
           </div>
           <div className="p-6">
             <div className="h-[200px]">
-              <LineChart data={employeeGrowth} label="value" color="#3b82f6" />
+              <LineChart data={employeeGrowth} label="value" color="#3b82f6" dark={isDark} />
             </div>
           </div>
         </div>
@@ -179,7 +180,7 @@ function Dashboard() {
           </div>
           <div className="p-6">
             <div className="h-[200px]">
-              <BarChart data={monthlyHiring} color="#8b5cf6" />
+              <BarChart data={monthlyHiring} color="#8b5cf6" dark={isDark} />
             </div>
           </div>
         </div>

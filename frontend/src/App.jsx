@@ -14,6 +14,14 @@ import Users from './pages/Users'
 import Roles from './pages/Roles'
 import Permissions from './pages/Permissions'
 import Analytics from './pages/Analytics'
+import LeaveRequests from './pages/LeaveRequests'
+import Attendance from './pages/Attendance'
+import Payroll from './pages/Payroll'
+import OrgChart from './pages/OrgChart'
+import LeaveBalances from './pages/LeaveBalances'
+import MyLeave from './pages/MyLeave'
+import MyAttendance from './pages/MyAttendance'
+import MyPayslips from './pages/MyPayslips'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
 import RequirePermission from './components/RequirePermission'
@@ -40,6 +48,14 @@ function App() {
                         <Route path="/" element={<Dashboard />} />
                         <Route path="/employees" element={<RequirePermission permission="EMPLOYEE_READ"><Employees /></RequirePermission>} />
                         <Route path="/departments" element={<RequirePermission permission="EMPLOYEE_READ"><Departments /></RequirePermission>} />
+                        <Route path="/leave-requests" element={<RequirePermission permission="LEAVE_READ"><LeaveRequests /></RequirePermission>} />
+                        <Route path="/attendance" element={<RequirePermission permission="ATTENDANCE_READ"><Attendance /></RequirePermission>} />
+                        <Route path="/payroll" element={<RequirePermission permission="PAYROLL_READ"><Payroll /></RequirePermission>} />
+                        <Route path="/org-chart" element={<RequirePermission permission="EMPLOYEE_READ"><OrgChart /></RequirePermission>} />
+                        <Route path="/leave-balances" element={<RequirePermission permission="LEAVE_BALANCE_READ"><LeaveBalances /></RequirePermission>} />
+                        <Route path="/my-leave" element={<RequirePermission permission="LEAVE_READ"><MyLeave /></RequirePermission>} />
+                        <Route path="/my-attendance" element={<RequirePermission permission="ATTENDANCE_READ"><MyAttendance /></RequirePermission>} />
+                        <Route path="/my-payslips" element={<RequirePermission permission="PAYROLL_READ"><MyPayslips /></RequirePermission>} />
                         <Route path="/products" element={<RequirePermission permission="PRODUCT_READ"><Products /></RequirePermission>} />
                         <Route path="/categories" element={<RequirePermission permission="PRODUCT_READ"><Categories /></RequirePermission>} />
                         <Route path="/product-types" element={<RequirePermission permission="PRODUCT_READ"><ProductTypes /></RequirePermission>} />
